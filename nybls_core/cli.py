@@ -11,21 +11,10 @@ from . import transcribe as tr
 from .store import read_manifest, scrub, workspace, write_manifest
 
 
-def _print_ig(igm: dict) -> None:
-    if not igm:
-        return
-    if igm.get("owner"):
-        print(f"posted by: @{igm['owner']}" + (f" on {igm['posted'][:10]}" if igm.get("posted") else ""))
-    if igm.get("caption"):
-        cap = igm["caption"].replace("\n", " ")
-        print(f"caption: {cap[:280]}{'…' if len(cap) > 280 else ''}")
-
-
 def cmd_probe(args) -> int:
     media_id, path = ing.ingest(args.source)
     ws = workspace(media_id)
     info = ing.media_info(path)
-    igm = ing.ig_metadata(ws)
     title = ""
     for ij in ws.glob("*.info.json"):
         title = json.loads(ij.read_text()).get("title", "")
@@ -35,11 +24,10 @@ def cmd_probe(args) -> int:
         images = sorted(p for p in ws.glob("media*") if ing.is_image(p))
         write_manifest(media_id, {
             "source": args.source if args.source.startswith("https://") else "local",
-            **info, "image_count": len(images), "instagram": igm or None,
+            **info, "image_count": len(images),
         })
         print(f"id: {media_id}")
         print(f"type: image post · {len(images)} image(s) · {info['width']}x{info['height']}")
-        _print_ig(igm)
         for p in images:
             print(f"image: {scrub(str(p))}")
         print("next: Read the image(s) directly — no frame budget needed. "
@@ -54,12 +42,10 @@ def cmd_probe(args) -> int:
         "scene_count": len(scenes),
         "transcript": tpath.name if tpath else None,
         "transcript_source": tsource,
-        "instagram": igm or None,
     })
     print(f"id: {media_id}")
-    print(f"title: {title or ('Instagram reel' if igm else '(local file)')}")
+    print(f"title: {title or '(local file)'}")
     print(f"duration: {info['duration_s']/60:.1f} min · {info['width']}x{info['height']} · {len(scenes)} scenes")
-    _print_ig(igm)
     print(f"transcript: {tsource} → {scrub(str(tpath)) if tpath else 'NONE'}")
     print(f"budget: {led.budget_for(info['duration_s'])} image units")
     print(f"scenes: {scrub(str(ws / 'scenes.json'))}")
@@ -177,29 +163,6 @@ def cmd_ledger(args) -> int:
     return 0
 
 
-def cmd_list(args) -> int:
-    user, posts = ing.list_profile(args.source, args.limit, args.refresh)
-
-    if args.pick:
-        sel = next((p for p in posts if p["n"] == args.pick), None)
-        if not sel:
-            print(f"no #{args.pick} in the listing (have 1–{len(posts)})", file=sys.stderr)
-            return 1
-        print(f"#{sel['n']} → {sel['url']}")
-        args.source = sel["url"]
-        return cmd_probe(args)
-
-    print(f"@{user} — {len(posts)} most recent (1 = newest, {len(posts)} = oldest of these)\n")
-    for p in posts:
-        got = "✓" if (workspace(f"ig_{p['shortcode']}") / "manifest.json").exists() else " "
-        kind = p["type"] + (f"×{p['media_count']}" if p["media_count"] > 1 else "")
-        likes = f"{p['likes']:>5}♥" if isinstance(p["likes"], int) else "      "
-        print(f"{got} {p['n']:>2}. {p['date']}  {kind:<9} {likes}  {p['caption'][:62]}")
-    print(f"\nwatch one:  nybls list {user} --pick <n>       (✓ = already downloaded)")
-    print("nothing above has been downloaded except the ✓ rows — listing costs no media transfer.")
-    return 0
-
-
 def cmd_serve(args) -> int:
     from . import receiver
     return receiver.serve(args.window)
@@ -283,13 +246,6 @@ def main() -> int:
     sl = sub.add_parser("ledger", help="spend summary")
     sl.add_argument("id")
     sl.set_defaults(fn=cmd_ledger)
-
-    sls = sub.add_parser("list", help="list an Instagram profile's recent posts (no media downloaded)")
-    sls.add_argument("source", help="profile URL or username")
-    sls.add_argument("--limit", type=int, default=12)
-    sls.add_argument("--refresh", action="store_true", help="re-fetch instead of using the cached listing")
-    sls.add_argument("--pick", type=int, metavar="N", help="probe post #N from the listing")
-    sls.set_defaults(fn=cmd_list, width=1568, looking_for=None, force=False)
 
     sv = sub.add_parser("serve", help="open the intake window (not a daemon)")
     sv.add_argument("--window", type=int, default=30, metavar="MIN",
