@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nybls"
+version = "0.1.0"
+description = "Budgeted, iterative video watching for AI agents — transcript first, then only the frames the model asks for, with receipts."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [{ name = "Ares" }]
+keywords = ["video", "llm", "agent", "vision", "transcript", "ffmpeg", "claude", "mcp"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Multimedia :: Video",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "scenedetect>=0.7.1",
+  "imagehash>=4.3.2",
+  "pillow>=10.0",
+]
+
+[project.optional-dependencies]
+macos = ["ocrmac>=1.0"]        # Apple Vision OCR (incl. Arabic); macOS only
+dev = ["pytest>=8.0"]
+
+[project.urls]
+Homepage = "https://github.com/nKOxxx/nybls"
+Repository = "https://github.com/nKOxxx/nybls"
+Issues = "https://github.com/nKOxxx/nybls/issues"
+
+[project.scripts]
+nybls = "nybls_core.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["nybls_core"]
+
+[tool.hatch.build.targets.sdist]
+include = ["nybls_core", "skill", "README.md", "LICENSE", "docs"]

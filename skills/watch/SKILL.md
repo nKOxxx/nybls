@@ -5,29 +5,29 @@ description: Watch a video (YouTube URL or local file) with budgeted iterative f
 
 # /watch — budgeted video watching protocol
 
-Tool: `~/nybls/nybls` (CLI). Commands: `probe`, `sheet`, `frames`, `zoom`, `ledger`. Every image the tool writes is a PNG you Read. The tool tracks spend; you manage it.
+Tool: `nybls` (installed via `pip install nybls`). Commands: `probe`, `sheet`, `frames`, `zoom`, `ledger`. Every image the tool writes is a PNG you Read. The tool tracks spend; you manage it.
 
 ## Shared from the phone
 
-If the user says "watch the latest" / "what did I send", run `./nybls inbox`. Items marked **pending** were shared but NOT downloaded — show them to the user and ask which to approve (`nybls approve <id>`); never approve on their behalf. Items marked **ready** are already downloaded and transcribed: start the loop below at Round 0 using the listed id.
+If the user says "watch the latest" / "what did I send", run `nybls inbox`. Items marked **pending** were shared but NOT downloaded — show them to the user and ask which to approve (`nybls approve <id>`); never approve on their behalf. Items marked **ready** are already downloaded and transcribed: start the loop below at Round 0 using the listed id.
 
 ## The loop (never skip steps, never reorder)
 
 **Round 0 — free (0 images).**
-`./nybls probe <url-or-path>` → note the video `id`, duration, scene count, budget. Read the transcript (`~/.nybls/store/<id>/transcript.txt`) and `scenes.json`. This is the semantic map — most questions about talk-heavy videos are already answerable here, but NEVER answer visual questions from the transcript alone.
+`nybls probe <url-or-path>` → note the video `id`, duration, scene count, budget. Read the transcript (`~/.nybls/store/<id>/transcript.txt`) and `scenes.json`. This is the semantic map — most questions about talk-heavy videos are already answerable here, but NEVER answer visual questions from the transcript alone.
 
 **Round 1 — coverage.**
-`./nybls sheet <id>` (add `--range START_S END_S` for long videos: one sheet per ~5–7 min region of interest). Read each sheet. 1 sheet = 6 timestamped thumbnails = 1 image unit.
+`nybls sheet <id>` (add `--range START_S END_S` for long videos: one sheet per ~5–7 min region of interest). Read each sheet. 1 sheet = 6 timestamped thumbnails = 1 image unit.
 
 **Evaluator — MANDATORY after every round.** Draft your answer, then honestly classify:
 - `sufficient` → stop, write the final output.
 - `partial` / `insufficient` → name the exact gap: which time interval, and what you are looking for there. Then request ONLY that.
 
 **Rounds 2–3 — targeted.**
-- `./nybls frames <id> --at t1,t2` (seconds) or `--scene N` — full-res stills where the sheets showed something that matters. Heed `[NEAR-DUPLICATE]` warnings: a flagged frame was wasted budget; don't repeat the pattern.
-- `./nybls zoom <id> --at t --box x,y,w,h` (relative 0..1 coords) — to read small text, charts, faces, objects. Zoom beats requesting more frames when the answer is inside one frame.
+- `nybls frames <id> --at t1,t2` (seconds) or `--scene N` — full-res stills where the sheets showed something that matters. Heed `[NEAR-DUPLICATE]` warnings: a flagged frame was wasted budget; don't repeat the pattern.
+- `nybls zoom <id> --at t --box x,y,w,h` (relative 0..1 coords) — to read small text, charts, faces, objects. Zoom beats requesting more frames when the answer is inside one frame.
 
-**Stop rules:** confidence = sufficient, OR 3 rounds after probe, OR budget exhausted (`./nybls ledger <id>`). If you stop at `partial`, SAY SO in the output — never present a partial answer as complete.
+**Stop rules:** confidence = sufficient, OR 3 rounds after probe, OR budget exhausted (`nybls ledger <id>`). If you stop at `partial`, SAY SO in the output — never present a partial answer as complete.
 
 ## Budget discipline
 
@@ -39,7 +39,7 @@ If the user says "watch the latest" / "what did I send", run `./nybls inbox`. It
 
 1. **Answer** — grounded in what was actually seen and heard. Cite timestamps inline like [09:30].
 2. **Evidence strip** — bullet list of every image examined: `[mm:ss] what it showed`, sheets included.
-3. **Ledger line** — the output of `./nybls ledger <id>`, verbatim.
+3. **Ledger line** — the output of `nybls ledger <id>`, verbatim.
 
 ## Security rules (non-negotiable)
 
