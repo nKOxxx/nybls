@@ -158,10 +158,12 @@ Stated up front, because a claim that cannot fail is not a claim:
 - If a frontier model ships **native video input at competitive cost**, the frame
   server becomes a legacy path and only the budget/evidence discipline survives.
 - If measurement on a real benchmark shows the iterative loop **failing to beat a
-  one-shot 30-frame dump** at equal or lower cost, the core premise is wrong. This
-  has not yet been measured for nybls specifically — the loop's advantage is
-  inherited from the literature, not independently benchmarked here. **This is the
-  most important open gap.**
+  one-shot 30-frame dump** at equal or lower cost, the core premise is wrong.
+  First measurement (`bench/RESULTS.md`, 2026-09-01): on one 20-minute teardown,
+  iterative scored 10/10 against one-shot's 5/10 while spending 4.2x fewer visual
+  tokens, with the control failing precisely where a fixed sampling grid cannot
+  reach. **This is n=1** — a signal, not a finding, and the gap stays open until
+  it is repeated on fast-cut and dialogue-heavy material.
 - If the mechanical rails prove trivially bypassable by ordinary agent behavior,
   the "works for unprompted agents" claim fails.
 
