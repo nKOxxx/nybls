@@ -70,6 +70,12 @@ def _ctx(video_id: str):
 
 def cmd_sheet(args) -> int:
     ws, m, video = _ctx(args.id)
+    # A whole-video sheet IS the coverage round, so it never needs a named gap.
+    # A --range sheet is a targeted request and plays by the same rule as frames.
+    gate = _budget_gate(ws, m, 1, args.looking_for if args.range else "coverage round", args.force)
+    if gate:
+        print(gate, file=sys.stderr)
+        return 1
     scenes = json.loads((ws / "scenes.json").read_text())
     start, end = args.range if args.range else (0.0, m["duration_s"])
     stamps = media.sheet_timestamps(scenes, m["duration_s"], start, end)
@@ -224,6 +230,8 @@ def main() -> int:
     ss = sub.add_parser("sheet", help="3x2 timestamped contact sheet")
     ss.add_argument("id")
     ss.add_argument("--range", nargs=2, type=float, metavar=("START_S", "END_S"))
+    ss.add_argument("--looking-for", help="the named gap; required with --range once spending has begun")
+    ss.add_argument("--force", action="store_true", help="HUMAN override for the budget stop")
     ss.set_defaults(fn=cmd_sheet)
 
     sf = sub.add_parser("frames", help="full-res frames at timestamps or scene")

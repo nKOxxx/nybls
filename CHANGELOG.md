@@ -12,6 +12,21 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.1.1] — 2026-09-01
+
+### Fixed
+- `sheet` did not check the budget at all, so contact sheets could be generated
+  past the ceiling without refusal. It now goes through the same gate as
+  `frames` and `zoom`.
+- `sheet` rejected `--looking-for`, which `frames` and `zoom` require — an
+  inconsistency that made a targeted sheet impossible to justify. It now accepts
+  both `--looking-for` and `--force`.
+
+### Changed
+- The named-gap rule now distinguishes coverage from targeting: a whole-video
+  `sheet` is the coverage round and never needs a named gap, while a `--range`
+  sheet is a targeted request and requires one once spending has begun.
+
 ## [0.1.0] — 2026-09-01
 
 First release. Alpha: the interfaces may change.
