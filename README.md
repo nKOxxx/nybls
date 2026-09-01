@@ -121,15 +121,27 @@ There is no API integration: your agent reads the files.
 
 ### With Claude Code
 
-Copy `skill/SKILL.md` to `~/.claude/skills/watch/SKILL.md`, then:
+Install as a plugin — the skill and its protocol come with it:
 
 ```
-/watch https://www.youtube.com/watch?v=VIDEO_ID  what does the chart at the end show?
+/plugin marketplace add nKOxxx/nybls
+```
+
+```
+/plugin install nybls@nybls
+```
+
+Then ask:
+
+```
+/nybls:watch https://www.youtube.com/watch?v=VIDEO_ID  what does the chart at the end show?
 ```
 
 The skill carries the protocol — the confidence check, the named-gap rule, the
 stop conditions, and the receipts contract — so the discipline travels with the
-tool instead of depending on how well you prompt.
+tool instead of depending on how well you prompt. For a personal install without
+the plugin system, copy `skills/watch/SKILL.md` to
+`~/.claude/skills/watch/SKILL.md`.
 
 ## The guardrails are in the tool, not just the prose
 

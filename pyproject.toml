@@ -44,4 +44,4 @@ nybls = "nybls_core.cli:main"
 packages = ["nybls_core"]
 
 [tool.hatch.build.targets.sdist]
-include = ["nybls_core", "skill", "README.md", "LICENSE", "docs"]
+include = ["nybls_core", "skills", "README.md", "LICENSE", "docs", ".claude-plugin"]
