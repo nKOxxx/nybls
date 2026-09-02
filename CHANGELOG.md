@@ -31,6 +31,13 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   independent OCR-derived reference.
 - **`paper/`** — draft arXiv paper with a fully verified bibliography.
 
+### Known issues (found by benchmark arms, reported not fixed during the run)
+- The named-gap rail also applies to `sheet --range`, but the rails table in
+  `docs/PROTOCOL.md` says it applies only to `frames`/`zoom`. Docs and behaviour disagree.
+- Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom
+  box derived from a tile can land on a different shot. `snap_to_tile` (added this release)
+  mitigates this for `frames`; `zoom` and the docs mismatch are still open.
+
 ### Planned
 - Independent benchmark of the iterative loop against a one-shot frame dump at
   equal cost — the open gap named in `docs/RESEARCH.md`

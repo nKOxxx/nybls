@@ -1,0 +1,18 @@
+{
+ "media_id": "5oNHF72wbmI",
+ "signature": [
+  "tim",
+  "imessage",
+  "spare key"
+ ],
+ "center_s": 2532.0,
+ "step_s": 0.5,
+ "n_samples": 81,
+ "n_matching": 11,
+ "longest_run_frames": 11,
+ "measured_visible_s": 5.5,
+ "run_starts_s": 2531.5,
+ "duration_s": 2888.4,
+ "capture_prob_uniform_30": 0.0571,
+ "frames_needed_even_odds": 262
+}
