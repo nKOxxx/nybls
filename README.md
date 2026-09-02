@@ -11,36 +11,41 @@
 ---
 
 ```console
-$ nybls probe "https://www.youtube.com/watch?v=f1wnYdLEpgI"
+$ nybls probe "https://www.youtube.com/watch?v=F2FmTdLtb_4"
 
-id: f1wnYdLEpgI
-title: Learn Git Rebase in 6 minutes // explained with live animations!
-duration: 6.7 min · 1280x720 · 10 scenes
-transcript: captions:video.en.vtt → ~/.nybls/store/f1wnYdLEpgI/transcript.txt
-budget: 27 image units
+id: F2FmTdLtb_4
+title: System Design Concepts Course and Interview Prep
+duration: 53.6 min · 1280x720 · 64 scenes
+transcript: captions:video.en.vtt → ~/.nybls/store/F2FmTdLtb_4/transcript.txt
+budget: 200 image units
 cost so far: 0 images. Read the transcript first; then request sheets.
 
-$ nybls study f1wnYdLEpgI --adaptive
+$ nybls study F2FmTdLtb_4 --adaptive
 
 probing every 5s at low resolution (no vision cost)...
-probed 80 frames free → kept the 33 biggest changes (median change score 1.83)
-study pass: 33 tiles every 5s → 6 sheets (6 of 27 budget units)
-  sheet_000.png  [00:12–01:12]
-  sheet_001.png  [01:22–02:17]
+probed 644 frames free → kept the 72 biggest changes (median change score 1.56)
+study pass: 72 tiles every 5s → 12 sheets (12 of 200 budget units)
+  sheet_000.png  [00:07–01:52]
+  sheet_002.png  [10:30–19:32]
+  sheet_007.png  [34:12–37:30]
   ...
-spend: 6 images / 27 budget
 
-$ nybls ledger f1wnYdLEpgI
+$ nybls ledger F2FmTdLtb_4
 
-watched 7 min · examined 6 images (~6,240 visual tokens, ≈$0.01)
-of ~10,059 total frames
+watched 54 min · examined 12 images (~12,480 visual tokens, ≈$0.02)
+of ~80,443 total frames
 ```
 
-*Verbatim output, not a mockup.* It checked 80 frames for free to decide which 33
-mattered, then packed them into **6 images**. Pulling frames is nearly free;
-*looking* at them is what costs money, so it only looks at what changed.
+**A 54-minute course. 12 images. Two cents.** *Verbatim output, not a mockup.*
 
-On a 48-minute lesson the same command probes 583 frames and looks at 12.
+It pulled 644 frames for free to work out which 72 were worth looking at, then
+packed them into 12 sheets. Pulling frames is nearly free; *looking* at them is
+what costs money — so it only looks at what changed.
+
+And the frames are the right ones. One sheet from the middle covers a tradeoffs
+diagram, the throughput-vs-latency slide, TCP versus UDP, a TCP header
+breakdown, the networking-infrastructure slide, and live browser devtools showing
+a real HTTP request — six distinct teaching moments, no redundant talking head.
 
 ## Why this exists
 
