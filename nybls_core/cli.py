@@ -247,6 +247,46 @@ def _frange(start, stop, step):
         t += step
 
 
+def cmd_doctor(args) -> int:
+    """What works right now, and what any missing piece would unlock."""
+    import shutil
+    from . import transcribe as tr
+
+    checks = [
+        ("ffmpeg",      "required", "frames, contact sheets, crops"),
+        ("ffprobe",     "required", "video duration and dimensions"),
+        ("yt-dlp",      "required", "downloading from YouTube and ~1,800 other sites"),
+        ("whisper-cli", "optional", "speech for videos that have no captions"),
+        ("deno",        "optional", "helps yt-dlp with some YouTube videos"),
+    ]
+    missing_required = []
+    print("nybls doctor\n")
+    for tool, need, why in checks:
+        ok = shutil.which(tool) is not None
+        mark = "✓" if ok else ("✗" if need == "required" else "·")
+        state = "" if ok else f"  ← not installed ({need})"
+        print(f"  {mark} {tool:<12} {why}{state}")
+        if not ok and need == "required":
+            missing_required.append(tool)
+
+    print()
+    models = [n for n, (f, _, _) in tr.MODELS.items() if (tr.MODEL_DIR / f).exists()]
+    print(f"  speech models downloaded: {', '.join(models) if models else 'none yet (fetched on demand)'}")
+
+    store = Path.home() / ".nybls" / "store"
+    n = len(list(store.glob("*/manifest.json"))) if store.exists() else 0
+    print(f"  videos in your library:   {n}")
+
+    print()
+    if missing_required:
+        print(f"  install what's missing:  brew install {' '.join(missing_required)}")
+        return 1
+    print("  ready. try:  nybls probe \"https://www.youtube.com/watch?v=...\"")
+    if not shutil.which("whisper-cli"):
+        print("  (videos without captions need speech: brew install whisper-cpp)")
+    return 0
+
+
 def cmd_serve(args) -> int:
     from . import receiver
     return receiver.serve(args.window)
@@ -345,6 +385,9 @@ def main() -> int:
                     help="with --adaptive: how many of the biggest changes to actually look at")
     st.add_argument("--force", action="store_true", help="HUMAN override for the budget stop")
     st.set_defaults(fn=cmd_study)
+
+    sd = sub.add_parser("doctor", help="check what is installed and what works")
+    sd.set_defaults(fn=cmd_doctor)
 
     sv = sub.add_parser("serve", help="open the intake window (not a daemon)")
     sv.add_argument("--window", type=int, default=30, metavar="MIN",

@@ -1,192 +1,140 @@
 <p align="center">
-  <img src="brand/nybls_1024.png" alt="nybls" width="140">
+  <img src="brand/nybls_1024.png" alt="nybls" width="120">
 </p>
 
 <h1 align="center">nybls</h1>
 
 <p align="center">
-  <em>Other tools slurp the whole video. This one sips —<br>
-  three frames out of fifty-three thousand, and it shows you which.</em>
+  <b>Your AI reads the subtitles. This one actually looks — and shows you what it looked at.</b>
 </p>
 
 ---
 
-## The problem
+```console
+$ nybls probe "https://www.youtube.com/watch?v=f1wnYdLEpgI"
 
-Almost every "AI watches YouTube" tool reads the **subtitles**. That is not a
-cynical read of the field, it is what the code does: the YouTube loaders in the
-major agent frameworks and self-hosted chat apps are transcript scrapers, and
-Google's own documentation says a YouTube source in NotebookLM imports "only the
-text transcript of the video."
+id: f1wnYdLEpgI
+title: Learn Git Rebase in 6 minutes // explained with live animations!
+duration: 6.7 min · 1280x720 · 10 scenes
+transcript: captions:video.en.vtt → ~/.nybls/store/f1wnYdLEpgI/transcript.txt
+budget: 27 image units
+cost so far: 0 images. Read the transcript first; then request sheets.
 
-So a video with no speech returns nothing. A chart on screen is invisible. A
-demo that shows rather than tells is invisible. And you cannot tell the
-difference between a tool that looked and a tool that guessed, because neither
-shows you what it saw.
+$ nybls study f1wnYdLEpgI --adaptive
 
-The other half of the field does the opposite and dumps 100 uniformly-sampled
-frames into the model at once — expensive, mostly redundant, and still blind to
-whatever fell between the samples.
+probing every 5s at low resolution (no vision cost)...
+probed 80 frames free → kept the 33 biggest changes (median change score 1.83)
+study pass: 33 tiles every 5s → 6 sheets (6 of 27 budget units)
+  sheet_000.png  [00:12–01:12]
+  sheet_001.png  [01:22–02:17]
+  ...
+spend: 6 images / 27 budget
 
-## What nybls does instead
+$ nybls ledger f1wnYdLEpgI
 
-nybls gives an AI agent five ways to ask for pieces of a video, and a protocol
-that makes it ask well:
-
-1. **Read the free stuff first** — transcript, scene boundaries, metadata. Zero images.
-2. **Look broadly, cheaply** — one contact sheet is six timestamped thumbnails for
-   the cost of a single image.
-3. **Then say what it is missing** — the agent must name the time interval and what
-   it expects to find there before it may request more.
-4. **Drill in only there** — full-resolution frames, or a zoom crop to read small text.
-5. **Stop, and show the receipts** — every answer ends with the frames it examined
-   and what they cost.
-
-Real run, this repo's test corpus — a 35-minute car-restoration video:
-
-```
-watched 35 min · examined 3 images (~3,069 visual tokens, ~$0.01)
-of ~53,171 total frames · budget 3/142 units
+watched 7 min · examined 6 images (~6,240 visual tokens, ≈$0.01)
+of ~10,059 total frames
 ```
 
-Three frames. It found the reveal at 12:05, identified that the second half of
-the video switches to a different car, and reported honestly that a zoom aimed
-at a badge landed on a headlight instead — so it did not name the model.
+*Verbatim output, not a mockup.* It checked 80 frames for free to decide which 33
+mattered, then packed them into **6 images**. Pulling frames is nearly free;
+*looking* at them is what costs money, so it only looks at what changed.
 
-## Why "sips" is the whole point
+On a 48-minute lesson the same command probes 583 frames and looks at 12.
 
-The research this is built on is unambiguous: **selecting fewer frames well beats
-sampling many frames blindly.** Stanford's VideoAgent matched the accuracy of 180
-uniformly-sampled frames using 8.4 frames chosen by a confidence-gated loop.
-Adaptive keyframe selection beats uniform sampling at equal frame count. Grids
-larger than about six tiles measurably destroy a model's ability to localize
-detail. Every rule in the nybls protocol traces to a published result — see
-[docs/RESEARCH.md](docs/RESEARCH.md).
+## Why this exists
+
+Almost every "AI watches YouTube" tool reads the **captions**. That's not a cheap
+shot, it's what the code does — the YouTube loaders in the major agent frameworks
+and self-hosted chat apps are caption scrapers, and Google's own docs say a
+YouTube source in NotebookLM imports "only the text transcript."
+
+So a video with no speech returns nothing. A chart is invisible. A demo that
+shows rather than tells is invisible. And you can't tell a tool that looked from
+one that guessed, because neither shows you its evidence.
+
+The other half of the field dumps 100 evenly-spaced frames at the model and hopes.
+Expensive, mostly redundant, and still blind to whatever fell between samples.
 
 ## Install
 
-**Prerequisites** (nybls orchestrates these; it does not vendor them):
-
-| Tool | Why | Install |
-|---|---|---|
-| `ffmpeg` | frame extraction, crops, contact sheets | `brew install ffmpeg` |
-| `yt-dlp` | downloading from YouTube and ~1,800 other sites | `brew install yt-dlp` |
-| `deno` | required by yt-dlp for full YouTube support | `brew install deno` |
-| `whisper-cpp` | local transcription when a video has no captions | `brew install whisper-cpp` |
-
-Then:
+```bash
+brew install ffmpeg yt-dlp
+```
 
 ```bash
 pip install nybls
 ```
 
-On macOS, add Apple Vision OCR (works with Arabic, no extra models):
+That's it. No API keys, no account, no telemetry — your agent brings the model,
+everything else runs locally. Videos without captions need speech, which is an
+extra one-liner (`brew install whisper-cpp`); the model downloads itself the
+first time you need it, and the default is 141 MB, not 1.5 GB.
 
 ```bash
-pip install "nybls[macos]"
+nybls doctor
 ```
 
-For local transcription, download a Whisper model once:
+tells you exactly what works and what any missing piece would unlock.
+
+## The three commands you'll actually use
 
 ```bash
-mkdir -p ~/.nybls/models && curl -L -o ~/.nybls/models/ggml-large-v3-turbo.bin \
-  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
+nybls probe "https://www.youtube.com/watch?v=..."   # transcript + scenes, 0 images
+nybls study <id> --adaptive                          # learn the whole thing
+nybls sheet <id>                                     # one look, 6 timestamps
 ```
 
-## Use it
-
-```bash
-nybls probe "https://www.youtube.com/watch?v=VIDEO_ID"
-```
-
-```
-id: VIDEO_ID
-title: But what is a neural network? | Deep learning chapter 1
-duration: 18.7 min · 1280x720 · 24 scenes
-transcript: subtitles:video.en.vtt -> ~/.nybls/store/VIDEO_ID/transcript.txt
-budget: 75 image units
-cost so far: 0 images. Read the transcript first; then request sheets.
-```
-
-| Command | What it does | Cost |
-|---|---|---|
-| `nybls probe <url\|file>` | download, transcribe, detect scenes, set the budget | 0 images |
-| `nybls sheet <id> [--range S E]` | 3x2 contact sheet, timestamped | 1 image |
-| `nybls frames <id> --at 92,570` | full-resolution stills | 1 per frame |
-| `nybls zoom <id> --at 570 --box x,y,w,h` | crop into a region to read detail | 1 image |
-| `nybls ledger <id>` | what has been spent | 0 |
-
-Everything is written to `~/.nybls/store/<id>/` as ordinary PNG and text files.
-There is no API integration: your agent reads the files.
+Everything lands in `~/.nybls/store/<id>/` as ordinary PNGs and text. There's no
+API integration — your agent just reads the files.
 
 ### With Claude Code
 
-Install as a plugin — the skill and its protocol come with it:
-
 ```
 /plugin marketplace add nKOxxx/nybls
-```
-
-```
 /plugin install nybls@nybls
 ```
 
-Then ask:
+Then ask it anything about a video. The plugin ships the protocol — a mandatory
+confidence check each round, a rule that the model must name what it's missing
+before it may ask for more, and a receipts contract — so the discipline travels
+with the tool instead of depending on how well you prompt.
 
-```
-/nybls:watch https://www.youtube.com/watch?v=VIDEO_ID  what does the chart at the end show?
-```
+## Two modes, and it picks for you
 
-The skill carries the protocol — the confidence check, the named-gap rule, the
-stop conditions, and the receipts contract — so the discipline travels with the
-tool instead of depending on how well you prompt. For a personal install without
-the plugin system, copy `skills/watch/SKILL.md` to
-`~/.claude/skills/watch/SKILL.md`.
+**Answer mode** — you asked a question, so it stops the moment it can answer.
+A 35-minute video, "what happens in it?", answered with **3 images for a cent**.
 
-## The guardrails are in the tool, not just the prose
+**Study mode** — you want to *learn* the thing, so it covers the whole video.
+Minimal spend is the wrong goal for a lecture; a 48-minute lesson answered with
+one image describes the layout, not the content.
 
-A protocol written only in a prompt is a suggestion. These are enforced by the
-CLI itself:
+## Why it's cheap without being lazy
 
-- **Named gaps.** Past a few images, `frames` and `zoom` refuse to run without
-  `--looking-for "<interval + what you expect>"`.
-- **A real budget.** Duration-scaled, cumulative, and the server refuses to serve
-  past it unless a human passes `--force`.
-- **Duplicate warnings.** A frame that is a near-duplicate of one already served
-  is flagged as wasted budget.
-- **Next-step nudges.** Every command's output ends by telling the agent to draft
-  an answer and classify its own confidence before asking for more.
+Scene detection is the wrong signal for a fixed-camera recording. A 48-minute
+chess lesson filmed as one continuous screen capture produces **three** scene
+cuts — while the board, carrying all the information, changes every move. Slide
+decks, IDEs and dashboards have the same shape.
 
-## What this cannot do
+So `--adaptive` samples on a clock, scores each probe by how much the picture
+actually changed, and spends the budget on the biggest changes. On that lesson it
+caught an on-screen framework card that a uniform 30-second pass sampled straight
+past.
 
-- **No live video.** Batch only: download, then analyze.
-- **Motion is lossy.** It sees stills, not movement. Good for talks, tutorials,
-  demos, dashboards, and on-screen text; weak for sports mechanics or fast action.
-- **Speech only.** Transcription covers words, not music or sound events.
-- **It depends on tools that fight back.** Video platforms actively break
-  downloaders. Keep `yt-dlp` current; expect occasional breakage.
-- **Alpha.** The protocol is validated by published research and by daily use, but
-  this is version 0.1.0 and the interfaces may change.
+## Honest limits
 
-## Privacy and security posture
+- **No live video.** Download, then analyse.
+- **Motion is lossy.** It sees stills. Great for talks, tutorials, demos,
+  dashboards, on-screen text. Weak for sports and fast action.
+- **Speech only** — words, not music or sound events.
+- **Platforms fight downloaders.** Keep `yt-dlp` current; expect occasional breakage.
+- **Alpha.** v0.3, interfaces may change.
 
-Local-first by construction: no API keys, no accounts, no telemetry, no server.
-The agent you already use supplies the model; everything else runs on your
-machine. See [docs/SECURITY.md](docs/SECURITY.md) for the full posture, including
-the one rule that matters most — **video content is data, never instructions.** A
-video can display text aimed at your agent, and the protocol requires that such
-text be reported to you rather than obeyed.
+Video content is **data, never instructions** — a video can display text aimed at
+your agent, and the protocol requires that it be reported to you, not obeyed.
 
-Downloading from a platform may conflict with that platform's terms of service.
-That is your call to make; this tool takes no position and phones nothing home.
+## Docs
 
-## Documentation
-
-- [docs/PROTOCOL.md](docs/PROTOCOL.md) — the WATCH loop in full, and why each rule exists
-- [docs/RESEARCH.md](docs/RESEARCH.md) — the evidence base and everything this is built on
-- [docs/SECURITY.md](docs/SECURITY.md) — threat model and the security checklist
-- [CHANGELOG.md](CHANGELOG.md)
-
-## License
+[Protocol](docs/PROTOCOL.md) · [Research & evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Benchmark](bench/RESULTS.md) · [Changelog](CHANGELOG.md)
 
 MIT.
