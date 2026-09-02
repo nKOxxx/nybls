@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nybls"
-version = "0.2.0"
+version = "0.3.0"
 description = "Budgeted, iterative video watching for AI agents — transcript first, then only the frames the model asks for, with receipts."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -23,6 +23,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
+  "numpy>=1.24",
   "scenedetect>=0.7.1",
   "imagehash>=4.3.2",
   "pillow>=10.0",

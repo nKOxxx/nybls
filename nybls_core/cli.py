@@ -192,8 +192,24 @@ def default_interval(duration_s: float) -> int:
 def cmd_study(args) -> int:
     ws, m, video = _ctx(args.id)
     dur = m["duration_s"]
-    every = args.every or default_interval(dur)
-    stamps = [t for t in _frange(every / 2, dur, every)]
+    if args.adaptive:
+        region = None
+        if args.region:
+            region = tuple(float(v) for v in args.region.split(","))
+            if len(region) != 4 or not all(0 <= v <= 1 for v in region):
+                print("--region needs x,y,w,h as fractions 0..1", file=sys.stderr)
+                return 1
+        probe = args.every or 5
+        print(f"probing every {probe}s at low resolution (no vision cost)...")
+        stamps, n_probed, median = media.adaptive_timestamps(
+            video, ws, dur, probe_every=probe, region=region,
+            max_frames=args.max_frames)
+        every = probe
+        print(f"probed {n_probed} frames free → kept the {len(stamps)} biggest changes "
+              f"(median change score {median:.2f})")
+    else:
+        every = args.every or default_interval(dur)
+        stamps = [t for t in _frange(every / 2, dur, every)]
     n_sheets = math.ceil(len(stamps) / 6)
 
     budget = led.budget_for(dur)
@@ -320,6 +336,13 @@ def main() -> int:
     st = sub.add_parser("study", help="dense comprehension pass over the whole video")
     st.add_argument("id")
     st.add_argument("--every", type=int, metavar="SEC", help="seconds between tiles (default scales with length)")
+    st.add_argument("--adaptive", action="store_true",
+                    help="probe densely for free, then only show frames that CHANGED")
+    st.add_argument("--region", metavar="X,Y,W,H",
+                    help="restrict change detection to part of the frame (fractions 0..1) — "
+                         "e.g. the board in a split-screen lesson, not the talking head")
+    st.add_argument("--max-frames", type=int, default=60,
+                    help="with --adaptive: how many of the biggest changes to actually look at")
     st.add_argument("--force", action="store_true", help="HUMAN override for the budget stop")
     st.set_defaults(fn=cmd_study)
 

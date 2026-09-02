@@ -1,5 +1,6 @@
 """Media ops: scene detection, contact sheets, full frames, zoom crops, phash dedup."""
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -106,3 +107,78 @@ def zoom_crop(video: Path, ws: Path, ts: float, box: tuple[float, float, float, 
     vf = f"crop=iw*{w:.3f}:ih*{h:.3f}:iw*{x:.3f}:ih*{y:.3f},scale={width}:-2"
     _extract(video, ts, out, vf)
     return out
+
+
+def adaptive_timestamps(video: Path, ws: Path, duration: float, probe_every: float = 5.0,
+                        region: tuple[float, float, float, float] | None = None,
+                        max_frames: int = 60, backbone_every: float = 180.0) -> tuple[list[float], int, float]:
+    """Timestamps ranked by how much the picture actually CHANGED.
+
+    Extraction is cheap; looking is what costs money. So probe densely at low
+    resolution (no vision tokens), score each probe by mean absolute pixel
+    difference from the previous one, and return only the biggest changes.
+
+    Why pixel difference and not a perceptual hash: a perceptual hash is built to
+    be ROBUST to small changes, which makes it blind to exactly what matters here.
+    Measured on a chess lesson, board states ten seconds apart differed by only
+    2-4 bits of a 64-bit phash - below any usable threshold - while the same
+    change was obvious in pixel difference. Use the hash to detect duplicates,
+    not to detect change.
+
+    `region` (x, y, w, h in 0..1) restricts scoring to part of the frame. On
+    split-screen instructional video a talking head changes constantly while the
+    board beside it changes once a minute; score the board, not the face.
+
+    A uniform backbone (one probe every `backbone_every` seconds) is merged in so
+    that a long quiet stretch is never completely unrepresented.
+
+    Returns (timestamps, n_probed, median_score).
+    """
+    import numpy as np
+
+    tmp = ws / "_probe"
+    tmp.mkdir(exist_ok=True)
+    vf = "scale=192:-2,format=gray"
+    if region:
+        x, y, w, h = region
+        vf = f"crop=iw*{w:.4f}:ih*{h:.4f}:iw*{x:.4f}:ih*{y:.4f},{vf}"
+
+    scored: list[tuple[float, float]] = []
+    prev = None
+    probes = list(_frange(probe_every / 2, duration, probe_every))
+    for ts in probes:
+        f = tmp / f"p_{int(ts * 1000)}.png"
+        try:
+            _extract(video, ts, f, vf)
+        except subprocess.CalledProcessError:
+            continue
+        arr = np.asarray(Image.open(f), dtype=np.float32)
+        f.unlink(missing_ok=True)
+        if prev is not None and prev.shape == arr.shape:
+            scored.append((ts, float(np.abs(arr - prev).mean())))
+        prev = arr
+    shutil.rmtree(tmp, ignore_errors=True)
+    if not scored:
+        return [], len(probes), 0.0
+
+    median = sorted(s for _, s in scored)[len(scored) // 2]
+    # greedy top-N by change, spaced so one busy moment cannot eat the budget
+    min_gap = probe_every * 2
+    chosen: list[float] = []
+    for ts, _ in sorted(scored, key=lambda x: -x[1]):
+        if len(chosen) >= max_frames:
+            break
+        if all(abs(ts - c) >= min_gap for c in chosen):
+            chosen.append(ts)
+    # uniform backbone so quiet stretches are still represented
+    for ts in _frange(backbone_every / 2, duration, backbone_every):
+        if all(abs(ts - c) >= min_gap for c in chosen):
+            chosen.append(ts)
+    return sorted(chosen), len(probes), median
+
+
+def _frange(start, stop, step):
+    t = start
+    while t < stop:
+        yield t
+        t += step

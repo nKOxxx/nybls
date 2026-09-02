@@ -12,6 +12,29 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.3.0] — 2026-09-02
+
+### Added
+- **`nybls study --adaptive`** — probes the video densely at low resolution for
+  free (no vision tokens), scores each probe by how much the picture changed, and
+  spends the image budget only on the biggest changes. A uniform backbone is
+  merged in so a quiet stretch is never wholly unrepresented. `--region x,y,w,h`
+  restricts scoring to part of the frame; `--max-frames` bounds the spend.
+  On a 48-minute lesson: 583 probes free, 71 frames looked at, 12 images total —
+  5-second temporal resolution for less than a uniform 30-second pass costs.
+
+### Fixed
+- The adaptive sampler's first implementation used perceptual hashing to detect
+  change. That was backwards: a perceptual hash is designed to be *robust* to
+  small changes. Measured on the test video, board states ten seconds apart
+  differed by 2-4 bits of a 64-bit hash, below any usable threshold, so real
+  moves were classified as "no change". Replaced with mean absolute pixel
+  difference, which separates the quiet floor (0.03-0.3) from move and
+  annotation activity (1.0-1.8) cleanly. **Use the hash to detect duplicates,
+  never to detect change.**
+- The probe loop capped at 400 samples, silently truncating coverage of anything
+  longer than ~33 minutes at a 5-second probe interval.
+
 ## [0.2.0] — 2026-09-02
 
 ### Added
