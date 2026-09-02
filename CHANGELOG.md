@@ -12,6 +12,28 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.5.0] — 2026-09-02
+
+### Added
+- **`nybls contract --purpose "..." --shape teach|rebuild|procedure|brief`** —
+  the extraction contract for a stated purpose. Every comparable tool hardcodes
+  one ontology; the shape of what you extract should follow from why you are
+  extracting it. Teaching a beginner and reconstructing a system want different
+  objects out of the same video.
+- **`nybls extract-check <id> --file out.json`** — validates an extraction
+  against its contract *and* mechanically verifies every citation, reported
+  separately. Cross-references must resolve: a prerequisite pointing at nothing,
+  or a contradiction naming a claim that is not present, is an error.
+- Claims carry two clocks — `at` (video time) and `observed` (publication date)
+  — after ATOM (arXiv:2510.22590). The second only matters across a corpus, where
+  it separates "two sources disagree" from "one person changed their mind".
+- **First test suite** (18 tests) over the two pure-logic modules, including a
+  control that a plausible but fabricated claim must fail verification.
+
+### Notes
+- Structural validation is dependency-free on purpose. The schemas are simple and
+  every added dependency is install friction.
+
 ## [0.4.0] — 2026-09-02
 
 ### Added

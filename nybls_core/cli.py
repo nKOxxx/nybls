@@ -263,6 +263,62 @@ def cmd_verify(args) -> int:
     return 0 if all(v.status == "verified" for v in verdicts) else 1
 
 
+def cmd_contract(args) -> int:
+    from . import contracts as ct
+    print(ct.render(args.shape, args.purpose))
+    return 0
+
+
+def cmd_extract_check(args) -> int:
+    """Structure and citations, checked separately and reported together."""
+    from . import contracts as ct
+    from . import verify as vf
+
+    obj = json.loads(Path(args.file).read_text())
+    shape = args.shape or obj.get("shape")
+    if shape not in ct.SHAPES:
+        print(f"unknown or missing shape; use --shape ({', '.join(ct.SHAPES)})", file=sys.stderr)
+        return 1
+
+    errs = ct.validate(obj, shape)
+    root = ct.SHAPES[shape]["root"]
+    items = obj.get(root, []) if isinstance(obj, dict) else []
+    print(f"extraction: {len(items)} {root} · shape '{shape}'\n")
+
+    print("structure")
+    if errs:
+        for e in errs[:20]:
+            print(f"  ✗ {e}")
+        if len(errs) > 20:
+            print(f"  … and {len(errs) - 20} more")
+    else:
+        print("  ✓ conforms to the contract")
+
+    ws = workspace(args.id)
+    tpath = ws / "transcript.txt"
+    if not tpath.exists():
+        print("\ncitations\n  ? no transcript — run `nybls probe` first")
+        return 1
+
+    segs = vf.load_transcript(tpath)
+    label = {"teach": "name", "rebuild": "decision", "procedure": "action", "brief": "claim"}[shape]
+    verdicts = []
+    for it in items:
+        if not isinstance(it, dict) or "at" not in it:
+            continue
+        text = " ".join(str(it.get(k, "")) for k in (label, "plain", "rationale", "quote", "evidence"))
+        verdicts.append(vf.verify_claim(segs, text.strip(), float(it["at"])))
+
+    print("\ncitations")
+    print(vf.report(verdicts))
+    bad = [v for v in verdicts if v.status in ("unsupported", "out-of-range")]
+    if not errs and not bad:
+        print("\n  extraction accepted.")
+        return 0
+    print(f"\n  rejected: {len(errs)} structural, {len(bad)} unsupported citations.")
+    return 1
+
+
 def cmd_doctor(args) -> int:
     """What works right now, and what any missing piece would unlock."""
     import shutil
@@ -401,6 +457,17 @@ def main() -> int:
                     help="with --adaptive: how many of the biggest changes to actually look at")
     st.add_argument("--force", action="store_true", help="HUMAN override for the budget stop")
     st.set_defaults(fn=cmd_study)
+
+    sc = sub.add_parser("contract", help="print the extraction contract for a purpose")
+    sc.add_argument("--purpose", required=True)
+    sc.add_argument("--shape", default="teach", help="teach | rebuild | procedure | brief")
+    sc.set_defaults(fn=cmd_contract)
+
+    sx = sub.add_parser("extract-check", help="validate an extraction and verify every citation")
+    sx.add_argument("id")
+    sx.add_argument("--file", required=True)
+    sx.add_argument("--shape")
+    sx.set_defaults(fn=cmd_extract_check)
 
     sv2 = sub.add_parser("verify", help="check every cited timestamp against the transcript")
     sv2.add_argument("id")
