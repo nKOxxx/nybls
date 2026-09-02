@@ -9,7 +9,7 @@
       "name": "nybls",
       "source": "./",
       "description": "Watch videos properly: transcript first, contact sheets for coverage, then only the frames the model names a gap for \u2014 with a spend ledger and evidence receipts.",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "license": "MIT",
       "keywords": [
         "video",

@@ -110,6 +110,31 @@ def whisper(video: Path, out_dir: Path, model: str = DEFAULT_MODEL, lang: str = 
     return segs
 
 
+def looks_degenerate(segs: list[tuple[float, str]]) -> str | None:
+    """Whisper on audio it cannot handle does not fail — it loops.
+
+    Run an English-only model over Hindi, or any model over music, and it emits
+    the same line hundreds of times and reports success. Measured on a real
+    25-minute video: one identical line repeated for 23 of them, presented as a
+    healthy transcript. A silent wrong answer is worse than a loud failure, so
+    detect the loop and say so.
+    """
+    if len(segs) < 20:
+        return None
+    lines = [t.strip().lower() for _, t in segs]
+    unique = len(set(lines))
+    if unique / len(lines) < 0.25:
+        return (f"only {unique} distinct lines in {len(lines)} — the model looped, "
+                f"which usually means the audio is not the model's language")
+    longest = worst = 1
+    for a, b in zip(lines, lines[1:]):
+        longest = longest + 1 if a == b else 1
+        worst = max(worst, longest)
+    if worst >= 12:
+        return f"one line repeated {worst} times consecutively — the model looped"
+    return None
+
+
 def build_transcript(media_id: str, ws: Path, video: Path,
                      model: str = DEFAULT_MODEL) -> tuple[Path | None, str]:
     vtts = sorted(ws.glob("*.vtt"))
@@ -125,4 +150,13 @@ def build_transcript(media_id: str, ws: Path, video: Path,
         return None, "none"
     out = ws / "transcript.txt"
     out.write_text("\n".join(f"{_fmt(t)} {text}" for t, text in segs))
+
+    if source.startswith("whisper"):
+        problem = looks_degenerate(segs)
+        if problem:
+            hint = ""
+            if MODELS[model][0].endswith(".en.bin"):
+                hint = (f"  The '{model}' model is English-only. For other languages "
+                        f"re-run with --model turbo.")
+            source = f"{source} — UNRELIABLE: {problem}.{hint}"
     return out, source

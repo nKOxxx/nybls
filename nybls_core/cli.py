@@ -12,6 +12,11 @@ from . import transcribe as tr
 from .store import read_manifest, scrub, workspace, write_manifest
 
 
+def tr_default():
+    from . import transcribe as _t
+    return _t.DEFAULT_MODEL
+
+
 def cmd_probe(args) -> int:
     media_id, path = ing.ingest(args.source)
     ws = workspace(media_id)
@@ -36,7 +41,7 @@ def cmd_probe(args) -> int:
         return 0
 
     scenes = media.detect_scenes(path, ws)
-    tpath, tsource = tr.build_transcript(media_id, ws, path)
+    tpath, tsource = tr.build_transcript(media_id, ws, path, model=args.model)
     write_manifest(media_id, {
         "source": args.source if args.source.startswith("https://") else "local",
         "title": title, **info,
@@ -417,6 +422,9 @@ def main() -> int:
 
     sp = sub.add_parser("probe", help="ingest + transcript + scenes (0 images)")
     sp.add_argument("source", help="https URL or local file path")
+    sp.add_argument("--model", default=tr_default(),
+                    help="speech model when a video has no captions: tiny|base|small|turbo "
+                         "(default base, English-only; use turbo for other languages)")
     sp.set_defaults(fn=cmd_probe)
 
     ss = sub.add_parser("sheet", help="3x2 timestamped contact sheet")

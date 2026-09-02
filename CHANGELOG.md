@@ -44,6 +44,27 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.7.0] — 2026-09-02
+
+### Fixed
+- **Silent ASR failure.** Whisper does not fail on audio it cannot handle — it
+  loops, emitting the same line indefinitely and reporting success. A real
+  25-minute video with no captions fell back to the English-only default model
+  over Hindi audio and produced 65 distinct lines across 907, one repeated for 23
+  minutes, presented as a healthy transcript. Degenerate output is now detected
+  and the transcript labelled UNRELIABLE, naming the model and pointing at
+  `--model turbo` when the English-only default is the likely cause.
+
+### Added
+- `probe --model tiny|base|small|turbo` to choose the speech model up front.
+
+### Changed
+- Benchmark extended to **eight videos, forty questions, sixteen arms**
+  (`bench/RESULTS.md`): iterative 80/80, one-shot 65/80, with round 3's iterative
+  arms scoring higher on 47% of the images. The gap narrows on short and visually
+  repetitive video while the cost advantage persists — one video tied on accuracy
+  at half the spend. Two of the judge's own predictions are recorded as wrong.
+
 ## [0.6.0] — 2026-09-02
 
 ### Fixed

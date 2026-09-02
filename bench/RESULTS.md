@@ -1,17 +1,15 @@
 # Benchmark — iterative vs one-shot
 
-Two rounds, **four videos**, twenty questions, eight isolated arms.
+Three rounds, **eight videos, forty questions, sixteen isolated arms.**
 
 ## Method
 
 Questions and ground truth are written **before** any arm runs. Both arms are
 separate subagents with clean contexts; neither is the judge, neither sees the
-other's evidence or the ground truth. Every candidate answer is checked against
-the transcript first, and any term that appears in the narration is rejected as a
-question — otherwise the benchmark tests reading, not watching.
+other's evidence or the ground truth.
 
-- **One-shot (control)** — transcript + 30 frames at uniform intervals, handed
-  over at once. This is what the field does today.
+- **One-shot (control)** — transcript + 30 frames at uniform intervals, all at
+  once. This is what the field does today.
 - **Iterative (nybls)** — the CLI and the WATCH protocol: free transcript, a
   coverage pass, a confidence check each round, then only what it names a gap for.
 
@@ -20,68 +18,91 @@ Scoring: 2 correct and complete · 1 partial · 0 wrong or "insufficient evidenc
 
 ## Results
 
-| Round | Video | Scene cuts | One-shot | Iterative |
-|---|---|---|---|---|
-| 1 | PS3 teardown (20 min) | 22 | 5/10 · 30 frames + 8 crops | **10/10 · 9 images** |
-| 2 | Motorsport doc (27 min) | 1,700 | 7/10 · 35 reads | **10/10 · 26 images** |
-| 2 | McLaren rebuild (48 min) | 814 | 8/10 · 30 reads | **10/10 · ~30 images** |
-| 2 | GT3RS rebuild (81 min) | 726 | 9/10 · 35 reads | **10/10 · 16 images** |
-| | **Total** | | **29/40** | **40/40** |
+| Round | Video | Length | Cuts | One-shot | Iterative |
+|---|---|---|---|---|---|
+| 3 | Jet engine animation | 5 min | 2 | 9/10 · 30 img | **10/10 · 13 img** |
+| 3 | Docker tutorial | 12 min | 293 | 8/10 · 30 | **10/10 · 11** |
+| 1 | PS3 teardown | 20 min | 22 | 5/10 · 30+8 | **10/10 · 9** |
+| 3 | Stock documentary | 25 min | 201 | **10/10** · 30 | **10/10 · 15** |
+| 2 | Motorsport doc | 27 min | 1,700 | 7/10 · 35 | **10/10 · 26** |
+| 3 | History of Rome | 44 min | 395 | 9/10 · 30 | **10/10 · 17** |
+| 2 | McLaren rebuild | 48 min | 814 | 8/10 · 30 | **10/10 · ~30** |
+| 2 | GT3RS rebuild | 81 min | 726 | 9/10 · 35 | **10/10 · 16** |
+| | **Total** | | | **65/80** | **80/80** |
+
+Round 3 has the cleanest cost figures: control 120 images, iterative 56 — the
+iterative arm scored higher on **47%** of the images.
 
 ## Where the difference actually is
 
-Not general comprehension. The controls were strong, careful, and repeatedly
-honest — twice declining to guess rather than fabricate. The gap sits almost
-entirely in **one failure, replicated four times**: a brief, one-time on-screen
-graphic falling between two uniform samples.
+Not comprehension. The controls were careful, often exceeded the judge's own
+reference, and repeatedly said "insufficient evidence" rather than guess. The
+gap sits in **one failure, replicated seven times**: a brief, one-time on-screen
+element falling between two uniform samples.
 
-| Video | The thing missed | Sampled at | Missed by |
+| Video | Missed | Sampled at | Missed by |
 |---|---|---|---|
-| PS3 teardown | "Cleaning Process" title card, 08:41 | 08:21 / 09:01 | 20 s |
-| Motorsport | race-results graphic, 02:42 | 02:16 / 03:11 | 26 s |
-| McLaren | iMessage screenshot, 42:12 | 40:55 / 42:31 | 19 s |
-| GT3RS | warranty document, 72:27 | 71:22 / 74:03 | 65 s |
+| PS3 teardown | "Cleaning Process" title card | 08:21 / 09:01 | 20 s |
+| Motorsport | race-results graphic | 02:16 / 03:11 | 26 s |
+| McLaren | iMessage screenshot | 40:55 / 42:31 | 19 s |
+| GT3RS | warranty policy document | 71:22 / 74:03 | 65 s |
+| Jet engine | "310–620 mph" overlay | 03:15 / 03:25 | 7 s |
+| Rome | Hadrian's Wall | 24:29 / 25:58 | 8 s |
+| Docker | Dockerfile lines 13–20 | never sampled | — |
 
-A fixed grid cannot land on a brief graphic except by luck, and cannot go back
-once it learns the graphic exists. Every control missed these; every iterative
-arm found them.
+The Docker case is the starkest: asked for the port number and the
+`.dockerignore` contents, the control reported honestly that those lines never
+appear in its thirty frames — they genuinely didn't — and inferred the port from
+a container mapping. The iterative arm read `ENV PORT=9000` on line 17 directly.
 
-The zoom tool earns its place on small text: the GT3RS arm read a number plate
-and a vehicle-history card by cropping into two frames, scoring 10/10 on an
-81-minute video for **16 images** — under half what the control used.
+A fixed grid also spends samples on nothing: one of the Rome control's thirty
+frames was a **fade to black**, 1/30th of its budget returning zero information.
+
+## Effect of duration — the useful finding
+
+**The accuracy gap narrows as videos get shorter; the cost advantage does not.**
+
+At 5 minutes a 30-frame grid samples every 10 seconds and catches almost
+everything: the control scored 9/10, and the iterative arm won by one point while
+spending 13 images against 30. At 25 minutes on visually repetitive talking-head
+content the arms **tied at 10/10**, iterative at half the spend.
+
+So below roughly ten minutes the honest claim is not "more correct" — it is
+"same answer, less than half the cost". Above it, correctness diverges too.
 
 ## What must be said against the result
 
-- **The round-1 prediction was only half right.** Round 1 predicted faster-cut
-  material would widen the gap. Directionally it did — the widest gap (3 points)
-  was on the 1,700-cut video and the narrowest (1 point) on the 726-cut one — but
-  the controls scored **7–9 here against 5 in round 1**, so this material is
-  *easier for both arms*, not harder for one. The prediction as written
-  overstated the effect.
+- **Two of the judge's predictions were wrong.** Round 1 predicted fast-cut
+  material would widen the gap: directionally right (widest gap on the 1,700-cut
+  video) but overstated, since controls scored 7–9 on round 2 against 5 in round
+  1. Round 3 predicted the gap would *close* at 5 minutes: it narrowed and did
+  not close.
 - **"One-shot" was never purely one-shot.** Given file access, controls generated
   their own zoom crops — 5, 8 and 30 extra reads beyond the supplied 30. That is
   iterative behaviour leaking into the control, and it flatters the control.
-- **The judge's ground truth was exceeded six times.** Arms found a second title
-  card, a vacuuming step, a whole podium ceremony, video-game footage, two extra
-  diagnostic devices and branding on five objects where the reference had one. A
-  reference built by sampling loses to a method that looks harder — which is
-  exactly what is under test. This is a real weakness in the benchmark's
-  construction.
-- **Round 2's iterative arm had `study --adaptive`, which round 1's did not.**
-  The two rounds are therefore not the same arm and should not be pooled naively.
-- **n = 4.** Four videos, two domains, one judge. A signal, not a proof.
+- **The judge's ground truth was exceeded at least seven times** — a second title
+  card, a vacuuming step, whole podium ceremonies, video-game footage, extra
+  diagnostic devices, branding on five objects where the reference had one. A
+  reference built by sampling loses to a method that looks harder, which is
+  exactly what is under test.
+- **The "verified absent from transcript" check was weaker than stated.** It used
+  exact string matching, so a term written `node_modules` but *spoken* "node
+  modules" passed as visual-only when it was not. Questions about branding,
+  layout and graphics are unaffected; questions about written identifiers are.
+- **Arms were not identical across rounds.** Round 2 and 3 iterative arms had
+  `study --adaptive`; round 1's did not. Rounds should not be pooled naively.
+- **One judge, one scoring pass, no blind grading.**
 
-## Bugs the benchmark surfaced
+## Bugs the benchmark found
 
-- **Scene drift, since fixed.** Two targeted requests landed on adjacent shots.
-  Measured across three videos, **21 of 24 one-second offsets landed in a visibly
-  different shot** (mean pixel difference 24–53). Sheets now record the exact
-  moment each tile was rendered — 255.035 s, not 255 — and `frames` snaps to it,
-  verified as an exact match on all three videos.
-- **A ledger reading zero.** Both iterative arms reported it independently. It was
-  an artifact of the sandboxed environment the benchmark arms run in discarding
-  their writes, not a product fault; verified by reproducing the same commands
-  outside the sandbox, where the ledger records correctly.
-
-Two arms catching and correctly diagnosing an instrument problem is a better
-outcome than either silently reporting a wrong number.
+- **Scene drift (fixed, v0.6.0).** Sheet tiles render at 255.035 s, not 255, so a
+  request for the labelled second returned a different moment — on fast-cut
+  material, a different shot. Measured: **21 of 24 one-second offsets landed in a
+  visibly different shot.** Sheets now record real timestamps and `frames` snaps.
+- **Silent ASR failure (fixed, v0.7.0).** A video with no captions fell back to
+  the English-only default model over Hindi audio. Whisper did not fail — it
+  looped, emitting **65 distinct lines across 907**, one line repeated for 23 of
+  25 minutes, reported as a healthy transcript. Both iterative arms diagnosed it
+  independently. Now detected and labelled UNRELIABLE, with the model named.
+- **A ledger reading zero** — an artifact of the sandboxed environment the
+  benchmark arms run in, not a product fault; verified by reproducing outside it.
