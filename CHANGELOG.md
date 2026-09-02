@@ -12,6 +12,30 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.4.0] — 2026-09-02
+
+### Added
+- **`nybls verify <id> --claims claims.json`** — mechanical citation checking.
+  Every claim names a timestamp; the verifier pulls the transcript window around
+  it and reports the fraction of the claim's content words actually present, as
+  `verified` / `weak` / `unsupported`, listing what it could not find.
+  A citation is never trusted because a model asserted it.
+
+  Rationale: on a 2026 grounded-video-QA benchmark, frontier models scored 8.5%
+  and 1.5% on evidence grounding while scoring 45% and 41% on answer accuracy.
+  Every large quality gain in that literature came from adding a separate
+  checking step, not from better prompting.
+
+  Validated against a hand-made extraction of a 48-minute lesson: 14 of 15 claims
+  verified, and a deliberately wrong control claim was caught at 22%.
+
+### Fixed
+- The verifier's first version produced a false negative on a correct claim,
+  because ASR and a written claim disagree on word form ("ask"/"asking",
+  "save"/"saves") and on numerals ("90%" vs "90 percent"). Added light suffix
+  stripping and numeral normalisation; the control claim still fails at 22%,
+  so the check did not simply get looser.
+
 ## [0.3.0] — 2026-09-02
 
 ### Added

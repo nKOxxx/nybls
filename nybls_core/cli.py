@@ -247,6 +247,22 @@ def _frange(start, stop, step):
         t += step
 
 
+def cmd_verify(args) -> int:
+    from . import verify as vf
+    ws = workspace(args.id)
+    tpath = ws / "transcript.txt"
+    if not tpath.exists():
+        print(f"no transcript for {args.id} — run `nybls probe` first", file=sys.stderr)
+        return 1
+    verdicts = vf.verify_file(tpath, Path(args.claims))
+    if args.json:
+        print(vf.to_json(verdicts))
+    else:
+        print(f"verifying {len(verdicts)} claims against {args.id}\n")
+        print(vf.report(verdicts))
+    return 0 if all(v.status == "verified" for v in verdicts) else 1
+
+
 def cmd_doctor(args) -> int:
     """What works right now, and what any missing piece would unlock."""
     import shutil
@@ -385,6 +401,12 @@ def main() -> int:
                     help="with --adaptive: how many of the biggest changes to actually look at")
     st.add_argument("--force", action="store_true", help="HUMAN override for the budget stop")
     st.set_defaults(fn=cmd_study)
+
+    sv2 = sub.add_parser("verify", help="check every cited timestamp against the transcript")
+    sv2.add_argument("id")
+    sv2.add_argument("--claims", required=True, help='JSON: [{"claim": "...", "at": 242}]')
+    sv2.add_argument("--json", action="store_true")
+    sv2.set_defaults(fn=cmd_verify)
 
     sd = sub.add_parser("doctor", help="check what is installed and what works")
     sd.set_defaults(fn=cmd_doctor)
