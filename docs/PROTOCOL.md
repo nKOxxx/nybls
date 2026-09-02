@@ -12,6 +12,34 @@ using 8.4 chosen ones (arXiv:2403.10517).
 
 ---
 
+## Two modes — pick one before you start
+
+The loop below is **answer mode**: a question exists, and stopping as soon as it
+is answered is correct. It is the wrong mode for a dense instructional video.
+
+**Study mode** is for comprehension: "watch this and tell me what's in it",
+tutorials, lectures, anything where the goal is to absorb rather than to look
+something up.
+
+```bash
+nybls study <id> [--every SECONDS]
+```
+
+It samples the whole video on a clock and returns every sheet at once. Read all
+of them. Do not stop early — there is no question to satisfy, so "sufficient"
+does not apply until the video is covered.
+
+Default interval scales with length: 10s up to 5 min, 20s to 20 min, 30s to
+60 min, 45s beyond. A 48-minute video costs 17 sheets, about 3 cents.
+
+**Why a clock and not scene detection.** Scene detection is the wrong signal for
+static-camera instructional content. A 48-minute chess lesson recorded as one
+continuous screen capture yields *three* scene cuts, because the frame
+composition never changes — while the board, the thing that carries all the
+information, changes every move. Anything shot as a fixed screen recording (a
+board, a slide deck, an IDE, a dashboard) has the same shape. Sampling on cuts
+sees nothing; sampling on a clock sees everything.
+
 ## The loop
 
 ### Round 0 — free

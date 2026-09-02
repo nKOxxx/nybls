@@ -12,6 +12,27 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.2.0] — 2026-09-02
+
+### Added
+- **`nybls study`** — a comprehension pass over the whole video. Samples on a
+  clock (10s/20s/30s/45s by length, `--every` to override) and emits every sheet
+  at once. For dense instructional video, minimal spend was the wrong objective:
+  a 48-minute lesson answered with one image describes the format, not the
+  content.
+
+### Changed
+- The protocol now distinguishes **answer mode** (a question exists; stop when
+  answered) from **study mode** (comprehension; cover the whole video). The skill
+  defaults to study mode for instructional material when intent is ambiguous.
+
+### Known limitation, now documented
+- **Scene detection is the wrong signal for static-camera content.** A 48-minute
+  chess lesson recorded as one continuous screen capture produced three scene
+  cuts, while the board changed every move. Study mode therefore ignores scenes
+  entirely and samples on a clock. Scene-adaptive sheets remain the default for
+  edited footage.
+
 ## [0.1.1] — 2026-09-01
 
 ### Fixed

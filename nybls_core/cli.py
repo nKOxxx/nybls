@@ -1,6 +1,7 @@
 """nybls — nybls CLI. Five commands: probe, sheet, frames, zoom, ledger."""
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -169,6 +170,67 @@ def cmd_ledger(args) -> int:
     return 0
 
 
+def default_interval(duration_s: float) -> int:
+    """Sampling interval for study mode, in seconds.
+
+    Scene detection is the wrong signal for static-camera instructional video
+    (a chess board, a slide deck, an IDE): the frame composition never changes
+    while the information changes constantly. Study mode therefore samples on a
+    clock, not on cuts, and stays dense enough that a move, a slide, or a step
+    is unlikely to fall between two samples.
+    """
+    m = duration_s / 60
+    if m <= 5:
+        return 10
+    if m <= 20:
+        return 20
+    if m <= 60:
+        return 30
+    return 45
+
+
+def cmd_study(args) -> int:
+    ws, m, video = _ctx(args.id)
+    dur = m["duration_s"]
+    every = args.every or default_interval(dur)
+    stamps = [t for t in _frange(every / 2, dur, every)]
+    n_sheets = math.ceil(len(stamps) / 6)
+
+    budget = led.budget_for(dur)
+    lp = ws / "ledger.json"
+    spent = json.loads(lp.read_text())["images"] if lp.exists() else 0
+    if spent + n_sheets > budget and not args.force:
+        room = max(budget - spent, 0)
+        print(f"study at {every}s needs {n_sheets} sheets but only {room} units remain "
+              f"of {budget}. Use a larger --every, or --force.", file=sys.stderr)
+        return 1
+
+    print(f"study pass: {len(stamps)} tiles every {every}s → {n_sheets} sheets "
+          f"({n_sheets} of {budget} budget units)")
+    idx = len(list((ws / "frames").glob("sheet_*.png")))
+    outs = []
+    for i in range(n_sheets):
+        chunk = stamps[i * 6:(i + 1) * 6]
+        if not chunk:
+            break
+        out = media.make_sheet(video, ws, chunk, idx + i)
+        outs.append(out)
+        span = f"{int(chunk[0]//60):02d}:{int(chunk[0]%60):02d}–{int(chunk[-1]//60):02d}:{int(chunk[-1]%60):02d}"
+        print(f"  {scrub(str(out))}  [{span}]")
+    ledger = led.record(ws, "study", outs)
+    print(f"spend: {ledger['images']} images / {budget} budget")
+    print("next: Read every sheet in order. This is a comprehension pass, not a "
+          "question — build the whole picture, then drill into what the sheets show matters.")
+    return 0
+
+
+def _frange(start, stop, step):
+    t = start
+    while t < stop:
+        yield t
+        t += step
+
+
 def cmd_serve(args) -> int:
     from . import receiver
     return receiver.serve(args.window)
@@ -254,6 +316,12 @@ def main() -> int:
     sl = sub.add_parser("ledger", help="spend summary")
     sl.add_argument("id")
     sl.set_defaults(fn=cmd_ledger)
+
+    st = sub.add_parser("study", help="dense comprehension pass over the whole video")
+    st.add_argument("id")
+    st.add_argument("--every", type=int, metavar="SEC", help="seconds between tiles (default scales with length)")
+    st.add_argument("--force", action="store_true", help="HUMAN override for the budget stop")
+    st.set_defaults(fn=cmd_study)
 
     sv = sub.add_parser("serve", help="open the intake window (not a daemon)")
     sv.add_argument("--window", type=int, default=30, metavar="MIN",

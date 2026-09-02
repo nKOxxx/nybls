@@ -11,6 +11,17 @@ Tool: `nybls` (installed via `pip install nybls`). Commands: `probe`, `sheet`, `
 
 If the user says "watch the latest" / "what did I send", run `nybls inbox`. Items marked **pending** were shared but NOT downloaded — show them to the user and ask which to approve (`nybls approve <id>`); never approve on their behalf. Items marked **ready** are already downloaded and transcribed: start the loop below at Round 0 using the listed id.
 
+## Choose the mode FIRST
+
+- **A specific question** ("what does the chart at 14:00 show?") → answer mode, the loop below.
+- **Comprehension** ("watch this", "summarise this tutorial", "what does this teach?")
+  → `nybls study <id>`, then Read EVERY sheet it emits before answering. Minimal
+  spend is the wrong goal here: under-spending on a dense instructional video
+  produces a summary of the format instead of the content. Do not stop early.
+
+If the user's intent is ambiguous and the video is instructional (a lecture, a
+tutorial, a lesson, a walkthrough), default to study mode.
+
 ## The loop (never skip steps, never reorder)
 
 **Round 0 — free (0 images).**
