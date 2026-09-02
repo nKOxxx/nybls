@@ -1,0 +1,300 @@
+{
+ "media_id": "f1wnYdLEpgI",
+ "title": "Learn Git Rebase in 6 minutes // explained with live animations!",
+ "duration_s": 402.4,
+ "probe_every_s": 10.0,
+ "n_pairs": 39,
+ "n_usable_ocr_pairs": 38,
+ "n_content_changes": 21,
+ "n_non_changes": 17,
+ "ocr_threshold": 0.5,
+ "scene_cuts": 10,
+ "scene_cuts_per_min": 1.49,
+ "phash": {
+  "median": 4.0,
+  "p90": 34.4,
+  "max": 38.0,
+  "auc_vs_ocr": 0.881
+ },
+ "pixdiff": {
+  "median": 4.3744,
+  "p90": 86.6324,
+  "max": 163.4015,
+  "auc_vs_ocr": 0.9552
+ },
+ "rows": [
+  {
+   "t": 15.0,
+   "phash_hamming": 34,
+   "pixdiff": 84.5663,
+   "ocr_jaccard": 1.0,
+   "ocr_words_now": 8
+  },
+  {
+   "t": 25.0,
+   "phash_hamming": 2,
+   "pixdiff": 2.4378,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 8
+  },
+  {
+   "t": 35.0,
+   "phash_hamming": 6,
+   "pixdiff": 6.2488,
+   "ocr_jaccard": 0.625,
+   "ocr_words_now": 3
+  },
+  {
+   "t": 45.0,
+   "phash_hamming": 2,
+   "pixdiff": 3.0394,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 3
+  },
+  {
+   "t": 55.0,
+   "phash_hamming": 4,
+   "pixdiff": 4.2721,
+   "ocr_jaccard": 0.625,
+   "ocr_words_now": 8
+  },
+  {
+   "t": 65.0,
+   "phash_hamming": 0,
+   "pixdiff": 2.0098,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 8
+  },
+  {
+   "t": 75.0,
+   "phash_hamming": 4,
+   "pixdiff": 1.5875,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 8
+  },
+  {
+   "t": 85.0,
+   "phash_hamming": 36,
+   "pixdiff": 131.0059,
+   "ocr_jaccard": 0.9674,
+   "ocr_words_now": 87
+  },
+  {
+   "t": 95.0,
+   "phash_hamming": 32,
+   "pixdiff": 135.3824,
+   "ocr_jaccard": 1.0,
+   "ocr_words_now": 3
+  },
+  {
+   "t": 105.0,
+   "phash_hamming": 8,
+   "pixdiff": 5.7862,
+   "ocr_jaccard": 0.625,
+   "ocr_words_now": 8
+  },
+  {
+   "t": 115.0,
+   "phash_hamming": 6,
+   "pixdiff": 3.3225,
+   "ocr_jaccard": 0.25,
+   "ocr_words_now": 6
+  },
+  {
+   "t": 125.0,
+   "phash_hamming": 36,
+   "pixdiff": 39.1777,
+   "ocr_jaccard": 0.9643,
+   "ocr_words_now": 23
+  },
+  {
+   "t": 135.0,
+   "phash_hamming": 2,
+   "pixdiff": 0.3321,
+   "ocr_jaccard": 0.4333,
+   "ocr_words_now": 24
+  },
+  {
+   "t": 145.0,
+   "phash_hamming": 38,
+   "pixdiff": 41.7818,
+   "ocr_jaccard": 0.9655,
+   "ocr_words_now": 6
+  },
+  {
+   "t": 155.0,
+   "phash_hamming": 2,
+   "pixdiff": 1.7377,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 6
+  },
+  {
+   "t": 165.0,
+   "phash_hamming": 36,
+   "pixdiff": 87.4301,
+   "ocr_jaccard": 1.0,
+   "ocr_words_now": 1
+  },
+  {
+   "t": 175.0,
+   "phash_hamming": 8,
+   "pixdiff": 5.2204,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 1
+  },
+  {
+   "t": 185.0,
+   "phash_hamming": 6,
+   "pixdiff": 4.9732,
+   "ocr_jaccard": 1.0,
+   "ocr_words_now": 0
+  },
+  {
+   "t": 195.0,
+   "phash_hamming": 30,
+   "pixdiff": 86.433,
+   "ocr_jaccard": 1.0,
+   "ocr_words_now": 3
+  },
+  {
+   "t": 205.0,
+   "phash_hamming": 2,
+   "pixdiff": 2.3593,
+   "ocr_jaccard": 0.4,
+   "ocr_words_now": 5
+  },
+  {
+   "t": 215.0,
+   "phash_hamming": 0,
+   "pixdiff": 1.6271,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 5
+  },
+  {
+   "t": 225.0,
+   "phash_hamming": 0,
+   "pixdiff": 1.168,
+   "ocr_jaccard": 0.375,
+   "ocr_words_now": 8
+  },
+  {
+   "t": 235.0,
+   "phash_hamming": 0,
+   "pixdiff": 1.1177,
+   "ocr_jaccard": 0.3333,
+   "ocr_words_now": 7
+  },
+  {
+   "t": 245.0,
+   "phash_hamming": 2,
+   "pixdiff": 4.6265,
+   "ocr_jaccard": 0.6316,
+   "ocr_words_now": 19
+  },
+  {
+   "t": 255.0,
+   "phash_hamming": 2,
+   "pixdiff": 4.3744,
+   "ocr_jaccard": 0.6842,
+   "ocr_words_now": 6
+  },
+  {
+   "t": 265.0,
+   "phash_hamming": 0,
+   "pixdiff": 1.1965,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 6
+  },
+  {
+   "t": 275.0,
+   "phash_hamming": 0,
+   "pixdiff": 0.7693,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 6
+  },
+  {
+   "t": 285.0,
+   "phash_hamming": 2,
+   "pixdiff": 9.8625,
+   "ocr_jaccard": 0.8837,
+   "ocr_words_now": 42
+  },
+  {
+   "t": 295.0,
+   "phash_hamming": 4,
+   "pixdiff": 9.4627,
+   "ocr_jaccard": 0.8837,
+   "ocr_words_now": 6
+  },
+  {
+   "t": 305.0,
+   "phash_hamming": 2,
+   "pixdiff": 2.526,
+   "ocr_jaccard": 0.5,
+   "ocr_words_now": 12
+  },
+  {
+   "t": 315.0,
+   "phash_hamming": 6,
+   "pixdiff": 4.0408,
+   "ocr_jaccard": 0.6296,
+   "ocr_words_now": 25
+  },
+  {
+   "t": 325.0,
+   "phash_hamming": 6,
+   "pixdiff": 5.1494,
+   "ocr_jaccard": 0.76,
+   "ocr_words_now": 6
+  },
+  {
+   "t": 335.0,
+   "phash_hamming": 2,
+   "pixdiff": 2.9112,
+   "ocr_jaccard": 0.6,
+   "ocr_words_now": 15
+  },
+  {
+   "t": 345.0,
+   "phash_hamming": 6,
+   "pixdiff": 3.9933,
+   "ocr_jaccard": 0.5556,
+   "ocr_words_now": 24
+  },
+  {
+   "t": 355.0,
+   "phash_hamming": 4,
+   "pixdiff": 5.2592,
+   "ocr_jaccard": 0.6538,
+   "ocr_words_now": 46
+  },
+  {
+   "t": 365.0,
+   "phash_hamming": 4,
+   "pixdiff": 10.728,
+   "ocr_jaccard": 0.9375,
+   "ocr_words_now": 5
+  },
+  {
+   "t": 375.0,
+   "phash_hamming": 2,
+   "pixdiff": 5.1803,
+   "ocr_jaccard": 0.4,
+   "ocr_words_now": 3
+  },
+  {
+   "t": 385.0,
+   "phash_hamming": 0,
+   "pixdiff": 0.8165,
+   "ocr_jaccard": 0.0,
+   "ocr_words_now": 3
+  },
+  {
+   "t": 395.0,
+   "phash_hamming": 26,
+   "pixdiff": 163.4015,
+   "ocr_jaccard": 1.0,
+   "ocr_words_now": 12
+  }
+ ]
+}

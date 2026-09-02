@@ -1,0 +1,152 @@
+{
+ "n_frames": 30,
+ "visual_tokens_per_frame": 1792,
+ "videos": [
+  {
+   "media_id": "LP10_YdKEPw",
+   "title": "PS3 Super Slim Full Teardown & Deep Clean Step-by-",
+   "duration_s": 1202.6,
+   "grid_interval_s": 40.1,
+   "dead_zone_each_end_s": 20.0,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 401,
+   "visual_tokens_for_that": 718592
+  },
+  {
+   "media_id": "g9xUu2StOYg",
+   "title": "The WORST Driver in Motorsport History",
+   "duration_s": 1642.2,
+   "grid_interval_s": 54.7,
+   "dead_zone_each_end_s": 27.4,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 548,
+   "visual_tokens_for_that": 982016
+  },
+  {
+   "media_id": "5oNHF72wbmI",
+   "title": "I REBUILT THE MCLAREN THAT COPART GOT WRONG",
+   "duration_s": 2888.4,
+   "grid_interval_s": 96.3,
+   "dead_zone_each_end_s": 48.1,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 963,
+   "visual_tokens_for_that": 1725696
+  },
+  {
+   "media_id": "jgN4XWFUSb4",
+   "title": "I BOUGHT A BROKEN GT3RS THAT PORSCHE REFUSED TO FI",
+   "duration_s": 4848.0,
+   "grid_interval_s": 161.6,
+   "dead_zone_each_end_s": 80.8,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 1617,
+   "visual_tokens_for_that": 2897664
+  },
+  {
+   "media_id": "OngJKc-FAS0",
+   "title": "Give Me 48 Minutes and You'll Beat Everyone Under ",
+   "duration_s": 2913.2,
+   "grid_interval_s": 97.1,
+   "dead_zone_each_end_s": 48.6,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 972,
+   "visual_tokens_for_that": 1741824
+  },
+  {
+   "media_id": "F2FmTdLtb_4",
+   "title": "System Design Concepts Course and Interview Prep",
+   "duration_s": 3217.7,
+   "grid_interval_s": 107.3,
+   "dead_zone_each_end_s": 53.6,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 1073,
+   "visual_tokens_for_that": 1922816
+  },
+  {
+   "media_id": "aircAruvnKk",
+   "title": "But what is a neural network? | Deep learning chap",
+   "duration_s": 1120.0,
+   "grid_interval_s": 37.3,
+   "dead_zone_each_end_s": 18.7,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 374,
+   "visual_tokens_for_that": 670208
+  },
+  {
+   "media_id": "f1wnYdLEpgI",
+   "title": "Learn Git Rebase in 6 minutes // explained with li",
+   "duration_s": 402.4,
+   "grid_interval_s": 13.4,
+   "dead_zone_each_end_s": 6.7,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 135,
+   "visual_tokens_for_that": 241920
+  },
+  {
+   "media_id": "8NSyI-npJCU",
+   "title": "The NEW Agentic OS standard for Claude 5 Models is",
+   "duration_s": 1298.2,
+   "grid_interval_s": 43.3,
+   "dead_zone_each_end_s": 21.6,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 433,
+   "visual_tokens_for_that": 775936
+  },
+  {
+   "media_id": "N--Mj95mAYI",
+   "title": "REVEALING THE WRECKED CHIRON TO IT'S OWNER",
+   "duration_s": 2126.8,
+   "grid_interval_s": 70.9,
+   "dead_zone_each_end_s": 35.4,
+   "unreachable_fraction": 0.0333,
+   "frames_needed_for_3s_event": 709,
+   "visual_tokens_for_that": 1270528
+  }
+ ],
+ "events": [
+  {
+   "media_id": "LP10_YdKEPw",
+   "event": "mid-video title card",
+   "t_s": 521.0,
+   "visible_s": 3.0,
+   "nearest_uniform_sample_s": 501.1,
+   "gap_to_nearest_s": 19.9,
+   "captured_by_uniform_30": false,
+   "capture_probability": 0.0748,
+   "frames_needed_for_even_odds": 201
+  },
+  {
+   "media_id": "LP10_YdKEPw",
+   "event": "closing subscribe/thanks cards",
+   "t_s": 1185.0,
+   "visible_s": 15.0,
+   "nearest_uniform_sample_s": 1182.5,
+   "gap_to_nearest_s": 2.5,
+   "captured_by_uniform_30": true,
+   "capture_probability": 0.3742,
+   "frames_needed_for_even_odds": 41
+  },
+  {
+   "media_id": "g9xUu2StOYg",
+   "event": "race results graphic",
+   "t_s": 162.0,
+   "visible_s": 4.0,
+   "nearest_uniform_sample_s": 136.8,
+   "gap_to_nearest_s": 25.2,
+   "captured_by_uniform_30": false,
+   "capture_probability": 0.0731,
+   "frames_needed_for_even_odds": 206
+  },
+  {
+   "media_id": "5oNHF72wbmI",
+   "event": "iMessage screenshot",
+   "t_s": 2532.0,
+   "visible_s": 5.0,
+   "nearest_uniform_sample_s": 2551.4,
+   "gap_to_nearest_s": 19.4,
+   "captured_by_uniform_30": false,
+   "capture_probability": 0.0519,
+   "frames_needed_for_even_odds": 289
+  }
+ ]
+}

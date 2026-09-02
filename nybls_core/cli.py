@@ -136,10 +136,12 @@ def cmd_frames(args) -> int:
         if not 0 <= ts <= m["duration_s"]:
             print(f"timestamp {ts} outside video", file=sys.stderr)
             return 1
+        ts, snapped = media.snap_to_tile(ws, ts)
         out, dupe = media.extract_frame(video, ws, ts, args.width)
         outs.append(out)
         flag = "  [NEAR-DUPLICATE of an already-served frame]" if dupe else ""
-        print(f"frame {int(ts//60):02d}:{int(ts%60):02d}: {scrub(str(out))}{flag}")
+        note = "  (snapped to the sheet tile you saw)" if snapped else ""
+        print(f"frame {int(ts//60):02d}:{int(ts%60):02d}: {scrub(str(out))}{flag}{note}")
     ledger = led.record(ws, "frames", outs)
     print(f"spend: {ledger['images']} images / {led.budget_for(m['duration_s'])} budget")
     print("next: Read the frame(s), draft your answer, then classify honestly — "

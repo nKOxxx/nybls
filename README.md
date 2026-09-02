@@ -140,6 +140,8 @@ your agent, and the protocol requires that it be reported to you, not obeyed.
 
 ## Docs
 
-[Protocol](docs/PROTOCOL.md) · [Research & evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Benchmark](bench/RESULTS.md) · [Changelog](CHANGELOG.md)
+[Protocol](docs/PROTOCOL.md) · [Research & evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Changelog](CHANGELOG.md)
+
+Benchmarks: [round 1](bench/RESULTS.md) · [round 2](bench/RESULTS_round2.md) · [change-detection signals](bench/RESULTS_signals.md) · [paper draft](paper/)
 
 MIT.

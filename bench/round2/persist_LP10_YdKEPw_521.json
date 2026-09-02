@@ -1,0 +1,16 @@
+{
+ "media_id": "LP10_YdKEPw",
+ "signature": [
+  "cleaning process"
+ ],
+ "center_s": 521.0,
+ "step_s": 0.5,
+ "n_samples": 101,
+ "n_matching": 7,
+ "longest_run_frames": 7,
+ "measured_visible_s": 3.5,
+ "run_starts_s": 520.5,
+ "duration_s": 1202.6,
+ "capture_prob_uniform_30": 0.0873,
+ "frames_needed_even_odds": 171
+}

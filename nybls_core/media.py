@@ -78,7 +78,36 @@ def make_sheet(video: Path, ws: Path, timestamps: list[float], idx: int, tile_w:
         tmp.unlink(missing_ok=True)
     out = ws / "frames" / f"sheet_{idx:03d}.png"
     sheet.save(out)
+    remember_tiles(ws, timestamps)
     return out
+
+
+def remember_tiles(ws: Path, timestamps: list[float]) -> None:
+    """Record exactly which moments were rendered into a sheet.
+
+    A label reads "24:12", so the model asks for second 1452 - but the tile was
+    rendered at 1452.4, and on material cutting once a second that is a
+    different shot. Measured across three videos, 21 of 24 one-second offsets
+    landed in a visibly different shot. Keeping the real timestamps lets a
+    later request return the frame the model actually saw."""
+    p = ws / "tiles.json"
+    known = json.loads(p.read_text()) if p.exists() else []
+    known = sorted(set(known) | {round(float(t), 3) for t in timestamps})
+    p.write_text(json.dumps(known))
+
+
+def snap_to_tile(ws: Path, ts: float, tolerance: float = 3.0) -> tuple[float, bool]:
+    """Return the nearest rendered tile within tolerance, else the request."""
+    p = ws / "tiles.json"
+    if not p.exists():
+        return ts, False
+    known = json.loads(p.read_text())
+    if not known:
+        return ts, False
+    best = min(known, key=lambda k: abs(k - ts))
+    if abs(best - ts) <= tolerance and best != ts:
+        return best, True
+    return ts, False
 
 
 def extract_frame(video: Path, ws: Path, ts: float, width: int = 1568) -> tuple[Path, bool]:
@@ -118,12 +147,18 @@ def adaptive_timestamps(video: Path, ws: Path, duration: float, probe_every: flo
     resolution (no vision tokens), score each probe by mean absolute pixel
     difference from the previous one, and return only the biggest changes.
 
-    Why pixel difference and not a perceptual hash: a perceptual hash is built to
-    be ROBUST to small changes, which makes it blind to exactly what matters here.
-    Measured on a chess lesson, board states ten seconds apart differed by only
-    2-4 bits of a 64-bit phash - below any usable threshold - while the same
-    change was obvious in pixel difference. Use the hash to detect duplicates,
-    not to detect change.
+    Why pixel difference and not a perceptual hash: on static-camera content the
+    perceptual hash's distribution compresses into the same band the code uses to
+    declare two frames DUPLICATES (measured on a chess lesson: median 4, p90 8 of a
+    possible 64), leaving a threshold-based detector nowhere to sit. Pixel difference
+    keeps a usable range on the same footage (median 2.8, max 33.5).
+
+    NOTE, 2026-09-02: the stronger claim this docstring used to make - that a
+    perceptual hash is BLIND to content change - was tested against an independent
+    OCR reference across seven videos and did NOT hold (mean AUC 0.734 vs 0.762,
+    pixel difference better on only 2 of 4 usable videos). See
+    bench/RESULTS_signals.md. Pixel difference is retained for the compression
+    property above, not because the hash was shown to be useless.
 
     `region` (x, y, w, h in 0..1) restricts scoring to part of the frame. On
     split-screen instructional video a talking head changes constantly while the

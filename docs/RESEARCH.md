@@ -79,9 +79,15 @@ This is the load-bearing decision, and it is empirical rather than aesthetic.
   at equal frame count.
   → nybls: scene-medoid sheet timestamps rather than fixed intervals.
 
-- **Frame-count saturation** (arXiv:2502.19680) — video QA performance peaks
-  around 32 well-chosen frames; more uniform frames do not help.
+- **Query-adaptive frame selection** (arXiv:2502.19680) — selection driven by the
+  question beats uniform sampling at an equal downstream frame count.
   → nybls: budget ceilings are permission, not instruction.
+  **[CORRECTED 2026-09-02.** This entry previously claimed the paper showed video-QA
+  performance peaking around 32 well-chosen frames. Verification against the paper
+  found the opposite: it treats 32 frames as too few and samples 128 before selection.
+  No saturation finding exists in it. The nearest real support for a saturation-shaped
+  claim is A.I.R. (arXiv:2510.04428, Table 4) and VideoAgent's observation that more
+  frames do not always help.**]
 
 - **Necessary sampling density** (arXiv:2503.12496) — some questions are
   answerable at one frame per minute, others need ~1 fps in a narrow window;
@@ -159,11 +165,13 @@ Stated up front, because a claim that cannot fail is not a claim:
   server becomes a legacy path and only the budget/evidence discipline survives.
 - If measurement on a real benchmark shows the iterative loop **failing to beat a
   one-shot 30-frame dump** at equal or lower cost, the core premise is wrong.
-  First measurement (`bench/RESULTS.md`, 2026-09-01): on one 20-minute teardown,
-  iterative scored 10/10 against one-shot's 5/10 while spending 4.2x fewer visual
-  tokens, with the control failing precisely where a fixed sampling grid cannot
-  reach. **This is n=1** — a signal, not a finding, and the gap stays open until
-  it is repeated on fast-cut and dialogue-heavy material.
+  Round 1 (`bench/RESULTS.md`, 2026-09-01, n=1): iterative 10/10 vs one-shot 5/10 at
+  4.2x fewer visual tokens. Round 2 (`bench/RESULTS_round2.md`, 2026-09-02, n=3 with
+  a tightened control that could not zoom): **the margin did not replicate** — 25/30
+  vs 22/30. Combined across 4 videos and 20 questions: 35/40 vs 27/40 at 2.41x the
+  cost. The advantage is narrow and consistent, not a rout, and it narrowed as the
+  control was tightened. **Both arms failed the same question** — a 2.0-second
+  on-screen graphic — which iteration does not fix and only dense coverage reaches.
 - If the mechanical rails prove trivially bypassable by ordinary agent behavior,
   the "works for unprompted agents" claim fails.
 
@@ -183,3 +191,35 @@ Stated up front, because a claim that cannot fail is not a claim:
   UNVERIFIED.
 - Maturity: the frame server and protocol are IMPLEMENTED and used daily. Formal
   benchmarking is ENVISIONED, not done.
+
+
+---
+
+## 8. Corrections log
+
+Claims that were stated in this repository and did not survive verification. Recorded
+rather than silently edited, because the point of the document is traceability.
+
+**2026-09-02 — "use the hash to detect duplicates, never to detect change" (WITHDRAWN).**
+Stated in CHANGELOG 0.3.0 and in the `adaptive_timestamps` docstring on the strength of
+one observation on one chess lesson. Measured properly against an independent OCR
+reference across seven videos (`bench/RESULTS_signals.md`): mean AUC 0.734 for perceptual
+hashing against 0.762 for pixel difference, with pixel difference better on only 2 of 4
+videos where the reference was usable. **At n=4 this is not a real effect.** What survives
+is narrower: on static-camera content the perceptual hash's distribution compresses into
+the same band used for duplicate detection (median 4, p90 8 of a possible 64), leaving a
+threshold detector nowhere to sit. The static-camera case itself remains **untested**,
+because a chess move changes the board and not the on-screen text, so the OCR reference is
+degenerate exactly where the original claim was made.
+
+**2026-09-02 — the EG-VQA grounding statistic (RESTATED).** CHANGELOG 0.4.0 stated that
+"frontier models scored 8.5% and 1.5% on evidence grounding while scoring 45% and 41% on
+answer accuracy," with no citation. The source is EG-VQA (arXiv:2606.24797). The four
+numbers are all real but were **assembled from two different metric columns**: 8.49 is
+GPT-4o's EG-F1 at (0.3, 0.5) and 1.48 is Gemini-2.5-Flash's at (0.3, 0.75). At a matched
+threshold the pair is 8.49 / 12.64, which makes Gemini *better* at grounding, not six
+times worse. The accuracy figures are Relaxed Accuracy; Strict is 28.47 / 24.87. Correct
+statement: on EG-VQA, GPT-4o and Gemini-2.5-Flash reach 45.1% and 41.2% relaxed answer
+accuracy but 8.5% and 12.6% EG-F1 at (0.3, 0.5), falling to 1.2% and 1.5% at (0.3, 0.75).
+
+**2026-09-02 — arXiv:2502.19680 miscited (CORRECTED above in section 3).**
