@@ -326,6 +326,43 @@ def cmd_extract_check(args) -> int:
     return 1
 
 
+def cmd_corpus(args) -> int:
+    from . import corpus as cp
+
+    if args.add:
+        r = cp.register(args.name, [i.strip() for i in args.add.split(",") if i.strip()])
+        for i in r["added"]:
+            print(f"  added {i}")
+        for i in r["failed"]:
+            print(f"  skipped {i} — no manifest; run `nybls probe` on it first", file=sys.stderr)
+        c = r["corpus"]
+    else:
+        try:
+            c = cp.load(args.name)
+        except FileNotFoundError as e:
+            print(str(e), file=sys.stderr)
+            return 1
+
+    vids = c["videos"]
+    print(f"\ncorpus '{c['name']}' — {len(vids)} videos\n")
+    for v in vids:
+        mins = v["duration_s"] / 60
+        date = v["observed"] or "no date"
+        who = f"@{v['author']}" if v["author"] else "-"
+        tr = "" if v["transcript"] else "  [no transcript]"
+        print(f"  {date:<12} {who:<16} {mins:>5.1f}m  {v['id']}  {v['title'][:38]}{tr}")
+
+    missing = cp.undated(c)
+    if missing:
+        print(f"\n  {len(missing)} video(s) have no publication date, so they cannot be placed")
+        print(f"  on the timeline and are excluded from evolution detection: {', '.join(missing)}")
+    authors = {v["author"] for v in vids if v["author"]}
+    if len(authors) > 1:
+        print(f"\n  note: {len(authors)} different authors — differences across them are")
+        print("  disagreements between sources, not one person changing their mind.")
+    return 0
+
+
 def cmd_doctor(args) -> int:
     """What works right now, and what any missing piece would unlock."""
     import shutil
@@ -484,6 +521,11 @@ def main() -> int:
     sv2.add_argument("--claims", required=True, help='JSON: [{"claim": "...", "at": 242}]')
     sv2.add_argument("--json", action="store_true")
     sv2.set_defaults(fn=cmd_verify)
+
+    scp = sub.add_parser("corpus", help="group videos from one source and see their timeline")
+    scp.add_argument("name")
+    scp.add_argument("--add", metavar="ID,ID", help="comma-separated video ids to add")
+    scp.set_defaults(fn=cmd_corpus)
 
     sd = sub.add_parser("doctor", help="check what is installed and what works")
     sd.set_defaults(fn=cmd_doctor)

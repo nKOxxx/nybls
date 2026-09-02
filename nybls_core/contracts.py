@@ -55,6 +55,7 @@ SHAPES: dict[str, dict] = {
             "component": ("string", False, "the part of the system it governs"),
             "supersedes": ("string", False, "an earlier decision this replaces"),
             "confidence": ("string", False, "stated | implied | inferred"),
+            "video": ("string", False, "source video id — required when extracting across a corpus"),
             **CITATION,
         },
         "guidance": [
@@ -90,6 +91,7 @@ SHAPES: dict[str, dict] = {
             "kind": ("string", False, "fact | opinion | prediction | anecdote"),
             "evidence": ("string", False, "what the source offers in support"),
             "contradicts": ("string", False, "another claim in this extraction"),
+            "video": ("string", False, "source video id — required when extracting across a corpus"),
             **CITATION,
         },
         "guidance": [

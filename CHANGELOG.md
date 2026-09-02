@@ -44,6 +44,25 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.7.1] — 2026-09-02
+
+### Fixed
+- Degenerate-transcript detection missed the *short* half of the same failure.
+  The v0.7.0 check required 20+ segments before examining anything, so a silent
+  video producing a single hallucinated line passed as healthy. Four real
+  Instagram reels — all silent screen recordings — yielded exactly one line each
+  ("Thank you.", "We'll see you next time.", "We'll be right back.", and a
+  Spanish request to subscribe) and all four were reported as valid transcripts.
+  Stock filler and near-empty transcripts are now flagged with the likely cause.
+
+### Added
+- **`nybls corpus <name> --add <ids>`** — group videos from one source into a
+  timeline. Each entry carries its publication date and author, so the corpus can
+  distinguish *evolution* (one author, different dates) from *disagreement*
+  (different authors) — the distinction the build-in-public case turns on.
+  Videos without a publication date are excluded from evolution detection and
+  said to be excluded, rather than silently treated as oldest.
+
 ## [0.7.0] — 2026-09-02
 
 ### Fixed

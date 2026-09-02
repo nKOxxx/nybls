@@ -119,6 +119,25 @@ def looks_degenerate(segs: list[tuple[float, str]]) -> str | None:
     healthy transcript. A silent wrong answer is worse than a loud failure, so
     detect the loop and say so.
     """
+    words = sum(len(t.split()) for _, t in segs)
+    dur = (segs[-1][0] - segs[0][0]) if len(segs) > 1 else 0.0
+
+    # A near-empty transcript is the other half of the same failure. Fed silence
+    # or music, whisper does not return nothing - it returns a stock politeness.
+    # Four real Instagram reels, all silent screen recordings, produced exactly
+    # one line each: "Thank you.", "We'll see you next time.", "We'll be right
+    # back.", and a Spanish request to subscribe. All were reported as healthy.
+    joined = " ".join(t.strip().lower() for _, t in segs)
+    HALLUCINATED = (
+        "thank you", "thanks for watching", "we'll see you next time",
+        "we'll be right back", "subscribe", "suscr\u00edbete", "bye",
+        "please subscribe", "you", "\u266a",
+    )
+    stripped = joined.strip(" .!?\u00a1\u00bf,")
+    if words <= 12 and any(stripped == h or stripped.startswith(h) for h in HALLUCINATED):
+        return (f"the entire transcript is {words} words of stock filler "
+                f"({joined[:48]!r}) — the audio is almost certainly silent or music only")
+
     if len(segs) < 20:
         return None
     lines = [t.strip().lower() for _, t in segs]
