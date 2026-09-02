@@ -1,7 +1,7 @@
 {
   "name": "nybls",
   "displayName": "nybls",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Budgeted, iterative video watching for AI agents — transcript first, then only the frames the model asks for, with receipts.",
   "author": { "name": "Ares", "url": "https://github.com/nKOxxx" },
   "homepage": "https://github.com/nKOxxx/nybls",

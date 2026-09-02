@@ -1,83 +1,87 @@
-# Benchmark 001 — iterative vs one-shot
+# Benchmark — iterative vs one-shot
 
-**Date:** 2026-09-01 · **Video:** `LP10_YdKEPw`, a 20:03 PS3 Super Slim teardown,
-never seen by the judge or either arm before this run · **n = 1 video, 5 questions.**
+Two rounds, **four videos**, twenty questions, eight isolated arms.
 
 ## Method
 
-Questions and ground truth were written **before** either arm ran. Both arms were
-separate subagents with clean contexts; neither was the judge, neither saw the
-other's evidence or the ground truth. Every answer was verified absent from the
-transcript first ("glove", "Instagram", "GCR", "subscribe", "cleaning process",
-"IPA", "ultrasonic", "soap" — all zero hits), so the questions test looking, not
-reading.
+Questions and ground truth are written **before** any arm runs. Both arms are
+separate subagents with clean contexts; neither is the judge, neither sees the
+other's evidence or the ground truth. Every candidate answer is checked against
+the transcript first, and any term that appears in the narration is rejected as a
+question — otherwise the benchmark tests reading, not watching.
 
-- **Arm A — one-shot (control).** Transcript + 30 frames sampled at uniform
-  intervals, handed over at once. No ability to request more. This is what the
-  field does today.
-- **Arm B — iterative (nybls).** The `nybls` CLI and the WATCH protocol: free
-  transcript, a coverage sheet, a confidence check each round, then only what it
-  named a gap for.
+- **One-shot (control)** — transcript + 30 frames at uniform intervals, handed
+  over at once. This is what the field does today.
+- **Iterative (nybls)** — the CLI and the WATCH protocol: free transcript, a
+  coverage pass, a confidence check each round, then only what it names a gap for.
 
 Scoring: 2 correct and complete · 1 partial · 0 wrong or "insufficient evidence"
 · −1 confidently fabricated.
 
-## Result
+## Results
 
-| Q | Arm A (one-shot) | Arm B (iterative) |
-|---|---|---|
-| 1 Channel + handle | logo yes, handle **not reachable** — honestly declined · **1** | both, and flagged what was inferred vs seen · **2** |
-| 2 Title card(s) | found one of two; read only its top line · **1** | both cards, both timings · **2** |
-| 3 Gloves | correct, **plus** a detail the judge missed (one hand only) · **2** | correct incl. "not throughout" · **2** |
-| 4 Cleaning methods | 3 of 5; **missed the immersion bath** · **1** | 4 of 5, incl. two the judge missed · **2** |
-| 5 Final 30s | **outside its evidence window** — honestly declined · **0** | reassembly → subscribe card → thanks card · **2** |
-| **Total** | **5 / 10** | **10 / 10** |
+| Round | Video | Scene cuts | One-shot | Iterative |
+|---|---|---|---|---|
+| 1 | PS3 teardown (20 min) | 22 | 5/10 · 30 frames + 8 crops | **10/10 · 9 images** |
+| 2 | Motorsport doc (27 min) | 1,700 | 7/10 · 35 reads | **10/10 · 26 images** |
+| 2 | McLaren rebuild (48 min) | 814 | 8/10 · 30 reads | **10/10 · ~30 images** |
+| 2 | GT3RS rebuild (81 min) | 726 | 9/10 · 35 reads | **10/10 · 16 images** |
+| | **Total** | | **29/40** | **40/40** |
 
-**Cost:** Arm A 53,760 visual tokens across 30 frames (plus 8 zoom crops it made
-on its own, uncounted). Arm B 12,941 across 9 images. **Arm A spent 4.2× the
-visual tokens for half the score.**
+## Where the difference actually is
 
-## Why Arm A lost, precisely
+Not general comprehension. The controls were strong, careful, and repeatedly
+honest — twice declining to guess rather than fabricate. The gap sits almost
+entirely in **one failure, replicated four times**: a brief, one-time on-screen
+graphic falling between two uniform samples.
 
-Not through bad reasoning — its analysis was careful and it degraded honestly.
-It lost on the structural failure mode of uniform sampling:
+| Video | The thing missed | Sampled at | Missed by |
+|---|---|---|---|
+| PS3 teardown | "Cleaning Process" title card, 08:41 | 08:21 / 09:01 | 20 s |
+| Motorsport | race-results graphic, 02:42 | 02:16 / 03:11 | 26 s |
+| McLaren | iMessage screenshot, 42:12 | 40:55 / 42:31 | 19 s |
+| GT3RS | warranty document, 72:27 | 71:22 / 74:03 | 65 s |
 
-- **The 08:41 title card fell exactly between two samples** (08:21 and 09:01), so
-  the immersion-bath segment and the card announcing it were both invisible.
-- **The video ends at 20:03; its last frame was 19:42.** The end cards carrying
-  the social handle were outside its evidence window entirely. Nothing about its
-  method could have recovered them.
+A fixed grid cannot land on a brief graphic except by luck, and cannot go back
+once it learns the graphic exists. Every control missed these; every iterative
+arm found them.
 
-A fixed grid cannot adapt to where the information is. That is the whole claim,
-and this is what it looks like in practice.
+The zoom tool earns its place on small text: the GT3RS arm read a number plate
+and a vehicle-history card by cropping into two frames, scoring 10/10 on an
+81-minute video for **16 images** — under half what the control used.
 
 ## What must be said against the result
 
-- **n = 1.** A signal, not a finding. One video, one domain, one question set.
-- **The judge's ground truth was wrong and an arm corrected it.** Arm B reported
-  a second title card and a vacuuming step the judge's 18-sample reference had
-  missed; both were independently verified before scoring. A benchmark whose
-  reference is built by sampling can be beaten by a method that looks harder —
-  a real weakness in this benchmark's construction.
-- **Both arms exceeded the reference.** Arm A caught that only one hand was
-  gloved, which the judge had also missed. Neither arm was sloppy.
-- **Arm A's honesty is worth more than its score.** It said "insufficient
-  evidence" twice rather than inventing a handle or an ending, and lost 3 points
-  doing so. A one-shot pipeline driven by an honest agent fails safely; the risk
-  it carries is silence, not fabrication.
-- **Arm A was not purely one-shot.** Given file access it spontaneously made 8
-  zoom crops — iterative behaviour leaking into the control. If anything this
-  flatters the control arm.
-- **A teardown is close to a best case for uniform sampling**: slow, static bench
-  work at one frame per 40 seconds. Faster-cut material should widen the gap;
-  that is a prediction, and it is untested.
+- **The round-1 prediction was only half right.** Round 1 predicted faster-cut
+  material would widen the gap. Directionally it did — the widest gap (3 points)
+  was on the 1,700-cut video and the narrowest (1 point) on the 726-cut one — but
+  the controls scored **7–9 here against 5 in round 1**, so this material is
+  *easier for both arms*, not harder for one. The prediction as written
+  overstated the effect.
+- **"One-shot" was never purely one-shot.** Given file access, controls generated
+  their own zoom crops — 5, 8 and 30 extra reads beyond the supplied 30. That is
+  iterative behaviour leaking into the control, and it flatters the control.
+- **The judge's ground truth was exceeded six times.** Arms found a second title
+  card, a vacuuming step, a whole podium ceremony, video-game footage, two extra
+  diagnostic devices and branding on five objects where the reference had one. A
+  reference built by sampling loses to a method that looks harder — which is
+  exactly what is under test. This is a real weakness in the benchmark's
+  construction.
+- **Round 2's iterative arm had `study --adaptive`, which round 1's did not.**
+  The two rounds are therefore not the same arm and should not be pooled naively.
+- **n = 4.** Four videos, two domains, one judge. A signal, not a proof.
 
-## Verdict
+## Bugs the benchmark surfaced
 
-On this video, the iterative protocol answered every question correctly for a
-quarter of the visual-token cost, while the one-shot control answered half — and
-failed specifically where a fixed sampling grid structurally cannot reach.
-That is one honest data point, not a proof.
+- **Scene drift, since fixed.** Two targeted requests landed on adjacent shots.
+  Measured across three videos, **21 of 24 one-second offsets landed in a visibly
+  different shot** (mean pixel difference 24–53). Sheets now record the exact
+  moment each tile was rendered — 255.035 s, not 255 — and `frames` snaps to it,
+  verified as an exact match on all three videos.
+- **A ledger reading zero.** Both iterative arms reported it independently. It was
+  an artifact of the sandboxed environment the benchmark arms run in discarding
+  their writes, not a product fault; verified by reproducing the same commands
+  outside the sandbox, where the ledger records correctly.
 
-**Next:** repeat on fast-cut and dialogue-heavy material before this is quoted as
-anything more than a first result.
+Two arms catching and correctly diagnosing an instrument problem is a better
+outcome than either silently reporting a wrong number.

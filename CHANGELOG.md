@@ -44,6 +44,31 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.6.0] — 2026-09-02
+
+### Fixed
+- **Scene drift on targeted frame requests.** A sheet tile labelled "04:15" is
+  rendered at 255.035 s, so a request for second 255 returned a different moment —
+  and on fast-cut material, a different shot. Measured across three videos, 21 of
+  24 one-second offsets landed in a visibly different shot. Sheets now record the
+  exact timestamps they rendered and `frames` snaps to the nearest within three
+  seconds, reporting when it does. No new command and no new flag: `frames`
+  simply became accurate. Degrades safely — with no sheet yet rendered there is
+  nothing to snap to and behaviour is unchanged.
+
+### Changed
+- Benchmark extended to **four videos across two domains** (`bench/RESULTS.md`):
+  iterative 40/40, one-shot 29/40, with the difference concentrated in brief
+  on-screen graphics falling between uniform samples — replicated four times.
+  The round-1 prediction that fast-cut material would widen the gap is recorded
+  as only half right: directionally correct, but overstated.
+
+### Maturity
+- The **watching core** (probe, study, sheet, frames, zoom, ledger, verify) is now
+  beta-quality: 24 tests, benchmarked on four videos, interface stable.
+- The **extraction layer** (contract, extract-check) remains alpha — single-video
+  only; the corpus half is not built.
+
 ## [0.5.0] — 2026-09-02
 
 ### Added
