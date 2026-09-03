@@ -22,6 +22,14 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.7.2] — 2026-09-03
 
 ### Fixed
+- **`probe` gave backwards advice on silent videos.** It closed with "Read the
+  transcript first" even when the transcript had just been flagged UNRELIABLE,
+  pointing the agent at content that does not exist. A silent screen recording
+  is the case where frames are the *only* carrier of information, not a
+  low-value case. Caught when four a build-in-public account reels — whose captions are
+  one-line headlines and whose videos contain the full system architecture —
+  were written off as "the substance is in the captions" on the strength of an
+  empty transcript. `probe` now inverts its guidance when the guard fires.
 - `nybls --version` errored instead of printing a version. The subcommand was
   marked required, so argparse rejected the bare flag — the first thing anyone
   types after installing. Now reads the installed package metadata, so it cannot

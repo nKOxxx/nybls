@@ -41,3 +41,18 @@ def test_short_but_genuine_transcript_passes():
 def test_the_word_you_alone_is_caught():
     """Whisper's most common silence artefact is the bare word 'you'."""
     assert tr.looks_degenerate(_segs(["You"]))
+
+
+def test_silent_video_guidance_is_inverted():
+    """A silent video is the case where frames carry everything, so pointing the
+    agent at the transcript is the wrong instruction. This was a real failure:
+    a degenerate-transcript report was read as 'low-value video' and four reels
+    full of architecture diagrams went unexamined."""
+    import inspect
+    from nybls_core import cli
+    src = inspect.getsource(cli.cmd_probe)
+    assert 'if "UNRELIABLE" in tsource:' in src
+    # the misleading default must not be what a silent video receives
+    i_guard = src.index('if "UNRELIABLE" in tsource:')
+    i_default = src.index("Read the transcript first")
+    assert i_default > i_guard, "silent-video branch must precede the default advice"

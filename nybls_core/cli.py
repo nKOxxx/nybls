@@ -66,7 +66,17 @@ def cmd_probe(args) -> int:
     print(f"transcript: {tsource} → {scrub(str(tpath)) if tpath else 'NONE'}")
     print(f"budget: {led.budget_for(info['duration_s'])} image units")
     print(f"scenes: {scrub(str(ws / 'scenes.json'))}")
-    print("cost so far: 0 images. Read the transcript first; then request sheets.")
+    # A silent video is not a low-value video — it is the case where frames are
+    # the ONLY carrier of content, so the default advice ("read the transcript
+    # first") is exactly backwards. Four a build-in-public account reels showed this: the
+    # transcripts were stock filler, the captions were one-line headlines, and
+    # the architecture being demonstrated existed solely in pixels.
+    if "UNRELIABLE" in tsource:
+        print("cost so far: 0 images. There is no usable transcript — for a silent "
+              "screen recording the frames ARE the content, so go straight to "
+              "`sheet` and expect to spend the budget rather than save it.")
+    else:
+        print("cost so far: 0 images. Read the transcript first; then request sheets.")
     return 0
 
 
