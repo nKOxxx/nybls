@@ -1,8 +1,9 @@
-"""nybls — nybls CLI. Five commands: probe, sheet, frames, zoom, ledger."""
+"""nybls — the CLI. Run `nybls --help` for the full command list."""
 import argparse
 import json
 import math
 import sys
+from importlib.metadata import PackageNotFoundError, version as _pkg_version
 from pathlib import Path
 
 from . import ingest as ing
@@ -10,6 +11,16 @@ from . import ledger as led
 from . import media
 from . import transcribe as tr
 from .store import read_manifest, scrub, workspace, write_manifest
+
+
+def _version() -> str:
+    """Read the installed version rather than hardcoding it, so `--version`
+    can never drift from pyproject.toml. Running from a source tree that was
+    never installed is the one case with no metadata to read."""
+    try:
+        return _pkg_version("nybls")
+    except PackageNotFoundError:
+        return "unknown (running from source)"
 
 
 def tr_default():
@@ -455,6 +466,7 @@ def cmd_inbox(args) -> int:
 
 def main() -> int:
     p = argparse.ArgumentParser(prog="nybls", description="nybls frame server")
+    p.add_argument("--version", action="version", version=f"nybls {_version()}")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sp = sub.add_parser("probe", help="ingest + transcript + scenes (0 images)")

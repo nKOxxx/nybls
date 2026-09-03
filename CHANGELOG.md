@@ -6,36 +6,11 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-### Changed
-- **The change-detection design rule from 0.3.0 is WITHDRAWN.** "Use the hash to detect
-  duplicates, never to detect change" was stated from a single observation on a single
-  video. Measured against an independent OCR reference across seven videos, perceptual
-  hashing and pixel difference are comparable (mean AUC 0.734 vs 0.762; pixel difference
-  better on 2 of 4 videos with a usable reference). Pixel difference is retained for a
-  narrower, real reason: on static-camera content the hash's distribution compresses into
-  the duplicate-detection band. See `bench/RESULTS_signals.md` and `docs/RESEARCH.md` §8.
-- The uncited grounding statistic in 0.4.0 was traced to EG-VQA (arXiv:2606.24797) and
-  found to combine two different metric columns. Restated at a matched threshold.
-- One reference in `docs/RESEARCH.md` (arXiv:2502.19680) did not support the claim made
-  of it and has been corrected.
-
-### Added
-- **Benchmark round 2** — 3 videos, 15 questions, pre-registered, with a tightened control
-  arm that could not zoom. `bench/RESULTS_round2.md`. Round 1's 2x margin did not
-  replicate; combined result across 4 videos is 35/40 vs 27/40 at 2.41x less cost.
-- **`bench/uniform_coverage.py`** — closed-form dead zones and capture probability for a
-  uniform grid, plus what it predicts about specific benchmark questions.
-- **`bench/measure_event_persistence.py`** — measures how long an on-screen event actually
-  persists, so capture probability rests on measurement rather than estimate.
-- **`bench/measure_signals.py`** — scores candidate change-detection signals against an
-  independent OCR-derived reference.
-- **`paper/`** — draft arXiv paper with a fully verified bibliography.
-
 ### Known issues (found by benchmark arms, reported not fixed during the run)
 - The named-gap rail also applies to `sheet --range`, but the rails table in
   `docs/PROTOCOL.md` says it applies only to `frames`/`zoom`. Docs and behaviour disagree.
 - Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom
-  box derived from a tile can land on a different shot. `snap_to_tile` (added this release)
+  box derived from a tile can land on a different shot. `snap_to_tile` (added in 0.7.1)
   mitigates this for `frames`; `zoom` and the docs mismatch are still open.
 
 ### Planned
@@ -43,6 +18,16 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   equal cost — the open gap named in `docs/RESEARCH.md`
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
+
+## [0.7.2] — 2026-09-03
+
+### Fixed
+- `nybls --version` errored instead of printing a version. The subcommand was
+  marked required, so argparse rejected the bare flag — the first thing anyone
+  types after installing. Now reads the installed package metadata, so it cannot
+  drift from `pyproject.toml`. Covered by a test.
+- The `cli.py` docstring still advertised "five commands". There are fifteen.
+
 
 ## [0.7.1] — 2026-09-02
 
@@ -62,6 +47,29 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   (different authors) — the distinction the build-in-public case turns on.
   Videos without a publication date are excluded from evolution detection and
   said to be excluded, rather than silently treated as oldest.
+- **Benchmark round 2** — 3 videos, 15 questions, pre-registered, with a tightened control
+  arm that could not zoom. `bench/RESULTS_round2.md`. Round 1's 2x margin did not
+  replicate; combined result across 4 videos is 35/40 vs 27/40 at 2.41x less cost.
+- **`bench/uniform_coverage.py`** — closed-form dead zones and capture probability for a
+  uniform grid, plus what it predicts about specific benchmark questions.
+- **`bench/measure_event_persistence.py`** — measures how long an on-screen event actually
+  persists, so capture probability rests on measurement rather than estimate.
+- **`bench/measure_signals.py`** — scores candidate change-detection signals against an
+  independent OCR-derived reference.
+- **`paper/`** — draft arXiv paper with a fully verified bibliography.
+
+### Changed
+- **The change-detection design rule from 0.3.0 is WITHDRAWN.** "Use the hash to detect
+  duplicates, never to detect change" was stated from a single observation on a single
+  video. Measured against an independent OCR reference across seven videos, perceptual
+  hashing and pixel difference are comparable (mean AUC 0.734 vs 0.762; pixel difference
+  better on 2 of 4 videos with a usable reference). Pixel difference is retained for a
+  narrower, real reason: on static-camera content the hash's distribution compresses into
+  the duplicate-detection band. See `bench/RESULTS_signals.md` and `docs/RESEARCH.md` §8.
+- The uncited grounding statistic in 0.4.0 was traced to EG-VQA (arXiv:2606.24797) and
+  found to combine two different metric columns. Restated at a matched threshold.
+- One reference in `docs/RESEARCH.md` (arXiv:2502.19680) did not support the claim made
+  of it and has been corrected.
 
 ## [0.7.0] — 2026-09-02
 
