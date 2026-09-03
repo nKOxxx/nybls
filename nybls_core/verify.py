@@ -37,7 +37,7 @@ TS_RE = re.compile(r"^\[(\d+):(\d+)\]\s*(.*)$")
 class Verdict:
     claim: str
     at: float
-    status: str          # verified | weak | unsupported | out-of-range
+    status: str          # verified | weak | unsupported | out-of-range | no-speech
     coverage: float
     found: list[str]
     missing: list[str]
@@ -77,8 +77,27 @@ def window_text(segs: list[tuple[float, str]], at: float) -> str:
     return " ".join(t for ts, t in segs if lo <= ts <= hi)
 
 
+def _no_usable_speech(segs: list[tuple[float, str]]) -> bool:
+    """Distinguish "the video said something else" from "the video said nothing".
+
+    A silent screen recording yields one line of whisper filler. Scoring a claim
+    against that returns 0% coverage, which reads identically to a fabrication —
+    so the verifier would mark a claim that is plainly true on screen as
+    unsupported, and an honest agent would delete it. Measured: a correct claim
+    about a medallion pipeline scored 0.0 against a one-line transcript.
+    """
+    from .transcribe import looks_degenerate
+    if not segs:
+        return True
+    return looks_degenerate(segs) is not None
+
+
 def verify_claim(segs: list[tuple[float, str]], claim: str, at: float) -> Verdict:
-    if not segs or at > segs[-1][0] + WINDOW_AFTER or at < -1:
+    if _no_usable_speech(segs):
+        # Not a failure of the claim — a failure of this method to apply. The
+        # claim needs a frame citation, which the transcript can never supply.
+        return Verdict(claim, at, "no-speech", 0.0, [], [])
+    if at > segs[-1][0] + WINDOW_AFTER or at < -1:
         return Verdict(claim, at, "out-of-range", 0.0, [], [])
     words = _content_words(claim)
     if not words:
@@ -99,19 +118,33 @@ def verify_file(transcript: Path, claims_path: Path) -> list[Verdict]:
 
 
 def report(verdicts: list[Verdict]) -> str:
-    mark = {"verified": "✓", "weak": "~", "unsupported": "✗", "out-of-range": "?"}
+    mark = {"verified": "✓", "weak": "~", "unsupported": "✗",
+            "out-of-range": "?", "no-speech": "▣"}
     lines = []
     for v in verdicts:
         ts = f"{int(v.at // 60):02d}:{int(v.at % 60):02d}"
         lines.append(f"  {mark[v.status]} [{ts}] {v.coverage:>4.0%}  {v.claim[:66]}")
         if v.status in ("weak", "unsupported") and v.missing:
             lines.append(f"        not found near this timestamp: {', '.join(v.missing[:8])}")
+        if v.status == "no-speech":
+            lines.append("        no usable speech in this video — speech cannot "
+                         "confirm or deny this; cite a frame instead")
     n = len(verdicts) or 1
     ok = sum(1 for v in verdicts if v.status == "verified")
     weak = sum(1 for v in verdicts if v.status == "weak")
-    bad = n - ok - weak
-    lines.append(f"\n  {ok}/{n} verified · {weak} weak · {bad} unsupported "
-                 f"({ok / n:.0%} clean)")
+    mute = sum(1 for v in verdicts if v.status == "no-speech")
+    bad = n - ok - weak - mute
+    tail = f" · {mute} not checkable by speech" if mute else ""
+    denom = n - mute
+    if denom <= 0:
+        # Everything was unjudgeable. Printing "0/1 verified · 0% clean" here
+        # reads as total failure when the truth is that this method does not
+        # apply at all to this material.
+        lines.append(f"\n  0 of {n} claims can be judged by speech — this video has "
+                     f"none. Verify these against frames.")
+    else:
+        lines.append(f"\n  {ok}/{denom} verified · {weak} weak · {bad} unsupported{tail} "
+                     f"({ok / denom:.0%} clean of what speech can judge)")
     return "\n".join(lines)
 
 

@@ -22,6 +22,15 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.7.2] — 2026-09-03
 
 ### Fixed
+- **The verifier called true claims about silent videos "unsupported".** It could
+  not distinguish "the transcript contradicts this" from "there is no transcript
+  to check against" — both scored 0% coverage. A claim read directly off the
+  frames of a real reel (a medallion pipeline with self-recovery) came back
+  `unsupported`, which pressures an honest agent into deleting a correct finding.
+  New `no-speech` verdict says the method does not apply and the claim needs a
+  frame citation. Unjudgeable claims leave the clean-percentage denominator
+  rather than counting as failures. Verified not to weaken real verification:
+  on an 819-segment transcript a fabricated claim still returns `unsupported`.
 - **`probe` gave backwards advice on silent videos.** It closed with "Read the
   transcript first" even when the transcript had just been flagged UNRELIABLE,
   pointing the agent at content that does not exist. A silent screen recording

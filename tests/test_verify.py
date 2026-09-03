@@ -57,3 +57,43 @@ def test_transcript_parsing(tmp_path, line, expect):
     p = tmp_path / "t.txt"
     p.write_text(line)
     assert vf.load_transcript(p)[0][0] == expect
+
+
+def test_silent_video_claim_is_not_called_unsupported():
+    """"No transcript to check" and "the transcript contradicts you" are
+    different states. Collapsing them marked a claim that was plainly true on
+    screen as unsupported at 0% coverage, which pressures an honest agent into
+    deleting a correct finding."""
+    segs = [(0.0, "We'll see you next time.")]
+    v = vf.verify_claim(segs, "the pipeline uses a medallion architecture", 5.0)
+    assert v.status == "no-speech"
+
+
+def test_no_speech_does_not_weaken_real_verification():
+    """The carve-out must not become a way for fabrications to pass."""
+    segs = [(float(i), f"segment number {i} about pipelines and latency") for i in range(40)]
+    good = vf.verify_claim(segs, "segment number 10 about pipelines", 10.0)
+    bad = vf.verify_claim(segs, "quantum blockchain unicorn synergy", 10.0)
+    assert good.status == "verified"
+    assert bad.status == "unsupported"
+
+
+def test_all_unjudgeable_does_not_report_as_zero_percent_clean():
+    """With every claim unjudgeable the denominator collapses, and the naive
+    ratio prints "0/1 verified · 0% clean" — total failure, when the truth is
+    that speech cannot judge this material at all."""
+    vs = [vf.verify_claim([(0.0, "Thank you.")], "a real on-screen fact", 1.0)]
+    out = vf.report(vs)
+    assert "0/1 verified" not in out and "0% clean" not in out
+    assert "can be judged by speech" in out
+
+
+def test_unjudgeable_claims_leave_the_ratio_when_mixed():
+    """Counting them as failures understates a partly-silent corpus; counting
+    them as passes overstates it. They are excluded and stated separately."""
+    real = [(float(i), f"segment number {i} about pipelines and latency") for i in range(40)]
+    vs = [vf.verify_claim(real, "segment number 10 about pipelines", 10.0),
+          vf.verify_claim([(0.0, "Thank you.")], "an on-screen fact", 1.0)]
+    out = vf.report(vs)
+    assert "1 not checkable by speech" in out
+    assert "1/1 verified" in out          # the mute claim left the denominator
