@@ -1,0 +1,36 @@
+{
+ "entries": [
+  {
+   "utc": "2026-09-02T15:02:48Z",
+   "cmd": "study",
+   "images": 11,
+   "tokens": 11440
+  },
+  {
+   "utc": "2026-09-02T15:09:31Z",
+   "cmd": "study",
+   "images": 11,
+   "tokens": 11440
+  },
+  {
+   "utc": "2026-09-02T15:10:24Z",
+   "cmd": "frames",
+   "images": 2,
+   "tokens": 3584
+  },
+  {
+   "utc": "2026-09-02T15:10:48Z",
+   "cmd": "zoom",
+   "images": 1,
+   "tokens": 1333
+  },
+  {
+   "utc": "2026-09-02T15:10:48Z",
+   "cmd": "frames",
+   "images": 1,
+   "tokens": 1792
+  }
+ ],
+ "images": 26,
+ "tokens": 29589
+}

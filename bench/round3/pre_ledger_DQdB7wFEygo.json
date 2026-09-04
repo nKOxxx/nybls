@@ -1,0 +1,24 @@
+{
+ "entries": [
+  {
+   "utc": "2026-09-02T15:02:08Z",
+   "cmd": "study",
+   "images": 10,
+   "tokens": 10400
+  },
+  {
+   "utc": "2026-09-02T15:08:38Z",
+   "cmd": "study",
+   "images": 10,
+   "tokens": 10400
+  },
+  {
+   "utc": "2026-09-02T15:09:24Z",
+   "cmd": "zoom",
+   "images": 1,
+   "tokens": 1677
+  }
+ ],
+ "images": 21,
+ "tokens": 22477
+}
