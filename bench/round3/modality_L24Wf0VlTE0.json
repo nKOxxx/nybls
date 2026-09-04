@@ -1,0 +1,24 @@
+{
+ "media_id": "L24Wf0VlTE0",
+ "title": "How Jet Engines Work",
+ "duration_s": 301.0,
+ "frames_sampled": 25,
+ "frames_with_on_screen_text": 23,
+ "transcript_lines": 100,
+ "transcript_unique_lines": 100,
+ "transcript_degeneracy": 1.0,
+ "transcript_unique_words": 238,
+ "ocr_unique_words": 18,
+ "ocr_words_absent_from_transcript": 8,
+ "visual_exclusivity": 0.4444,
+ "sample_visual_only_words": [
+  "anima",
+  "animage",
+  "anin",
+  "graffs",
+  "inimagraffs",
+  "jacob",
+  "praffs",
+  "rbine"
+ ]
+}
