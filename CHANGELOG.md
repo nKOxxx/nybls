@@ -7,11 +7,9 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Known issues (found by benchmark arms, reported not fixed during the run)
-- The named-gap rail also applies to `sheet --range`, but the rails table in
-  `docs/PROTOCOL.md` says it applies only to `frames`/`zoom`. Docs and behaviour disagree.
 - Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom
   box derived from a tile can land on a different shot. `snap_to_tile` (added in 0.7.1)
-  mitigates this for `frames`; `zoom` and the docs mismatch are still open.
+  mitigates this for `frames`; `zoom` is still open.
 
 ### Planned
 - Independent benchmark of the iterative loop against a one-shot frame dump at
@@ -19,7 +17,28 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
-## [0.7.2] — 2026-09-03
+## [0.7.2] — 2026-09-04
+
+### Changed
+- **The `/watch` skill now handles silent video.** It told the agent to read the
+  transcript first and to spend "almost nothing" on static scenes, and said
+  nothing about what to do when there is no usable transcript at all. The budget
+  rule is now stated as the governing principle: spend in inverse proportion to
+  what the transcript carries, so a silent screen recording gets the *most*.
+  Also warns that small dense text (metrics, log lines) is legible on a contact
+  sheet as structure but not as text, and must be read with `zoom`.
+- `docs/PROTOCOL.md` gains a **Grounding** section documenting `verify` and every
+  verdict, which had been undocumented since it shipped. The Rails table now says
+  the named-gap rail covers `sheet --range` too, matching the code (closes the
+  docs/behaviour mismatch reported in 0.7.1).
+- `README.md` states the inverse-value rule and drops a stale "v0.3" label.
+
+### Added
+- **`nybls doctor` detects a stale installed skill.** The installed
+  `~/.claude/skills/watch/SKILL.md` is a copy of the repo's, and had silently
+  fallen behind it — the agent ran an outdated protocol for days while every
+  other surface reported healthy. `doctor` now compares the two and prints the
+  refresh command (username scrubbed, since doctor output ends up in bug reports).
 
 ### Fixed
 - **The verifier called true claims about silent videos "unsupported".** It could

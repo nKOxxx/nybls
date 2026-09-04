@@ -55,6 +55,16 @@ For talk-heavy video this round frequently answers the question outright. It
 must never be used to answer a *visual* question — if the user asks what is on
 screen, the transcript is evidence about the audio, not the picture.
 
+**Check the transcript is real before trusting it or its absence.** If `probe`
+marks it UNRELIABLE, or it is a few words of stock politeness ("Thank you.",
+"We'll see you next time."), the video has no speech. That is not a low-value
+video. It is the case where frames are the *only* carrier of content, and the
+one that most deserves the budget. Four real build-in-public reels had one-line
+captions and filler transcripts; their videos held the entire system
+architecture, including a restructure no caption mentioned. Never conclude a
+silent video is empty, or that "the substance is in the caption", without
+looking. Go straight to `sheet` and expect to spend.
+
 ### Round 1 — coverage
 
 ```bash
@@ -142,7 +152,7 @@ Prose can be ignored. These cannot:
 
 | Rail | Behavior |
 |---|---|
-| Named gaps | past 3 spent images, `frames`/`zoom` refuse without `--looking-for` |
+| Named gaps | past 3 spent images, `frames`, `zoom` and `sheet --range` refuse without `--looking-for` (a whole-video `sheet` is the coverage round and is exempt) |
 | Budget stop | requests beyond the budget are refused; only a human may `--force` |
 | Duplicate detection | a near-duplicate of an already-served frame is flagged as waste |
 | Per-call cap | at most 10 frames per invocation |
@@ -151,6 +161,35 @@ Prose can be ignored. These cannot:
 The rails exist because the protocol must work for an agent that was not
 carefully prompted. Discipline that depends on the operator does not survive
 distribution.
+
+---
+
+## Grounding: what the verifier can and cannot judge
+
+`nybls verify <id> --claims claims.json` checks each claim against the transcript in a
+window around its timestamp (45 s before, 120 s after). Citations are generated
+by the tool, never written by the model; the verifier is the check that the
+model's *claims* match what was actually said.
+
+| Verdict | Meaning |
+|---|---|
+| `verified` | ≥55% of the claim's content words appear near the timestamp |
+| `weak` | 30–55% — quote more precisely, or the timestamp is off |
+| `unsupported` | <30% — the transcript does not say this here; treat as a fabrication until shown otherwise |
+| `out-of-range` | the timestamp is past the end of speech |
+| `no-speech` | the video has no usable transcript; speech can neither confirm nor deny this claim |
+
+`no-speech` is not a failure of the claim. It says this method does not apply,
+and the claim needs a **frame citation** instead. Claims that speech cannot
+judge leave the clean-percentage denominator rather than counting as failures:
+a corpus of silent screen recordings would otherwise verify as 0% clean while
+being entirely correct on screen. Never delete a finding you can see because the
+transcript did not corroborate it; cite the frame and its timestamp.
+
+The distinction exists because it was missed once. A true claim, read off the
+frames of a silent reel, came back `unsupported` at 0% — indistinguishable from a
+fabrication — and the honest response to that verdict would have been to delete
+a correct finding.
 
 ---
 

@@ -384,6 +384,28 @@ def cmd_corpus(args) -> int:
     return 0
 
 
+def _skill_drift() -> str | None:
+    """Compare the installed /watch skill against this package's own copy.
+
+    Returns a human-readable warning, or None when they agree or when there is
+    nothing to compare (the skill is optional; not having it is not a fault).
+    """
+    installed = Path.home() / ".claude" / "skills" / "watch" / "SKILL.md"
+    if not installed.exists():
+        return None
+    shipped = Path(__file__).resolve().parent.parent / "skills" / "watch" / "SKILL.md"
+    if not shipped.exists():
+        return None            # installed from a wheel: nothing to compare against
+    if installed.resolve() == shipped.resolve():
+        return "installed (symlinked — cannot drift)"
+    a, b = installed.read_bytes(), shipped.read_bytes()
+    if a == b:
+        return "installed and current"
+    # doctor output is what people paste into bug reports — never leak the username
+    return ("STALE — the installed /watch skill differs from this repo's. "
+            f"Refresh it:  cp {scrub(str(shipped))} {scrub(str(installed))}")
+
+
 def cmd_doctor(args) -> int:
     """What works right now, and what any missing piece would unlock."""
     import shutil
@@ -413,6 +435,14 @@ def cmd_doctor(args) -> int:
     store = Path.home() / ".nybls" / "store"
     n = len(list(store.glob("*/manifest.json"))) if store.exists() else 0
     print(f"  videos in your library:   {n}")
+
+    # The skill is the runtime instruction set — it decides how an agent spends
+    # the budget. An installed copy that has drifted from the repo is invisible
+    # at every other surface, and a stale copy silently ran an outdated protocol
+    # for days before anyone noticed.
+    drift = _skill_drift()
+    if drift:
+        print(f"  skill:                    {drift}")
 
     print()
     if missing_required:

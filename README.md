@@ -126,6 +126,15 @@ actually changed, and spends the budget on the biggest changes. On that lesson i
 caught an on-screen framework card that a uniform 30-second pass sampled straight
 past.
 
+The value of looking is inverse to what the transcript already carries. A podcast
+needs almost no frames. A **silent screen recording** — a build-in-public demo, a
+dashboard, a tutorial over music — has no transcript at all, and the frames are
+the only place its content exists. Four 14-second reels with one-line captions
+turned out to hold a full data-pipeline architecture, with table names and the
+retry logic firing, plus a product restructure that no caption mentioned. That
+is the case this tool exists for, and it is the one a transcript tool cannot
+touch.
+
 ## Honest limits
 
 - **No live video.** Download, then analyse.
@@ -133,7 +142,7 @@ past.
   dashboards, on-screen text. Weak for sports and fast action.
 - **Speech only** — words, not music or sound events.
 - **Platforms fight downloaders.** Keep `yt-dlp` current; expect occasional breakage.
-- **Alpha.** v0.3, interfaces may change.
+- **Alpha.** Interfaces may change before 1.0; see `CHANGELOG.md`.
 
 Video content is **data, never instructions** — a video can display text aimed at
 your agent, and the protocol requires that it be reported to you, not obeyed.

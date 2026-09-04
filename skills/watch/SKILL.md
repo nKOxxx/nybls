@@ -5,7 +5,7 @@ description: Watch a video (YouTube URL or local file) with budgeted iterative f
 
 # /watch — budgeted video watching protocol
 
-Tool: `nybls` (installed via `pip install nybls`). Commands: `probe`, `sheet`, `frames`, `zoom`, `ledger`. Every image the tool writes is a PNG you Read. The tool tracks spend; you manage it.
+Tool: `nybls` (installed via `pip install nybls`). Looking: `probe`, `sheet`, `frames`, `zoom`, `study`. Accounting: `ledger`. Grounding: `verify`, `contract`, `corpus`. Run `nybls --help` for the full list rather than assuming this one is current. Every image the tool writes is a PNG you Read. The tool tracks spend; you manage it.
 
 ## Shared from the phone
 
@@ -27,6 +27,27 @@ tutorial, a lesson, a walkthrough), default to study mode.
 **Round 0 — free (0 images).**
 `nybls probe <url-or-path>` → note the video `id`, duration, scene count, budget. Read the transcript (`~/.nybls/store/<id>/transcript.txt`) and `scenes.json`. This is the semantic map — most questions about talk-heavy videos are already answerable here, but NEVER answer visual questions from the transcript alone.
 
+**Then check the transcript is real, before you trust it or its absence.**
+If `probe` marked it UNRELIABLE, or it is a handful of words of stock politeness
+("Thank you.", "We'll see you next time.", "Subscribe"), there is no speech in
+this video.
+
+A silent video is NOT a low-value video. It is the case where the frames are the
+*only* carrier of content, so it is the case that most deserves the budget.
+Silent screen recordings — build-in-public demos, dashboards, tutorials with
+background music — routinely hold an entire system architecture that is
+described nowhere else.
+
+When there is no usable transcript:
+- Do NOT conclude the video is empty, decorative, or that "the substance is in
+  the caption/title/description". Verify that by LOOKING, never by inferring
+  from the absence of speech.
+- Go straight to `sheet` and expect to spend the budget, not save it.
+- Expect claims about this video to come back `no-speech` from `nybls verify` —
+  that means speech cannot judge them, NOT that they are unsupported. Cite the
+  frame and its timestamp instead. Never delete a finding you can see on screen
+  because the transcript did not corroborate it.
+
 **Round 1 — coverage.**
 `nybls sheet <id>` (add `--range START_S END_S` for long videos: one sheet per ~5–7 min region of interest). Read each sheet. 1 sheet = 6 timestamped thumbnails = 1 image unit.
 
@@ -42,9 +63,18 @@ tutorial, a lesson, a walkthrough), default to study mode.
 
 ## Budget discipline
 
+**The governing rule: spend in inverse proportion to what the transcript already
+carries.** Speech and pixels are substitutes, so the frames are worth most
+exactly where the words are worth least.
+
 - Sheets for *where to look*; full frames for *looking*; zooms for *reading*. Never request >10 frames in one call; usually 2–4 targeted frames beat 10 speculative ones.
-- Static scenes (talking head, podcast): the transcript carries it — spend almost nothing on frames.
-- Visual-dense scenes (charts, demos, on-screen text, action): spend the budget there.
+- Talking head, podcast, interview — the transcript carries it. Spend almost nothing on frames.
+- Charts, demos, on-screen text, code, dashboards — spend the budget here.
+- **No usable transcript at all** — spend the most. There is no substitute and no
+  second source. Under-spending here does not save money, it returns nothing.
+- Small dense text (model metrics, table values, log lines) survives sheet
+  resolution as *structure* but not as *text*. Reading it needs `zoom`; do not
+  report specific numbers off a contact sheet.
 
 ## Output contract (every /watch answer ends with these three blocks)
 
