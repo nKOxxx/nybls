@@ -153,6 +153,6 @@ your agent, and the protocol requires that it be reported to you, not obeyed.
 
 [Protocol](docs/PROTOCOL.md) · [Research & evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Changelog](CHANGELOG.md)
 
-Benchmarks: [round 1](bench/RESULTS.md) · [round 2](bench/RESULTS_round2.md) · [change-detection signals](bench/RESULTS_signals.md)
+Benchmarks: [round 1](bench/RESULTS.md) · [round 2](bench/RESULTS_round2.md) · [round 3 — 8 videos](bench/RESULTS_round3.md) · [change-detection signals](bench/RESULTS_signals.md)
 
 MIT.
