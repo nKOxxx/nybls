@@ -16,8 +16,12 @@ round 2's contamination incident; **its hash was identical before and after all 
 | rome | 44:32 | 7/10 (70%) | 10/10 (100%) | 53,760 | 12,832 | 4.2x |
 | **Round 3** | | **29/36 (81%)** | **33/36 (92%)** | **215,040** | **53,323** | **4.03x** |
 
-**All three rounds — 8 videos, 76 valid questions:** Arm A **56/76 (74%)** for 430,080
-visual tokens; Arm B **68/76 (89%)** for 119,363. **Arm A spent 3.60x for 83% of Arm B's score.**
+**All three rounds, 8 videos.** A cross round question audit (`QUESTION_AUDIT.md`, run
+after this round exposed the flaw) voided four questions in total, two here and two in
+round 2, because the narration states their answers. Both arms scored equally on all four,
+so the direction is unchanged. Strict figures, which the paper must use:
+Arm A **52/72 (72%)** for 430,080 visual tokens; Arm B **64/72 (89%)** for 119,363.
+**Arm A spent 3.60x the visual tokens for 81% of Arm B's score.**
 
 ## Predictions, scored
 
