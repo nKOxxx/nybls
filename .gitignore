@@ -6,3 +6,6 @@ brand/nybls_60.png
 brand/nybls_180.png
 .DS_Store
 .env
+dist/
+build/
+*.egg-info/

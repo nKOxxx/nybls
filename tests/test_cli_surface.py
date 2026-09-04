@@ -23,3 +23,16 @@ def test_version_is_not_hardcoded():
     from nybls_core import cli
     src = __import__("inspect").getsource(cli._version)
     assert "_pkg_version" in src
+
+
+def test_plugin_manifests_match_package_version():
+    """The Claude Code plugin manifests carried 0.7.1 while PyPI served 0.8.0.
+    Nothing exercised them, so nothing noticed. Three files, one version."""
+    import json, re
+    from pathlib import Path
+    root = Path(__file__).parent.parent
+    ver = re.search(r'^version = "([^"]+)"', (root / "pyproject.toml").read_text(), re.M).group(1)
+    plugin = json.loads((root / ".claude-plugin/plugin.json").read_text())
+    market = json.loads((root / ".claude-plugin/marketplace.json").read_text())
+    assert plugin["version"] == ver
+    assert all(p["version"] == ver for p in market["plugins"])

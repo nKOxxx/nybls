@@ -68,7 +68,7 @@ def cmd_probe(args) -> int:
     print(f"scenes: {scrub(str(ws / 'scenes.json'))}")
     # A silent video is not a low-value video — it is the case where frames are
     # the ONLY carrier of content, so the default advice ("read the transcript
-    # first") is exactly backwards. Four a build-in-public account reels showed this: the
+    # first") is exactly backwards. Four build-in-public reels showed this: the
     # transcripts were stock filler, the captions were one-line headlines, and
     # the architecture being demonstrated existed solely in pixels.
     if "UNRELIABLE" in tsource:

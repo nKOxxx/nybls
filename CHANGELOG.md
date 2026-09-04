@@ -39,7 +39,18 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     and that the declared dependencies stay exactly those two — so the budget cannot
     be blown silently by a future import.
 
+- `requires-python` is now `>=3.12`. It said 3.10, which was never tested; 3.12 and
+  3.14 are what the clean-install checks actually ran on, and the test suite uses
+  `tomllib` (3.11+).
+- Claude Code plugin manifests were still at 0.7.1. Synced, and a test now asserts
+  they match `pyproject.toml`.
+- GitHub Actions: the pure-Python suite runs on Ubuntu and macOS, 3.12 and 3.13, and
+  the job fails if a clean install exceeds 150 MB.
+
 ### Removed
+- Build artifacts (`dist/`) had been committed by mistake; untracked and ignored.
+- The root `nybls` wrapper script (pointed at a dev `.venv`; `pip install` provides
+  the real entry point).
 - The chess-curriculum use case is dropped (it was only ever an illustrative
   example). The word "chess" still appears where it names a real benchmark
   video — those are measurement records and were left alone.
@@ -81,7 +92,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   transcript first" even when the transcript had just been flagged UNRELIABLE,
   pointing the agent at content that does not exist. A silent screen recording
   is the case where frames are the *only* carrier of information, not a
-  low-value case. Caught when four a build-in-public account reels — whose captions are
+  low-value case. Caught when four build-in-public reels — whose captions are
   one-line headlines and whose videos contain the full system architecture —
   were written off as "the substance is in the captions" on the strength of an
   empty transcript. `probe` now inverts its guidance when the guard fires.

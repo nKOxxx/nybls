@@ -1,0 +1,28 @@
+# Pure-Python suite: tests never call ffmpeg/yt-dlp/whisper, so no system deps.
+# Runs on both OSes because path handling and Pillow wheels differ.
+name: tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest tests/ -q
+      # The footprint guard: a clean install must stay far under the 150 MB ceiling.
+      - run: |
+          python -m venv /tmp/clean && /tmp/clean/bin/pip install -q .
+          SIZE=$(du -sm /tmp/clean | cut -f1); echo "clean install: ${SIZE} MB"
+          test "$SIZE" -lt 150
