@@ -32,7 +32,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import imagehash
+import imagehash  # reference implementation; install with `pip install nybls[bench]`
 import numpy as np
 from PIL import Image
 

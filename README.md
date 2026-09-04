@@ -72,9 +72,11 @@ pip install nybls
 ```
 
 That's it. No API keys, no account, no telemetry — your agent brings the model,
-everything else runs locally. Videos without captions need speech, which is an
-extra one-liner (`brew install whisper-cpp`); the model downloads itself the
-first time you need it, and the default is 141 MB, not 1.5 GB.
+everything else runs locally. The whole install is **about 50 MB** (numpy and
+Pillow; nothing else) — it was 293 MB before 0.8.0, and the difference was two
+libraries we used one function from each. Videos without captions need speech,
+which is an extra one-liner (`brew install whisper-cpp`); the model downloads
+itself the first time you need it, and the default is 141 MB, not 1.5 GB.
 
 ```bash
 nybls doctor

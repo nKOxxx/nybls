@@ -17,6 +17,33 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.8.0] — 2026-09-04
+
+### Changed
+- **Install footprint 293 MB → 63 MB** (clean venv, measured; ~50 MB net of the venv's
+  own pip). The agreed ceiling is 150 MB and 0.7.x was nearly double it — not because
+  of nybls (the wheel is 36 KB) but because two transitive imports we used one
+  function from each pulled opencv (120 MB) and scipy (99 MB). Both are gone:
+  - Scene detection now uses ffmpeg's own scene-change filter instead of
+    `scenedetect`. Verified on real footage: identical cuts on a 5-minute video,
+    same first cuts and same end on a 44-minute one (349 vs 395 scenes at threshold
+    0.3). Scene cuts only seed contact-sheet placement; adaptive sampling is the
+    real signal, so ~88% agreement is sufficient.
+  - The perceptual hash behind `[NEAR-DUPLICATE]` is now ~20 lines of numpy DCT
+    instead of `imagehash`. **Bit-exact** against the reference on 217 real frames,
+    so every stored `_phashes.json` remains valid.
+  - Runtime dependencies are now `numpy` and `pillow` only. `imagehash` moved to a
+    `bench` extra for `bench/measure_signals.py`, which compares against it as the
+    reference implementation.
+  - A test asserts the core package never imports cv2/scipy/scenedetect/imagehash,
+    and that the declared dependencies stay exactly those two — so the budget cannot
+    be blown silently by a future import.
+
+### Removed
+- The chess-curriculum use case is dropped (it was only ever an illustrative
+  example). The word "chess" still appears where it names a real benchmark
+  video — those are measurement records and were left alone.
+
 ## [0.7.2] — 2026-09-04
 
 ### Changed

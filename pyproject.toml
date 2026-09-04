@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nybls"
-version = "0.7.2"
+version = "0.8.0"
 description = "Budgeted, iterative video watching for AI agents — transcript first, then only the frames the model asks for, with receipts."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -24,13 +24,12 @@ classifiers = [
 ]
 dependencies = [
   "numpy>=1.24",
-  "scenedetect>=0.7.1",
-  "imagehash>=4.3.2",
   "pillow>=10.0",
 ]
 
 [project.optional-dependencies]
 macos = ["ocrmac>=1.0"]        # Apple Vision OCR (incl. Arabic); macOS only
+bench = ["imagehash>=4.3.2"]   # reference hash library for bench/measure_signals.py only
 dev = ["pytest>=8.0"]
 
 [project.urls]
