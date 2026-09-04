@@ -123,7 +123,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   said to be excluded, rather than silently treated as oldest.
 - **Benchmark round 2** — 3 videos, 15 questions, pre-registered, with a tightened control
   arm that could not zoom. `bench/RESULTS_round2.md`. Round 1's 2x margin did not
-  replicate; combined result across 4 videos is 35/40 vs 27/40 at 2.41x less cost.
+  replicate; combined result across 4 videos is 35/40 vs 27/40 at 3.26x less cost.
 - **`bench/uniform_coverage.py`** — closed-form dead zones and capture probability for a
   uniform grid, plus what it predicts about specific benchmark questions.
 - **`bench/measure_event_persistence.py`** — measures how long an on-screen event actually

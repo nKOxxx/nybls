@@ -168,8 +168,8 @@ Stated up front, because a claim that cannot fail is not a claim:
   Round 1 (`bench/RESULTS.md`, 2026-09-01, n=1): iterative 10/10 vs one-shot 5/10 at
   4.2x fewer visual tokens. Round 2 (`bench/RESULTS_round2.md`, 2026-09-02, n=3 with
   a tightened control that could not zoom): **the margin did not replicate** — 25/30
-  vs 22/30. Combined across 4 videos and 20 questions: 35/40 vs 27/40 at 2.41x the
-  cost. The advantage is narrow and consistent, not a rout, and it narrowed as the
+  vs 22/30. Combined across 4 videos and 20 questions: 35/40 vs 27/40 at 3.26x the
+  cost (215,040 visual tokens against 66,040). The advantage is narrow and consistent, not a rout, and it narrowed as the
   control was tightened. **Both arms failed the same question** — a 2.0-second
   on-screen graphic — which iteration does not fix and only dense coverage reaches.
 - If the mechanical rails prove trivially bypassable by ordinary agent behavior,
