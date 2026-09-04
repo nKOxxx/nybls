@@ -72,7 +72,7 @@ def main():
            "capture_prob_uniform_30": round(min(1.0, v * 30 / dur), 4) if v else 0.0,
            "frames_needed_even_odds": int(dur / (2 * v)) if v else None}
     print(json.dumps(res, indent=1))
-    out = Path(__file__).parent / "round2" / f"persist_{a.media_id}_{int(a.center)}.json"
+    out = Path(__file__).parent / "round3" / f"persist_{a.media_id}_{int(a.center)}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(res, indent=1))
 

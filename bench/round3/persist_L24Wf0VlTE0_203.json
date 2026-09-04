@@ -1,0 +1,16 @@
+{
+ "media_id": "L24Wf0VlTE0",
+ "signature": [
+  "mph"
+ ],
+ "center_s": 203.0,
+ "step_s": 0.25,
+ "n_samples": 49,
+ "n_matching": 16,
+ "longest_run_frames": 16,
+ "measured_visible_s": 4.0,
+ "run_starts_s": 200.75,
+ "duration_s": 301.0,
+ "capture_prob_uniform_30": 0.3987,
+ "frames_needed_even_odds": 37
+}
