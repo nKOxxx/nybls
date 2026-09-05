@@ -95,5 +95,5 @@ programming. That is the segment the thesis is about.
 - **One silent video, not a corpus.** The silent row is a single public video. More are
   being added. It is however a public video anyone can re-run, which is the point: the
   thesis no longer rests on private material.
-- **Correlation, not causation, and n = 8.** The ordering matches the prediction, but the
+- **Correlation, not causation, and n = 9.** The ordering matches the prediction, but the
   corpus was assembled for a different experiment and is not a random sample of video.
