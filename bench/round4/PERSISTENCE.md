@@ -62,3 +62,20 @@ here rests entirely on reader agreement.
 |---|---|---|---|---|
 | Q4 DevTools edited rule | `200px` | at least 113 s | Arm A read it at 1159, 1216 and 1272 s; OCR 0 of 261 (DevTools text, small), unusable | about 1.0 |
 | Q5 second media query | `1080px` | about 160 s per the author; both arms read it in 3 to 4 frames from 1555 s to the end | OCR 0 of 171, unusable | about 1.0 |
+
+## Wlu4MsBnjuk, Snake game (1446 s)
+
+OCR works here: the editor and terminal text is large enough at 1280 px, and match counts
+are dense, so these figures are used as measured.
+
+| item | signature | visible | from | n_matching | p(capture) at N=30 | N for even odds |
+|---|---|---|---|---|---|---|
+| Q3 KeyboardInterrupt traceback | `KeyboardInterrupt` | 10.5 s (recurs; 21 matches in an 80 s window) | 1008.0 s | 21 of 161 | 0.218 | 68 |
+| Q4 final frame_size_x | `1380` | 27.0 s | 1419.0 s | 40 of 121 | 0.560 | 26 |
+| Q5 closing comment | `WATHING` | 25.5 s, to the end of the video | 1420.0 s | 51 of 61 | 0.529 | 28 |
+
+The control's grid interval on this video is 48.2 s, so each of these is caught by at most
+one uniform frame, and at 0.22 to 0.56 probability. The last two also sit inside the
+control's closing dead zone of 24.1 s for part of their run: the final uniform sample is
+at 1421.9 s, so anything typed after that is structurally unreachable, which is exactly
+what the control reported for the end of the closing comment and the final height.

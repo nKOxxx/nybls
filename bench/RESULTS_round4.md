@@ -27,12 +27,17 @@ On silent video the narration leak that voided four earlier questions cannot occ
 | C timelapse | 6:10 | 5/10 | 7/10 | 4/4 | 4/4 | 1/6 | 3/6 | 53,760 | 26,600 | 2.0x |
 | Rust session | 12:07 | 8/10 | 10/10 | 4/4 | 4/4 | 4/6 | 6/6 | 53,760 | 5,883 | 9.1x |
 | HTML and CSS | 28:17 | 10/10 | 10/10 | 6/6 | 6/6 | 4/4 | 4/4 | 53,760 | 15,692 | 3.4x |
-| Snake game | 24:05 | pending | | | | | | 53,760 | | |
+| Snake game | 24:05 | 8/10 | 10/10 | 4/4 | 4/4 | 4/6 | 6/6 | 53,760 | 21,514 | 2.5x |
+| **Round 4** | | **31/40 (78%)** | **37/40 (93%)** | **18/18** | **18/18** | **13/22** | **19/22** | **215,040** | **69,689** | **3.09x** |
 
 Rust Arm B is 10/10 after one reference correction (`round4/GT_ERRATA.md`), verified
 against the pixels before the judge's stated conditional was applied.
 
-## Predictions, scored so far
+**All four rounds, 12 videos, 112 audited questions:** Arm A **83/112 (74%)** for
+645,120 visual tokens; Arm B **101/112 (90%)** for 189,052. **Arm A spent 3.41x the
+visual tokens for 82% of Arm B's score.**
+
+## Predictions, scored
 
 **P1, the transcript contributes nothing. HELD.** All four transcripts are degenerate by
 the words per minute test: 2.93, 0.33, 0.08 and 0.07 content words per minute against a
@@ -41,9 +46,10 @@ shipped guard calls every one of them healthy. One wrinkle recorded honestly: th
 carries auto captions of its music track and sits at 2.93, above the "below 1" threshold
 the prediction wrote; it is still an order of magnitude under the floor.
 
-**P2, the gap is on transient items and near zero on persistent ones. HELD, on all three
-videos judged.** Persistent items: 4 to 4, 4 to 4, 6 to 6. Transient items: 1 to 3, 4 to 6,
-4 to 4. Every point of difference between the arms sits on a transient item. This is the
+**P2, the gap is on transient items and near zero on persistent ones. HELD, on all four
+videos.** Persistent items: 4 to 4, 4 to 4, 6 to 6, 4 to 4, a perfect tie at 18 to 18.
+Transient items: 1 to 3, 4 to 6, 4 to 4, 4 to 6, for 13 to 19. **Every one of the six
+points separating the arms sits on a transient item.** This is the
 round's main test and it is the sharpest confirmation of a mechanism in the benchmark.
 
 **A refinement the round forced.** The label predicts *where* a gap can be, not whether
@@ -56,7 +62,10 @@ comment (1.25 s), and the Rust job status line (about 2 s). **What the grid cann
 is decided by on screen persistence.** The P/T label is a proxy for it and a leaky one.
 
 **P4, sub three second items defeat both arms at least half the time. HELD.** Of the four
-items under 2 s, the control missed all four and the iterative arm missed two. The
+items under 2 s, the control missed all four and the iterative arm missed two. On the
+Snake video the control's two partial answers were both content typed after its last
+sample at 1421.9 s, inside the closing dead zone of 24.1 s that Section 4 of the paper
+derives in closed form. The
 iterative arm found the all caps comment with a zoom and the job status line by aiming a
 sheet at the flood; it did not find either half second terminal state and reported both as
 insufficient evidence.
@@ -66,11 +75,12 @@ insufficient evidence.
 at 2.0x, the bottom of the band, because the iterative arm spent 24 of its 25 unit budget
 hunting sub second states it never found. The band was wrong in both directions.
 
-**P6, the reference is corrected by an arm at least once. HELD.** The Rust reference
-recorded the PID of the first of two runs of the same command, four seconds apart; the
-question asks for the final job status line, which belongs to the second. A 10 s grid
-cannot separate two events four seconds apart. Fifth reference correction across the
-benchmark.
+**P6, the reference is corrected by an arm at least once. HELD, three times.** The Rust
+reference recorded the PID of the first of two runs of the same command, four seconds
+apart; the question asks for the final job status line, which belongs to the second. The
+Snake reference missed a recurrence of the traceback and a late reappearance of the final
+height; both were on screen where the arm said. Fifth, sixth and seventh reference
+corrections across the benchmark. A dense grid read once is still a sample.
 
 ## Two production findings
 

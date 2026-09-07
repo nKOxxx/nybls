@@ -1,0 +1,16 @@
+{
+ "media_id": "Wlu4MsBnjuk",
+ "signature": [
+  "keyboardinterrupt"
+ ],
+ "center_s": 1005.0,
+ "step_s": 0.5,
+ "n_samples": 161,
+ "n_matching": 21,
+ "longest_run_frames": 21,
+ "measured_visible_s": 10.5,
+ "run_starts_s": 1008.0,
+ "duration_s": 1445.5,
+ "capture_prob_uniform_30": 0.2179,
+ "frames_needed_even_odds": 68
+}
