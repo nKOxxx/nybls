@@ -1,0 +1,16 @@
+{
+ "media_id": "QtqYNyBv9r8",
+ "signature": [
+  "exit 127"
+ ],
+ "center_s": 415.0,
+ "step_s": 0.25,
+ "n_samples": 121,
+ "n_matching": 6,
+ "longest_run_frames": 6,
+ "measured_visible_s": 1.5,
+ "run_starts_s": 418.5,
+ "duration_s": 726.2,
+ "capture_prob_uniform_30": 0.062,
+ "frames_needed_even_odds": 242
+}
