@@ -53,7 +53,12 @@ not by the P/T label.** The label predicts the gap only where T items are genuin
 
 ## vxP2PTA1GEk, HTML and CSS session (1697 s)
 
+This video is stored at **360 by 640**, a vertical low resolution source, where the other
+three are 1152 to 1280 wide. OCR cannot read code at that size at all, and both arms
+reported digit level uncertainty on every numeric answer for the same reason. Persistence
+here rests entirely on reader agreement.
+
 | item | signature | visible | basis | p(capture) at N=30 |
 |---|---|---|---|---|
 | Q4 DevTools edited rule | `200px` | at least 113 s | Arm A read it at 1159, 1216 and 1272 s; OCR 0 of 261 (DevTools text, small), unusable | about 1.0 |
-| Q5 second media query | `1080px` | about 160 s per the author | pending OCR | about 1.0 |
+| Q5 second media query | `1080px` | about 160 s per the author; both arms read it in 3 to 4 frames from 1555 s to the end | OCR 0 of 171, unusable | about 1.0 |

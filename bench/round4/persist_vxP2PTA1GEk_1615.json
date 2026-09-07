@@ -1,0 +1,16 @@
+{
+ "media_id": "vxP2PTA1GEk",
+ "signature": [
+  "1080px"
+ ],
+ "center_s": 1615.0,
+ "step_s": 1.0,
+ "n_samples": 171,
+ "n_matching": 0,
+ "longest_run_frames": 0,
+ "measured_visible_s": 0.0,
+ "run_starts_s": null,
+ "duration_s": 1696.8,
+ "capture_prob_uniform_30": 0.0,
+ "frames_needed_even_odds": null
+}
