@@ -3,6 +3,9 @@ language its model cannot handle it loops. Both are reported as success, so both
 have to be caught here or they reach the user as fact."""
 from nybls_core import transcribe as tr
 
+WORDS = ("pipeline latency cluster deploy schema rollback index cache queue worker "
+         "shard replica backup restore migrate throttle retry timeout socket buffer "
+         "kernel packet router tunnel session token cursor commit branch rebase").split()
 
 def _segs(lines, step=3.0):
     return [(i * step, t) for i, t in enumerate(lines)]
@@ -27,7 +30,10 @@ def test_consecutive_repetition_is_caught():
 
 
 def test_a_real_transcript_passes():
-    segs = _segs([f"this is genuinely varied sentence number {i} with content" for i in range(60)])
+    # Real speech keeps introducing new words. A fixture that repeats one
+    # sentence template has the vocabulary of a hallucination, and the guard
+    # correctly says so, which is why this fixture uses a real word bank.
+    segs = _segs([f"{WORDS[i % len(WORDS)]} {WORDS[(i * 7) % len(WORDS)]} happens around step number {i}" for i in range(60)])
     assert tr.looks_degenerate(segs) is None
 
 
@@ -56,3 +62,62 @@ def test_silent_video_guidance_is_inverted():
     i_guard = src.index('if "UNRELIABLE" in tsource:')
     i_default = src.index("Read the transcript first")
     assert i_default > i_guard, "silent-video branch must precede the default advice"
+
+
+def _vocab(n: int) -> list[str]:
+    """n distinct content words. Synthetic, because the guard counts vocabulary
+    size and rate, not whether the words are real English."""
+    syl = ("ka ro mi tel sen dor vin lac pem nuz gri fal ost jen wub tam".split())
+    out = []
+    for i in range(n):
+        out.append(syl[i % 16] + syl[(i // 16) % 16] + syl[(i // 256) % 16])
+    return list(dict.fromkeys(out))[:n]
+
+
+def test_catches_fluent_hallucination_that_never_repeats():
+    """The line-ratio check only catches repetition. A model hallucinating from
+    audio it cannot hear produces varied text at a normal rate, so it scores a
+    perfect 1.000 there and was reported healthy. A real 24-minute video did
+    exactly this: 183 words per minute, 7.5 distinct content words per minute.
+
+    Built to that profile: plenty of words, almost no vocabulary, and no two
+    lines alike, so every earlier check passes it.
+    """
+    import random
+    rng = random.Random(0)          # seeded, so the fixture is reproducible
+    pool = _vocab(10)
+    segs = [(float(i * 3), " ".join(rng.choice(pool) for _ in range(9)))
+            for i in range(500)]
+    lines = [t for _, t in segs]
+    assert len(set(lines)) / len(lines) > 0.25, "must survive the line-ratio check"
+    wpm, distinct = tr.word_rates(segs, 1500)
+    assert wpm > 100 and distinct < 9
+    problem = tr.looks_degenerate(segs)
+    assert problem is not None and "distinct content words" in problem
+
+
+def test_catches_silence_captioned_as_room_tone():
+    """A 63-minute silent screen recording came back as hundreds of lines of
+    keyboard noise. Real speech never runs this quiet: 7 words per minute
+    against 49 for the sparsest genuine narration measured."""
+    tones = [f"(keyboard clicking {w})" for w in _vocab(60)]
+    segs = [(float(i * 15), tones[i % 60]) for i in range(226)]
+    assert len(set(t for _, t in segs)) / len(segs) > 0.25
+    problem = tr.looks_degenerate(segs)
+    assert problem is not None and "words per minute" in problem
+
+
+def test_sparse_but_real_narration_is_not_flagged():
+    """The guard must not punish genuinely quiet content. A console teardown
+    with long silent working stretches runs 63 words per minute at 11.2 distinct
+    content words per minute, and a stream billed as coding without commentary
+    runs 49. Both are real speech and both must pass. This fixture is built to
+    the teardown's measured profile, which sits closest to the threshold."""
+    pool = _vocab(230)
+    segs = []
+    for i in range(100):
+        new = pool[i * 2:i * 2 + 2]
+        segs.append((float(i * 12), " ".join(new) + " so we lift it clear and set it aside now"))
+    wpm, distinct = tr.word_rates(segs, 1200)
+    assert 45 < wpm < 80 and 9 < distinct < 15, (wpm, distinct)
+    assert tr.looks_degenerate(segs) is None

@@ -1,19 +1,19 @@
 """Purpose → extraction contract.
 
 Every comparable tool hardcodes one ontology: concepts, entities, sources. The
-shape of what you extract should instead follow from why you are extracting it —
+shape of what you extract should instead follow from why you are extracting it , 
 teaching a beginner and rebuilding a system want different objects out of the
 same video.
 
 A contract is a typed schema plus the guidance for filling it. The tool does not
 do the extraction; it states what a valid extraction looks like, then checks the
-result — schema conformance here, citation verification in verify.py. That split
+result, schema conformance here, citation verification in verify.py. That split
 is deliberate: a model that both decides what counts as evidence and grades its
 own evidence is not being checked.
 
 Every claim carries two clocks (after ATOM, arXiv:2510.22590):
-  at        — video time, where in the recording it was said
-  observed  — when the source itself was published
+  at       , video time, where in the recording it was said
+  observed , when the source itself was published
 The second only matters across a corpus, where it is the difference between
 "these two sources disagree" and "this person changed their mind".
 """
@@ -42,7 +42,7 @@ SHAPES: dict[str, dict] = {
             "Name concepts as the source names them. Do not invent tidier labels.",
             "prerequisites must reference other concept names in this same extraction.",
             "A concept with no worked example is usually a definition, not a concept.",
-            "Record common errors verbatim in substance — they are the highest-value part.",
+            "Record common errors verbatim in substance, they are the highest-value part.",
         ],
     },
     "rebuild": {
@@ -55,12 +55,12 @@ SHAPES: dict[str, dict] = {
             "component": ("string", False, "the part of the system it governs"),
             "supersedes": ("string", False, "an earlier decision this replaces"),
             "confidence": ("string", False, "stated | implied | inferred"),
-            "video": ("string", False, "source video id — required when extracting across a corpus"),
+            "video": ("string", False, "source video id, required when extracting across a corpus"),
             **CITATION,
         },
         "guidance": [
             "A decision without a stated rationale is an observation. Mark it inferred.",
-            "supersedes is for the same author changing their mind over time — set observed on both.",
+            "supersedes is for the same author changing their mind over time, set observed on both.",
             "Never merge two sources that disagree. Record both and let the contradiction stand.",
             "Prefer the author's own words for rationale; paraphrase loses the reason.",
         ],
@@ -91,7 +91,7 @@ SHAPES: dict[str, dict] = {
             "kind": ("string", False, "fact | opinion | prediction | anecdote"),
             "evidence": ("string", False, "what the source offers in support"),
             "contradicts": ("string", False, "another claim in this extraction"),
-            "video": ("string", False, "source video id — required when extracting across a corpus"),
+            "video": ("string", False, "source video id, required when extracting across a corpus"),
             **CITATION,
         },
         "guidance": [
@@ -108,7 +108,7 @@ def render(shape: str, purpose: str) -> str:
         raise ValueError(f"unknown shape {shape!r}; choose from {', '.join(SHAPES)}")
     c = SHAPES[shape]
     out = [
-        f"# extraction contract — {shape}",
+        f"# extraction contract. {shape}",
         f"# purpose: {purpose}",
         f"# {c['summary']}",
         "",
@@ -132,7 +132,7 @@ def render(shape: str, purpose: str) -> str:
 
 
 def validate(obj: dict, shape: str) -> list[str]:
-    """Structural check. Deliberately dependency-free — the schemas are simple
+    """Structural check. Deliberately dependency-free, the schemas are simple
     and every added dependency is install friction we decided not to spend."""
     c = SHAPES[shape]
     errs: list[str] = []

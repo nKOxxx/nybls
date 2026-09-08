@@ -14,14 +14,16 @@ from pathlib import Path
 MODEL_DIR = Path.home() / ".nybls" / "models"
 BASE_URL = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main"
 
-# name -> (file, approx MB, note)  — sizes verified against the CDN 2026-09-02
+# name -> (file, approx MB, note) , sizes verified against the CDN 2026-09-02
 MODELS = {
     "tiny":   ("ggml-tiny.en.bin", 74, "fastest, English only"),
-    "base":   ("ggml-base.en.bin", 141, "default — good balance, English only"),
+    "base":   ("ggml-base.en.bin", 141, "default, good balance, English only"),
     "small":  ("ggml-small.en.bin", 465, "more accurate, English only"),
     "turbo":  ("ggml-large-v3-turbo.bin", 1549, "most accurate, all languages"),
 }
 DEFAULT_MODEL = "base"
+MIN_WORDS_PER_MIN = 30.0      # below this the audio is silent or near-silent
+MIN_DISTINCT_PER_MIN = 9.0    # enough words but no vocabulary means the model is inventing
 
 TAG_RE = re.compile(r"<[^>]+>")
 TS_LINE_RE = re.compile(r"(\d+):(\d+):(\d+)\.\d+\s+-->")
@@ -110,8 +112,48 @@ def whisper(video: Path, out_dir: Path, model: str = DEFAULT_MODEL, lang: str = 
     return segs
 
 
+# Words that carry no information about a video's subject. Same list the
+# modality benchmark used, so the guard below is measured on the same terms.
+_STOP = {"the", "and", "for", "you", "your", "this", "that", "with", "from", "are",
+         "was", "not", "but", "have", "has", "had", "can", "will", "all", "its",
+         "it's", "they", "them", "their", "our", "out", "get", "got", "one", "two",
+         "new", "now", "how", "why", "what", "when", "who"}
+
+
+def word_rates(segs: list[tuple[float, str]], duration_s: float) -> tuple[float, float]:
+    """Words per minute, and distinct informative words per minute.
+
+    Two numbers because whisper fails in two opposite ways and neither number
+    catches both. Silence produces almost no words at all. A hallucinating model
+    produces plenty, at a normal rate, but keeps circling a tiny vocabulary, so
+    it hides inside the first number and only shows up in the second.
+    """
+    total = 0
+    seen: set[str] = set()
+    for _, text in segs:
+        toks = re.sub(r"[^a-z0-9']+", " ", text.lower()).split()
+        total += len(toks)
+        for w in toks:
+            if len(w) >= 3 and w not in _STOP:
+                seen.add(w)
+    mins = max(duration_s, 1.0) / 60.0
+    return total / mins, len(seen) / mins
+
+
+def _mostly_unspaced_script(segs: list[tuple[float, str]]) -> bool:
+    """Chinese, Japanese and Thai do not put spaces between words, so counting
+    them would report a near-zero rate for a perfectly good transcript. The rate
+    guard is validated on space-separated scripts only, so skip those.
+    """
+    text = "".join(t for _, t in segs)
+    if not text:
+        return False
+    cjk = sum(1 for ch in text if "\u3040" <= ch <= "\u9fff" or "\u0e00" <= ch <= "\u0e7f")
+    return cjk / len(text) > 0.15
+
+
 def looks_degenerate(segs: list[tuple[float, str]]) -> str | None:
-    """Whisper on audio it cannot handle does not fail — it loops.
+    """Whisper on audio it cannot handle does not fail, it loops.
 
     Run an English-only model over Hindi, or any model over music, and it emits
     the same line hundreds of times and reports success. Measured on a real
@@ -136,21 +178,47 @@ def looks_degenerate(segs: list[tuple[float, str]]) -> str | None:
     stripped = joined.strip(" .!?\u00a1\u00bf,")
     if words <= 12 and any(stripped == h or stripped.startswith(h) for h in HALLUCINATED):
         return (f"the entire transcript is {words} words of stock filler "
-                f"({joined[:48]!r}) — the audio is almost certainly silent or music only")
+                f"({joined[:48]!r}), the audio is almost certainly silent or music only")
 
     if len(segs) < 20:
         return None
     lines = [t.strip().lower() for _, t in segs]
     unique = len(set(lines))
     if unique / len(lines) < 0.25:
-        return (f"only {unique} distinct lines in {len(lines)} — the model looped, "
+        return (f"only {unique} distinct lines in {len(lines)}, the model looped, "
                 f"which usually means the audio is not the model's language")
     longest = worst = 1
     for a, b in zip(lines, lines[1:]):
         longest = longest + 1 if a == b else 1
         worst = max(worst, longest)
     if worst >= 12:
-        return f"one line repeated {worst} times consecutively — the model looped"
+        return f"one line repeated {worst} times consecutively, the model looped"
+
+    # These go last because they are the general case and the checks above are
+    # specific. They catch what those cannot: a transcript of varied nonsense
+    # that never repeats, and one where every line is unique only because each
+    # carries its own timestamp. Both scored a perfect 1.000 on the line ratio
+    # and were reported healthy.
+    #
+    # Thresholds measured across 24 videos of at least 30 seconds. Real speech
+    # runs 119 to 249 words per minute; the sparsest genuine narration we have,
+    # a teardown with long silent stretches and a deliberately quiet coding
+    # stream, still reach 49 and 63, while every silent video sits at 14 or
+    # below. The vocabulary check is the tighter of the two: a real ASR failure
+    # sits at 7.5 distinct words per minute and the nearest healthy video at
+    # 11.2, so 9 splits a gap of only 1.5x. Long videos on one narrow subject
+    # push this number down honestly, which is why it only applies when the
+    # model produced a normal volume of words in the first place.
+    if not _mostly_unspaced_script(segs) and dur >= 30:
+        wpm, distinct = word_rates(segs, dur)
+        if wpm < MIN_WORDS_PER_MIN:
+            return (f"only {wpm:.0f} words per minute, against {MIN_WORDS_PER_MIN:.0f} for "
+                    f"the sparsest real narration we have measured. The audio is silent or "
+                    f"nearly so, and the frames are the only place the content exists")
+        if distinct < MIN_DISTINCT_PER_MIN:
+            return (f"{wpm:.0f} words per minute but only {distinct:.1f} distinct content "
+                    f"words per minute. The model produced fluent text from audio it could "
+                    f"not hear; treat none of it as evidence")
     return None
 
 
@@ -161,7 +229,7 @@ def build_transcript(media_id: str, ws: Path, video: Path,
         vtt = _pick_vtt(vtts)
         segs, source = condense_vtt(vtt), f"captions:{vtt.name}"
     elif not have_whisper():
-        return None, ("none — no captions on this video, and whisper-cli is not installed. "
+        return None, ("none, no captions on this video, and whisper-cli is not installed. "
                       "Frames still work; for speech install it with: brew install whisper-cpp")
     else:
         segs, source = whisper(video, ws, model), f"whisper:{model}"
@@ -177,5 +245,5 @@ def build_transcript(media_id: str, ws: Path, video: Path,
             if MODELS[model][0].endswith(".en.bin"):
                 hint = (f"  The '{model}' model is English-only. For other languages "
                         f"re-run with --model turbo.")
-            source = f"{source} — UNRELIABLE: {problem}.{hint}"
+            source = f"{source}, UNRELIABLE: {problem}.{hint}"
     return out, source

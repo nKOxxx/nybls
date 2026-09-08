@@ -53,5 +53,5 @@ def write_manifest(video_id: str, data: dict) -> Path:
 def read_manifest(video_id: str) -> dict:
     p = workspace(video_id) / "manifest.json"
     if not p.exists():
-        raise FileNotFoundError(f"no manifest for {video_id} — run `nybls probe` first")
+        raise FileNotFoundError(f"no manifest for {video_id}, run `nybls probe` first")
     return json.loads(p.read_text())

@@ -3,6 +3,9 @@ so it is the one that most needs its own checks."""
 import pytest
 from nybls_core import verify as vf
 
+WORDS = ("pipeline latency cluster deploy schema rollback index cache queue worker "
+         "shard replica backup restore migrate throttle retry timeout socket buffer "
+         "kernel packet router tunnel session token cursor commit branch rebase").split()
 SEGS = [
     (0.0, "welcome to the lesson"),
     (36.0, "first of all you fight for the center this is the small center"),
@@ -71,7 +74,9 @@ def test_silent_video_claim_is_not_called_unsupported():
 
 def test_no_speech_does_not_weaken_real_verification():
     """The carve-out must not become a way for fabrications to pass."""
-    segs = [(float(i), f"segment number {i} about pipelines and latency") for i in range(40)]
+    segs = [(float(i), f"segment number {i} about pipelines and latency "
+                     f"{WORDS[i % len(WORDS)]} {WORDS[(i * 5) % len(WORDS)]}")
+            for i in range(40)]
     good = vf.verify_claim(segs, "segment number 10 about pipelines", 10.0)
     bad = vf.verify_claim(segs, "quantum blockchain unicorn synergy", 10.0)
     assert good.status == "verified"
@@ -91,7 +96,9 @@ def test_all_unjudgeable_does_not_report_as_zero_percent_clean():
 def test_unjudgeable_claims_leave_the_ratio_when_mixed():
     """Counting them as failures understates a partly-silent corpus; counting
     them as passes overstates it. They are excluded and stated separately."""
-    real = [(float(i), f"segment number {i} about pipelines and latency") for i in range(40)]
+    real = [(float(i), f"segment number {i} about pipelines and latency "
+                     f"{WORDS[i % len(WORDS)]} {WORDS[(i * 5) % len(WORDS)]}")
+            for i in range(40)]
     vs = [vf.verify_claim(real, "segment number 10 about pipelines", 10.0),
           vf.verify_claim([(0.0, "Thank you.")], "an on-screen fact", 1.0)]
     out = vf.report(vs)

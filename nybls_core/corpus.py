@@ -3,9 +3,9 @@
 The hard part is not merging. It is telling two things apart that look identical
 in the data:
 
-  - a **contradiction** — two sources asserting incompatible things, which the
+  - a **contradiction**, two sources asserting incompatible things, which the
     reader must adjudicate; and
-  - an **evolution** — one author changing their mind over time, which is not a
+  - an **evolution**, one author changing their mind over time, which is not a
     contradiction at all but the most interesting thing a corpus can show you.
 
 Both look like "claim A conflicts with claim B" until you know who said each and
@@ -70,7 +70,7 @@ def register(name: str, ids: list[str]) -> dict:
 def load(name: str) -> dict:
     path = _dir() / f"{name}.json"
     if not path.exists():
-        raise FileNotFoundError(f"no corpus '{name}' — create it with `nybls corpus {name} --add <ids>`")
+        raise FileNotFoundError(f"no corpus '{name}', create it with `nybls corpus {name} --add <ids>`")
     return json.loads(path.read_text())
 
 

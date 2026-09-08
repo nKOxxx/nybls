@@ -3,7 +3,7 @@
 The research is blunt about this: frontier models score ~8% on evidence
 grounding while being ~45% right, and every large quality gain in the literature
 came from adding a separate checking step rather than from better prompting. So
-a claim's citation is never trusted because a model asserted it — it is checked
+a claim's citation is never trusted because a model asserted it, it is checked
 against the transcript window it points at.
 
 The check is deliberately fuzzy. ASR output is not verbatim, so exact string
@@ -81,7 +81,7 @@ def _no_usable_speech(segs: list[tuple[float, str]]) -> bool:
     """Distinguish "the video said something else" from "the video said nothing".
 
     A silent screen recording yields one line of whisper filler. Scoring a claim
-    against that returns 0% coverage, which reads identically to a fabrication —
+    against that returns 0% coverage, which reads identically to a fabrication , 
     so the verifier would mark a claim that is plainly true on screen as
     unsupported, and an honest agent would delete it. Measured: a correct claim
     about a medallion pipeline scored 0.0 against a one-line transcript.
@@ -94,7 +94,7 @@ def _no_usable_speech(segs: list[tuple[float, str]]) -> bool:
 
 def verify_claim(segs: list[tuple[float, str]], claim: str, at: float) -> Verdict:
     if _no_usable_speech(segs):
-        # Not a failure of the claim — a failure of this method to apply. The
+        # Not a failure of the claim, a failure of this method to apply. The
         # claim needs a frame citation, which the transcript can never supply.
         return Verdict(claim, at, "no-speech", 0.0, [], [])
     if at > segs[-1][0] + WINDOW_AFTER or at < -1:
@@ -111,7 +111,7 @@ def verify_claim(segs: list[tuple[float, str]], claim: str, at: float) -> Verdic
 
 
 def verify_file(transcript: Path, claims_path: Path) -> list[Verdict]:
-    """claims.json: [{"claim": "...", "at": 242.0}, ...] — `at` in seconds."""
+    """claims.json: [{"claim": "...", "at": 242.0}, ...], `at` in seconds."""
     segs = load_transcript(transcript)
     claims = json.loads(claims_path.read_text())
     return [verify_claim(segs, c["claim"], float(c["at"])) for c in claims]
@@ -127,7 +127,7 @@ def report(verdicts: list[Verdict]) -> str:
         if v.status in ("weak", "unsupported") and v.missing:
             lines.append(f"        not found near this timestamp: {', '.join(v.missing[:8])}")
         if v.status == "no-speech":
-            lines.append("        no usable speech in this video — speech cannot "
+            lines.append("        no usable speech in this video, speech cannot "
                          "confirm or deny this; cite a frame instead")
     n = len(verdicts) or 1
     ok = sum(1 for v in verdicts if v.status == "verified")
@@ -140,7 +140,7 @@ def report(verdicts: list[Verdict]) -> str:
         # Everything was unjudgeable. Printing "0/1 verified · 0% clean" here
         # reads as total failure when the truth is that this method does not
         # apply at all to this material.
-        lines.append(f"\n  0 of {n} claims can be judged by speech — this video has "
+        lines.append(f"\n  0 of {n} claims can be judged by speech, this video has "
                      f"none. Verify these against frames.")
     else:
         lines.append(f"\n  {ok}/{denom} verified · {weak} weak · {bad} unsupported{tail} "

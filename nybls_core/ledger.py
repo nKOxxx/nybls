@@ -1,4 +1,4 @@
-"""Cumulative spend ledger — the piece nothing else on the market has."""
+"""Cumulative spend ledger, the piece nothing else on the market has."""
 import json
 import math
 from pathlib import Path

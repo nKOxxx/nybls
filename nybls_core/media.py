@@ -39,7 +39,7 @@ def phash_hex(img: Image.Image, hash_size: int = 8, highfreq_factor: int = 4) ->
     Grayscale, resize to 32x32, 2-D DCT-II (scipy's unnormalised convention,
     which only matters for reproducing the reference exactly), keep the
     top-left 8x8 low-frequency block, threshold at its median. Bits are
-    row-major, MSB first, rendered as 16 hex characters — the same string
+    row-major, MSB first, rendered as 16 hex characters, the same string
     imagehash writes, so `_phashes.json` files from earlier versions still
     compare correctly.
     """
@@ -276,3 +276,108 @@ def _frange(start, stop, step):
     while t < stop:
         yield t
         t += step
+
+
+# ── who is on screen ─────────────────────────────────────────────────────────
+#
+# A recorded call in speaker view cuts to whoever is talking, so the face on
+# screen IS the speaker and a shot change is a turn boundary. That makes speaker
+# segmentation a change-detection problem, which this module already solves for
+# free: probes are pulled at low resolution and cost no vision tokens at all.
+#
+# Measured on a 45-minute sales call, 600 probes every 3 s extracted in 13 s:
+# two clusters covered 88% of the call, one the rep alone and one the two
+# prospects, switching about every 9 s, which is conversational turn cadence.
+#
+# What this does NOT do: identify anyone. Clusters are shots, not names. The
+# caller supplies the names once, which is the cheap half of the problem.
+SHOT_MERGE = 24     # phash distance below which two probes are the same shot
+
+
+def cluster_hashes(hashes: list[str], merge: int = SHOT_MERGE) -> tuple[list[int], list[int]]:
+    """Greedy single-pass clustering of perceptual hashes into shots.
+
+    Returns a cluster id per hash, renumbered so 0 is the most common shot, and
+    the cluster ids in that order. Greedy rather than proper agglomeration
+    because the input is already ordered in time and the cost has to stay near
+    zero: this runs over every probe in a recording.
+    """
+    reps: list[str] = []
+    members: list[list[int]] = []
+    raw: list[int] = []
+    for h in hashes:
+        best, bd = None, 999
+        for c, rh in enumerate(reps):
+            dist = hamming(h, rh)
+            if dist < bd:
+                bd, best = dist, c
+        if best is None or bd > merge:
+            reps.append(h)
+            members.append([])
+            best = len(reps) - 1
+        members[best].append(len(raw))
+        raw.append(best)
+    order = sorted(range(len(reps)), key=lambda c: -len(members[c]))
+    rank = {c: r for r, c in enumerate(order)}
+    return [rank[c] for c in raw], [rank[c] for c in order]
+
+
+def _probe_dir(ws: Path) -> Path:
+    d = ws / "frames" / "_shots"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def shot_timeline(video: Path, ws: Path, every: float = 3.0,
+                  start: float = 0.0, end: float | None = None,
+                  merge: int = SHOT_MERGE) -> dict:
+    """Cluster low-resolution probes into shots. Costs no vision tokens."""
+    d = _probe_dir(ws)
+    for old in d.glob("p_*.png"):
+        old.unlink()
+    span = ["-ss", str(start)] + (["-to", str(end)] if end else [])
+    subprocess.run(
+        ["ffmpeg", "-hide_banner", "-loglevel", "error", *span, "-i", str(video),
+         "-vf", f"fps=1/{every},scale=160:-2", "-f", "image2", str(d / "p_%05d.png")],
+        check=True)
+    probes = sorted(d.glob("p_*.png"))
+    if not probes:
+        return {"shots": [], "clusters": [], "probes": 0, "every": every}
+
+    hashes = [phash_hex(Image.open(f)) for f in probes]
+    assign, order = cluster_hashes(hashes, merge)
+    shots = [{"t": round(start + i * every, 2), "cluster": c} for i, c in enumerate(assign)]
+    counts: dict[int, list[int]] = {}
+    for i, c in enumerate(assign):
+        counts.setdefault(c, []).append(i)
+    clusters = [{
+        "id": c,
+        "probes": len(counts[c]),
+        "share": round(len(counts[c]) / len(probes), 4),
+        "seconds": round(len(counts[c]) * every, 1),
+        "example": str(probes[counts[c][len(counts[c]) // 2]]),
+    } for c in order]
+    switches = sum(1 for a, b in zip(shots, shots[1:]) if a["cluster"] != b["cluster"])
+    return {"shots": shots, "clusters": clusters, "probes": len(probes),
+            "every": every, "switches": switches}
+
+
+def shot_strip(clusters: list[dict], out: Path, top: int = 6) -> Path:
+    """One labelled thumbnail per shot, so a human can say which one is them."""
+    picks = clusters[:top]
+    ims = [Image.open(c["example"]).convert("RGB") for c in picks]
+    w, h = ims[0].size
+    pad, band = 6, 30
+    sheet = Image.new("RGB", (w * len(ims) + pad * (len(ims) - 1), h + band), "black")
+    d = ImageDraw.Draw(sheet)
+    try:
+        font = ImageFont.truetype(FONT_PATH, 16)
+    except OSError:
+        font = ImageFont.load_default()
+    for i, (im, c) in enumerate(zip(ims, picks)):
+        x = i * (w + pad)
+        sheet.paste(im, (x, band))
+        d.text((x + 4, 7), f"shot {c['id']}  {c['share'] * 100:.0f}%", font=font, fill=(57, 255, 20))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(out)
+    return out

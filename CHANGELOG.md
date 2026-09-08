@@ -13,15 +13,60 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Planned
 - Independent benchmark of the iterative loop against a one-shot frame dump at
-  equal cost — the open gap named in `docs/RESEARCH.md`
+  equal cost, the open gap named in `docs/RESEARCH.md`
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
-## [0.8.0] — 2026-09-04
+## [0.9.0] - 2026-09-08
+
+### Added
+- **`nybls speakers <id>`, who is on screen across a recorded call.** A call
+  recorded in speaker view cuts to whoever is talking, so a shot change is a turn
+  boundary and speaker segmentation becomes a change-detection problem, which
+  this tool already solves for free. Measured on a 45-minute sales call: 600
+  probes every 3 s extracted in 13 s at no vision cost, two shots covering 88% of
+  the call, switching about every 9 s. The command prints the split and writes one
+  labelled thumbnail per shot so a person can say which one is them. It reports
+  honestly when there is no turn signal to read, which is what a screen share or a
+  static camera looks like.
+  Known limits, stated in the README: measured properly on one call, gallery view
+  untested, attribution stops during a screen share, and screen time is a proxy
+  for talk time rather than a measurement of it.
+
+### Fixed
+- **The ASR guard passed two real failure modes.** It only looked for repetition,
+  so it scored a perfect 1.000 and reported "healthy" on both a transcript of
+  fluent hallucinated nonsense that never repeats, and a 63-minute silent screen
+  recording captioned as hundreds of unique lines of keyboard noise. Round 4 hit
+  the same hole on all four of its silent videos.
+  Two rate checks now cover both, because the failures point in opposite
+  directions: too few words per minute catches silence, and enough words with
+  almost no vocabulary catches invention. Measured across 24 videos of at least
+  30 seconds, this catches 6 of 6 known failures with no false positives on the
+  18 healthy transcripts, including a console teardown with long silent stretches
+  and a stream billed as coding without commentary, which are the sparsest real
+  speech in the corpus.
+  An earlier attempt using a single threshold was discarded during testing: it
+  flagged a 48-minute chess lesson, because distinct vocabulary saturates on a
+  long video about one narrow subject, and no threshold survived a gap that thin.
+
+### Changed
+- README rewritten. It now lists what the tool actually does, documents call
+  review, and reports the benchmark honestly at four rounds, 12 videos and 112
+  audited questions: 83/112 for the uniform control against 101/112, with the
+  control spending 3.41x the visual tokens for 82% of the score. Round 4 was
+  judged blind by a separate agent with the arms labelled X and Y, and its ground
+  truth was built by an author with no access to the tool.
+- Em and en dashes removed from all prose and all command output.
+- Three test fixtures rebuilt. They had been written by repeating one sentence
+  template, which gives them the vocabulary profile of a hallucination, and the
+  new guard correctly flagged them. The guard was right and the fixtures were not.
+
+## [0.8.0] - 2026-09-04
 
 ### Changed
 - **Install footprint 293 MB → 63 MB** (clean venv, measured; ~50 MB net of the venv's
-  own pip). The agreed ceiling is 150 MB and 0.7.x was nearly double it — not because
+  own pip). The agreed ceiling is 150 MB and 0.7.x was nearly double it, not because
   of nybls (the wheel is 36 KB) but because two transitive imports we used one
   function from each pulled opencv (120 MB) and scipy (99 MB). Both are gone:
   - Scene detection now uses ffmpeg's own scene-change filter instead of
@@ -36,7 +81,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     `bench` extra for `bench/measure_signals.py`, which compares against it as the
     reference implementation.
   - A test asserts the core package never imports cv2/scipy/scenedetect/imagehash,
-    and that the declared dependencies stay exactly those two — so the budget cannot
+    and that the declared dependencies stay exactly those two, so the budget cannot
     be blown silently by a future import.
 
 - `requires-python` is now `>=3.12`. It said 3.10, which was never tested; 3.12 and
@@ -53,9 +98,9 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   the real entry point).
 - The chess-curriculum use case is dropped (it was only ever an illustrative
   example). The word "chess" still appears where it names a real benchmark
-  video — those are measurement records and were left alone.
+  video, those are measurement records and were left alone.
 
-## [0.7.2] — 2026-09-04
+## [0.7.2] - 2026-09-04
 
 ### Changed
 - **The `/watch` skill now handles silent video.** It told the agent to read the
@@ -74,14 +119,14 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 - **`nybls doctor` detects a stale installed skill.** The installed
   `~/.claude/skills/watch/SKILL.md` is a copy of the repo's, and had silently
-  fallen behind it — the agent ran an outdated protocol for days while every
+  fallen behind it, the agent ran an outdated protocol for days while every
   other surface reported healthy. `doctor` now compares the two and prints the
   refresh command (username scrubbed, since doctor output ends up in bug reports).
 
 ### Fixed
 - **The verifier called true claims about silent videos "unsupported".** It could
   not distinguish "the transcript contradicts this" from "there is no transcript
-  to check against" — both scored 0% coverage. A claim read directly off the
+  to check against", both scored 0% coverage. A claim read directly off the
   frames of a real reel (a medallion pipeline with self-recovery) came back
   `unsupported`, which pressures an honest agent into deleting a correct finding.
   New `no-speech` verdict says the method does not apply and the claim needs a
@@ -92,45 +137,45 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   transcript first" even when the transcript had just been flagged UNRELIABLE,
   pointing the agent at content that does not exist. A silent screen recording
   is the case where frames are the *only* carrier of information, not a
-  low-value case. Caught when four build-in-public reels — whose captions are
-  one-line headlines and whose videos contain the full system architecture —
+  low-value case. Caught when four build-in-public reels, whose captions are
+  one-line headlines and whose videos contain the full system architecture , 
   were written off as "the substance is in the captions" on the strength of an
   empty transcript. `probe` now inverts its guidance when the guard fires.
 - `nybls --version` errored instead of printing a version. The subcommand was
-  marked required, so argparse rejected the bare flag — the first thing anyone
+  marked required, so argparse rejected the bare flag, the first thing anyone
   types after installing. Now reads the installed package metadata, so it cannot
   drift from `pyproject.toml`. Covered by a test.
 - The `cli.py` docstring still advertised "five commands". There are fifteen.
 
 
-## [0.7.1] — 2026-09-02
+## [0.7.1] - 2026-09-02
 
 ### Fixed
 - Degenerate-transcript detection missed the *short* half of the same failure.
   The v0.7.0 check required 20+ segments before examining anything, so a silent
   video producing a single hallucinated line passed as healthy. Four real
-  Instagram reels — all silent screen recordings — yielded exactly one line each
+  Instagram reels, all silent screen recordings, yielded exactly one line each
   ("Thank you.", "We'll see you next time.", "We'll be right back.", and a
   Spanish request to subscribe) and all four were reported as valid transcripts.
   Stock filler and near-empty transcripts are now flagged with the likely cause.
 
 ### Added
-- **`nybls corpus <name> --add <ids>`** — group videos from one source into a
+- **`nybls corpus <name> --add <ids>`**, group videos from one source into a
   timeline. Each entry carries its publication date and author, so the corpus can
   distinguish *evolution* (one author, different dates) from *disagreement*
-  (different authors) — the distinction the build-in-public case turns on.
+  (different authors), the distinction the build-in-public case turns on.
   Videos without a publication date are excluded from evolution detection and
   said to be excluded, rather than silently treated as oldest.
-- **Benchmark round 2** — 3 videos, 15 questions, pre-registered, with a tightened control
+- **Benchmark round 2**, 3 videos, 15 questions, pre-registered, with a tightened control
   arm that could not zoom. `bench/RESULTS_round2.md`. Round 1's 2x margin did not
   replicate; combined result across 4 videos is 35/40 vs 27/40 at 3.26x less cost.
-- **`bench/uniform_coverage.py`** — closed-form dead zones and capture probability for a
+- **`bench/uniform_coverage.py`**, closed-form dead zones and capture probability for a
   uniform grid, plus what it predicts about specific benchmark questions.
-- **`bench/measure_event_persistence.py`** — measures how long an on-screen event actually
+- **`bench/measure_event_persistence.py`**, measures how long an on-screen event actually
   persists, so capture probability rests on measurement rather than estimate.
-- **`bench/measure_signals.py`** — scores candidate change-detection signals against an
+- **`bench/measure_signals.py`**, scores candidate change-detection signals against an
   independent OCR-derived reference.
-- **`paper/`** — draft arXiv paper with a fully verified bibliography.
+- **`paper/`**, draft arXiv paper with a fully verified bibliography.
 
 ### Changed
 - **The change-detection design rule from 0.3.0 is WITHDRAWN.** "Use the hash to detect
@@ -145,10 +190,10 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - One reference in `docs/RESEARCH.md` (arXiv:2502.19680) did not support the claim made
   of it and has been corrected.
 
-## [0.7.0] — 2026-09-02
+## [0.7.0] - 2026-09-02
 
 ### Fixed
-- **Silent ASR failure.** Whisper does not fail on audio it cannot handle — it
+- **Silent ASR failure.** Whisper does not fail on audio it cannot handle, it
   loops, emitting the same line indefinitely and reporting success. A real
   25-minute video with no captions fell back to the English-only default model
   over Hindi audio and produced 65 distinct lines across 907, one repeated for 23
@@ -163,48 +208,48 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Benchmark extended to **eight videos, forty questions, sixteen arms**
   (`bench/RESULTS.md`): iterative 80/80, one-shot 65/80, with round 3's iterative
   arms scoring higher on 47% of the images. The gap narrows on short and visually
-  repetitive video while the cost advantage persists — one video tied on accuracy
+  repetitive video while the cost advantage persists, one video tied on accuracy
   at half the spend. Two of the judge's own predictions are recorded as wrong.
 
-## [0.6.0] — 2026-09-02
+## [0.6.0] - 2026-09-02
 
 ### Fixed
 - **Scene drift on targeted frame requests.** A sheet tile labelled "04:15" is
-  rendered at 255.035 s, so a request for second 255 returned a different moment —
+  rendered at 255.035 s, so a request for second 255 returned a different moment , 
   and on fast-cut material, a different shot. Measured across three videos, 21 of
   24 one-second offsets landed in a visibly different shot. Sheets now record the
   exact timestamps they rendered and `frames` snaps to the nearest within three
   seconds, reporting when it does. No new command and no new flag: `frames`
-  simply became accurate. Degrades safely — with no sheet yet rendered there is
+  simply became accurate. Degrades safely, with no sheet yet rendered there is
   nothing to snap to and behaviour is unchanged.
 
 ### Changed
 - Benchmark extended to **four videos across two domains** (`bench/RESULTS.md`):
   iterative 40/40, one-shot 29/40, with the difference concentrated in brief
-  on-screen graphics falling between uniform samples — replicated four times.
+  on-screen graphics falling between uniform samples, replicated four times.
   The round-1 prediction that fast-cut material would widen the gap is recorded
   as only half right: directionally correct, but overstated.
 
 ### Maturity
 - The **watching core** (probe, study, sheet, frames, zoom, ledger, verify) is now
   beta-quality: 24 tests, benchmarked on four videos, interface stable.
-- The **extraction layer** (contract, extract-check) remains alpha — single-video
+- The **extraction layer** (contract, extract-check) remains alpha, single-video
   only; the corpus half is not built.
 
-## [0.5.0] — 2026-09-02
+## [0.5.0] - 2026-09-02
 
 ### Added
-- **`nybls contract --purpose "..." --shape teach|rebuild|procedure|brief`** —
+- **`nybls contract --purpose "..." --shape teach|rebuild|procedure|brief`** , 
   the extraction contract for a stated purpose. Every comparable tool hardcodes
   one ontology; the shape of what you extract should follow from why you are
   extracting it. Teaching a beginner and reconstructing a system want different
   objects out of the same video.
-- **`nybls extract-check <id> --file out.json`** — validates an extraction
+- **`nybls extract-check <id> --file out.json`**, validates an extraction
   against its contract *and* mechanically verifies every citation, reported
   separately. Cross-references must resolve: a prerequisite pointing at nothing,
   or a contradiction naming a claim that is not present, is an error.
-- Claims carry two clocks — `at` (video time) and `observed` (publication date)
-  — after ATOM (arXiv:2510.22590). The second only matters across a corpus, where
+- Claims carry two clocks. `at` (video time) and `observed` (publication date)
+ , after ATOM (arXiv:2510.22590). The second only matters across a corpus, where
   it separates "two sources disagree" from "one person changed their mind".
 - **First test suite** (18 tests) over the two pure-logic modules, including a
   control that a plausible but fabricated claim must fail verification.
@@ -213,10 +258,10 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Structural validation is dependency-free on purpose. The schemas are simple and
   every added dependency is install friction.
 
-## [0.4.0] — 2026-09-02
+## [0.4.0] - 2026-09-02
 
 ### Added
-- **`nybls verify <id> --claims claims.json`** — mechanical citation checking.
+- **`nybls verify <id> --claims claims.json`**, mechanical citation checking.
   Every claim names a timestamp; the verifier pulls the transcript window around
   it and reports the fraction of the claim's content words actually present, as
   `verified` / `weak` / `unsupported`, listing what it could not find.
@@ -237,15 +282,15 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   stripping and numeral normalisation; the control claim still fails at 22%,
   so the check did not simply get looser.
 
-## [0.3.0] — 2026-09-02
+## [0.3.0] - 2026-09-02
 
 ### Added
-- **`nybls study --adaptive`** — probes the video densely at low resolution for
+- **`nybls study --adaptive`**, probes the video densely at low resolution for
   free (no vision tokens), scores each probe by how much the picture changed, and
   spends the image budget only on the biggest changes. A uniform backbone is
   merged in so a quiet stretch is never wholly unrepresented. `--region x,y,w,h`
   restricts scoring to part of the frame; `--max-frames` bounds the spend.
-  On a 48-minute lesson: 583 probes free, 71 frames looked at, 12 images total —
+  On a 48-minute lesson: 583 probes free, 71 frames looked at, 12 images total , 
   5-second temporal resolution for less than a uniform 30-second pass costs.
 
 ### Fixed
@@ -260,10 +305,10 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - The probe loop capped at 400 samples, silently truncating coverage of anything
   longer than ~33 minutes at a 5-second probe interval.
 
-## [0.2.0] — 2026-09-02
+## [0.2.0] - 2026-09-02
 
 ### Added
-- **`nybls study`** — a comprehension pass over the whole video. Samples on a
+- **`nybls study`**, a comprehension pass over the whole video. Samples on a
   clock (10s/20s/30s/45s by length, `--every` to override) and emits every sheet
   at once. For dense instructional video, minimal spend was the wrong objective:
   a 48-minute lesson answered with one image describes the format, not the
@@ -281,13 +326,13 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   entirely and samples on a clock. Scene-adaptive sheets remain the default for
   edited footage.
 
-## [0.1.1] — 2026-09-01
+## [0.1.1] - 2026-09-01
 
 ### Fixed
 - `sheet` did not check the budget at all, so contact sheets could be generated
   past the ceiling without refusal. It now goes through the same gate as
   `frames` and `zoom`.
-- `sheet` rejected `--looking-for`, which `frames` and `zoom` require — an
+- `sheet` rejected `--looking-for`, which `frames` and `zoom` require, an
   inconsistency that made a targeted sheet impossible to justify. It now accepts
   both `--looking-for` and `--force`.
 
@@ -296,16 +341,16 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `sheet` is the coverage round and never needs a named gap, while a `--range`
   sheet is a targeted request and requires one once spending has begun.
 
-## [0.1.0] — 2026-09-01
+## [0.1.0] - 2026-09-01
 
 First release. Alpha: the interfaces may change.
 
 ### Added
 - **Frame server** with five verbs: `probe`, `sheet`, `frames`, `zoom`, `ledger`
-- **The WATCH protocol** as a Claude Code skill — transcript-first, coverage by
+- **The WATCH protocol** as a Claude Code skill, transcript-first, coverage by
   contact sheet, a mandatory confidence evaluator, named-gap requests, and stop
   rules (`docs/PROTOCOL.md`)
-- **Cumulative budget ledger** — duration-scaled budget, visual-token estimates
+- **Cumulative budget ledger**, duration-scaled budget, visual-token estimates
   matching Claude API billing, and per-command spend reporting
 - **Protocol rails enforced by the tool**: `--looking-for` required past three
   spent images, refusal past budget without an explicit human `--force`,
@@ -314,7 +359,7 @@ First release. Alpha: the interfaces may change.
 - **Acquisition** via yt-dlp for YouTube and ~1,800 other sites, plus local files
 - **Transcription**: platform captions when available, local whisper.cpp otherwise
 - **Scene-aware sampling** via PySceneDetect with perceptual-hash deduplication
-- **Optional phone-share receiver** — off by default, time-limited window,
+- **Optional phone-share receiver**, off by default, time-limited window,
   token-authenticated, private-interface binding, and per-item human approval
   before anything is fetched
 - Documentation: protocol reference, research and attribution, security posture

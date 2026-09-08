@@ -45,22 +45,22 @@ def bind_host() -> tuple[str, str]:
             ip = (r.stdout or "").strip().splitlines()
             if r.returncode == 0 and ip and ip[0].startswith("100."):
                 return ip[0], "tailscale (reachable from your phone)"
-        except Exception:  # noqa: BLE001 — tailscale absent/stopped is expected
+        except Exception:  # noqa: BLE001, tailscale absent/stopped is expected
             pass
-    return "127.0.0.1", "localhost only — Tailscale is not connected, so the phone cannot reach this yet"
+    return "127.0.0.1", "localhost only, Tailscale is not connected, so the phone cannot reach this yet"
 
 
 # ── queue ────────────────────────────────────────────────────────────────────
 
 def notify(title: str, message: str) -> None:
-    """Non-blocking macOS notification — arg array, never a shell string."""
+    """Non-blocking macOS notification, arg array, never a shell string."""
     try:
         subprocess.run(
             ["osascript", "-e", "on run {t, m}\ndisplay notification m with title t\nend run",
              title, message],
             capture_output=True, timeout=10,
         )
-    except Exception:  # noqa: BLE001 — a failed notification must never break intake
+    except Exception:  # noqa: BLE001, a failed notification must never break intake
         pass
 
 
@@ -76,7 +76,7 @@ def enqueue(source: str, kind: str) -> dict:
         "note": None,
     }
     (INBOX / f"{item['id']}.json").write_text(json.dumps(item, indent=1))
-    notify("nybls — approval needed", f"{source[:90]}\nRun: nybls approve {item['id']}")
+    notify("nybls, approval needed", f"{source[:90]}\nRun: nybls approve {item['id']}")
     return item
 
 
@@ -126,12 +126,12 @@ def _process(item: dict) -> None:
 
 def worker_loop(stop: threading.Event) -> None:
     while not stop.is_set():
-        # only items YOU approved are ever fetched — "pending" is never touched
+        # only items YOU approved are ever fetched. "pending" is never touched
         approved = [i for i in items(200) if i["status"] == "approved"]
         for item in sorted(approved, key=lambda i: i["received_utc"]):
             try:
                 _process(item)
-            except Exception as e:  # noqa: BLE001 — one bad item must not kill the worker
+            except Exception as e:  # noqa: BLE001, one bad item must not kill the worker
                 item["status"] = "error"
                 item["note"] = scrub(str(e))[:300]
                 _save(item)
@@ -217,12 +217,12 @@ def serve(window_min: int = 30) -> int:
         httpd = ThreadingHTTPServer((host, PORT), Handler)
     except OSError:
         # Tailscale address configured but interface down (Tailscale not connected)
-        host, mode = "127.0.0.1", "localhost only — connect Tailscale to reach this from the phone"
+        host, mode = "127.0.0.1", "localhost only, connect Tailscale to reach this from the phone"
         httpd = ThreadingHTTPServer((host, PORT), Handler)
 
     until = f"for {window_min} min" if window_min else "until you press Ctrl-C"
     print(f"intake window OPEN on http://{host}:{PORT} {until}  [{mode}]")
-    print("shares arrive as PENDING — nothing is downloaded until you run `nybls approve <id>`")
+    print("shares arrive as PENDING, nothing is downloaded until you run `nybls approve <id>`")
     print("token: cat ~/.nybls/secrets/receiver_token")
     if window_min:
         threading.Timer(window_min * 60, httpd.shutdown).start()
@@ -233,7 +233,7 @@ def serve(window_min: int = 30) -> int:
     finally:
         stop.set()
         httpd.server_close()
-    print("\nintake window CLOSED — nothing is listening now.")
+    print("\nintake window CLOSED, nothing is listening now.")
     pend = [i for i in items(50) if i["status"] == "pending"]
     if pend:
         print(f"{len(pend)} item(s) still awaiting approval: nybls inbox")
