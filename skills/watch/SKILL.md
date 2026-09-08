@@ -7,6 +7,23 @@ description: Watch a video (YouTube URL or local file) with budgeted iterative f
 
 Tool: `nybls` (installed via `pip install nybls`). Looking: `probe`, `sheet`, `frames`, `zoom`, `study`. Accounting: `ledger`. Grounding: `verify`, `contract`, `corpus`. Run `nybls --help` for the full list rather than assuming this one is current. Every image the tool writes is a PNG you Read. The tool tracks spend; you manage it.
 
+## Before anything: is the tool actually here
+
+Run `nybls doctor`. If the command is not found, the user installed this plugin
+without the CLI it drives. Say so plainly and give them both lines:
+
+```
+brew install ffmpeg yt-dlp
+pip install nybls
+```
+
+Then stop. Do not try to watch the video some other way, do not fetch the
+transcript by hand, and do not guess at the content. A plugin that quietly
+degrades into guessing is worse than one that says what is missing.
+
+If `doctor` runs but reports a missing piece, it already names what that piece
+would unlock. Relay that and let the user decide whether they need it.
+
 ## Shared from the phone
 
 If the user says "watch the latest" / "what did I send", run `nybls inbox`. Items marked **pending** were shared but NOT downloaded, show them to the user and ask which to approve (`nybls approve <id>`); never approve on their behalf. Items marked **ready** are already downloaded and transcribed: start the loop below at Round 0 using the listed id.
