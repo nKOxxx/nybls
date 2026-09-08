@@ -129,7 +129,9 @@ tells you what works, and what any missing piece would unlock.
 | `verify` | Check every cited timestamp against the transcript, mechanically. |
 | `contract` | Shape an extraction for a purpose: teach, rebuild, procedure, brief. |
 | `corpus` | Put several videos from one source on a timeline and see what changed. |
+| `extract-check` | Validate an extraction against the shape it claims, so a malformed one fails loudly. |
 | `ledger` | What you spent, in images, tokens and cents. |
+| `serve`, `inbox`, `approve`, `reject` | Receive videos shared from your phone, held pending until you approve each one. |
 
 Everything lands in `~/.nybls/store/<id>/` as ordinary PNGs and text files. There
 is no API to integrate against, because your agent simply reads the files.
@@ -219,8 +221,10 @@ the reasoning behind them, so you can build your own version of what you
 watched. `procedure` pulls out ordered steps with checkpoints. `brief` pulls out
 claims and what backs each one.
 
-Every field carries a timestamp, and `nybls verify` checks those citations
-against the transcript mechanically. So what you keep is grounded in the video
+`nybls extract-check <id> --file out.json` then checks the result against the
+shape it claims to be, so a malformed extraction fails loudly instead of looking
+finished. Every field carries a timestamp, and `nybls verify` checks those
+citations against the transcript mechanically. So what you keep is grounded in the video
 rather than in the model's memory of it, which is the difference between notes
 you can trust and notes you have to re-check.
 

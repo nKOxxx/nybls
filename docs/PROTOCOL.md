@@ -164,6 +164,32 @@ distribution.
 
 ---
 
+## Recorded calls
+
+`nybls speakers <id>` segments a recorded call by who is on screen. A call in
+speaker view cuts to whoever is talking, so a shot change is a turn boundary,
+which makes speaker segmentation a change-detection problem rather than an audio
+one. It runs on the same free low-resolution probes as adaptive sampling, so the
+segmentation itself costs no vision tokens; only the labelled strip does.
+
+Measured on a 45-minute sales call: 600 probes every 3 s pulled in 13 s, two shots
+covering 88% of the call, the picture switching about every 9 s, which is
+conversational turn cadence.
+
+The tool produces shots, not people. Naming solves identity, video solves
+segmentation, and both halves are needed: a caller supplies the names once, and
+until they do the shots must not be attributed to anyone.
+
+**Where it does not work, and the command says so rather than inventing a
+speaker.** A single dominant shot means nothing is cutting between speakers: a
+screen share, a static camera, or gallery view. During a screen share nobody's
+face is on screen at all, so attribution stops precisely where a demo begins.
+Screen time is also a proxy for talk time, not a measurement of it.
+
+Maturity: measured properly on one call. Gallery view is untested.
+
+---
+
 ## Grounding: what the verifier can and cannot judge
 
 `nybls verify <id> --claims claims.json` checks each claim against the transcript in a

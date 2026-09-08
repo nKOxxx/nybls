@@ -17,6 +17,25 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.9.3] - 2026-09-08
+
+### Fixed
+- **The skill handed users the install command that does not work.** Its preflight
+  fires exactly when the CLI is missing, so the one thing it has to get right is
+  the install line, and it still said `pip install nybls`, which PEP 668 refuses
+  on Homebrew Python and most current Linux. 0.9.2 fixed this everywhere except
+  the one place an agent actually reads.
+
+### Added
+- `speakers` documented in `docs/PROTOCOL.md` and in the skill. It shipped in
+  0.9.0 documented in the README alone, so an agent following the skill had no
+  idea the command existed, including its limits: shots are not people until a
+  human names them, and attribution stops during a screen share.
+- `extract-check` and `reject` documented for the first time.
+- A test asserting every command the CLI exposes appears in at least one document
+  a reader or an agent will see, and another asserting the skill's install block
+  uses pipx. Both gaps were invisible to every existing check.
+
 ## [0.9.2] - 2026-09-08
 
 ### Fixed

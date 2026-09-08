@@ -5,7 +5,7 @@ description: Watch a video (YouTube URL or local file) with budgeted iterative f
 
 # /watch, budgeted video watching protocol
 
-Tool: `nybls` (installed via `pip install nybls`). Looking: `probe`, `sheet`, `frames`, `zoom`, `study`. Accounting: `ledger`. Grounding: `verify`, `contract`, `corpus`. Run `nybls --help` for the full list rather than assuming this one is current. Every image the tool writes is a PNG you Read. The tool tracks spend; you manage it.
+Tool: `nybls` (installed via `pipx install nybls`). Looking: `probe`, `sheet`, `frames`, `zoom`, `study`, `speakers`. Accounting: `ledger`. Grounding: `verify`, `contract`, `corpus`. Run `nybls --help` for the full list rather than assuming this one is current. Every image the tool writes is a PNG you Read. The tool tracks spend; you manage it.
 
 ## Before anything: is the tool actually here
 
@@ -13,9 +13,15 @@ Run `nybls doctor`. If the command is not found, the user installed this plugin
 without the CLI it drives. Say so plainly and give them both lines:
 
 ```
-brew install ffmpeg yt-dlp
-pip install nybls
+brew install ffmpeg pipx
+pipx install "nybls[download]"
 ```
+
+Give those two lines, not `pip install nybls`. Homebrew's Python and most current
+Linux distributions refuse a plain pip install into the system environment under
+PEP 668, so that command fails on a normal modern Mac. If pip has already failed
+that way for them, the answer is pipx or a virtual environment, never
+`--break-system-packages` on someone else's machine.
 
 Then stop. Do not try to watch the video some other way, do not fetch the
 transcript by hand, and do not guess at the content. A plugin that quietly
@@ -26,7 +32,25 @@ would unlock. Relay that and let the user decide whether they need it.
 
 ## Shared from the phone
 
-If the user says "watch the latest" / "what did I send", run `nybls inbox`. Items marked **pending** were shared but NOT downloaded, show them to the user and ask which to approve (`nybls approve <id>`); never approve on their behalf. Items marked **ready** are already downloaded and transcribed: start the loop below at Round 0 using the listed id.
+If the user says "watch the latest" / "what did I send", run `nybls inbox`. Items marked **pending** were shared but NOT downloaded, show them to the user and ask which to approve (`nybls approve <id>`) or turn down (`nybls reject <id>`); never approve on their behalf. Items marked **ready** are already downloaded and transcribed: start the loop below at Round 0 using the listed id.
+
+## Recorded calls
+
+`nybls speakers <id>` works out who is on screen across a recorded call, from the
+same free low-resolution probes, so it costs nothing until you read the strip it
+writes. A call recorded in speaker view cuts to whoever is talking, which makes a
+shot change a turn boundary.
+
+It prints each shot's share of screen time and writes one labelled thumbnail per
+shot. Read that strip, then ask the user which shot is them and who the others
+are. Until they say, these are shots and not people, and you must not guess from
+appearance.
+
+It tells you when there is no turn signal to read, which is what a screen share,
+a static camera or gallery view looks like. Believe it. During a screen share
+nobody's face is on screen, so attribution stops exactly where a demo begins, and
+screen time is a proxy for talk time rather than a measurement of it. Say so when
+you report a split.
 
 ## Choose the mode FIRST
 

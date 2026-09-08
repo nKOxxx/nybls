@@ -103,3 +103,35 @@ def test_install_docs_use_pipx_not_bare_pip():
         blocks = re.findall(r"```[a-z]*\n(.*?)```", doc, re.S)
         assert not any("--break-system-packages" in b for b in blocks), \
             f"{name} must not put --break-system-packages in a runnable block"
+
+
+def test_every_command_is_documented_somewhere():
+    """`speakers` shipped in 0.9.0 and was documented only in the README, so the
+    skill an agent follows did not know it existed. Every command the CLI exposes
+    must appear in at least one document a reader or an agent will actually see."""
+    import re
+    from pathlib import Path
+    root = Path(__file__).parent.parent
+    src = (root / "nybls_core/cli.py").read_text()
+    commands = set(re.findall(r'sub\.add_parser\("([a-z-]+)"', src))
+    docs = "\n".join((root / n).read_text() for n in
+                     ("README.md", "docs/PROTOCOL.md", "skills/watch/SKILL.md", "INSTALL.md"))
+    # serve/inbox/approve/reject are the phone-sharing path, documented in SECURITY
+    docs += (root / "docs/SECURITY.md").read_text()
+    missing = sorted(c for c in commands if c not in docs)
+    assert not missing, f"undocumented commands: {missing}"
+
+
+def test_the_skill_gives_an_install_command_that_works():
+    """The skill's preflight fires exactly when the CLI is missing, so the one
+    thing it must get right is the install line. It shipped `pip install nybls`,
+    which is refused under PEP 668 on Homebrew Python and most current Linux."""
+    import re
+    from pathlib import Path
+    skill = (Path(__file__).parent.parent / "skills/watch/SKILL.md").read_text()
+    blocks = re.findall(r"```[a-z]*\n(.*?)```", skill, re.S)
+    installs = [b for b in blocks if "install" in b and "nybls" in b]
+    assert installs, "the skill must show an install command"
+    for b in installs:
+        assert "pipx install" in b, f"skill install block must use pipx:\n{b}"
+        assert not re.search(r"^\s*pip install nybls", b, re.M), f"bare pip install:\n{b}"
