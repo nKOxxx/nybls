@@ -17,6 +17,29 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.9.1] - 2026-09-08
+
+### Added
+- **`INSTALL.md`, written to be followed by an agent.** Someone can paste the
+  repository URL into Claude Code and say "install this". It detects the
+  platform rather than assuming Homebrew, covers apt, dnf, pacman, winget and
+  Chocolatey, verifies with `nybls doctor`, and instructs the agent to ask
+  before running sudo and to stop and say so rather than improvise if ffmpeg
+  cannot be installed.
+- **A `download` extra**: `pip install "nybls[download]"` pulls in yt-dlp for URL
+  downloads, about 25 MB. It stays an extra rather than a dependency because
+  local files work without it and the base install is advertised at about 50 MB.
+
+### Changed
+- The README overstated the requirements. It said `brew install ffmpeg yt-dlp`,
+  which is macOS only and put yt-dlp behind a system package manager it does not
+  need: yt-dlp is a Python package and nybls invokes it as a binary from PATH,
+  so pip supplies it on every platform. **ffmpeg is the only genuine system
+  dependency**, because nothing else decodes a video.
+- Plugin and marketplace descriptions now state the prerequisites. `plugin.json`
+  has no field for declaring them, so the description is the only place a user
+  sees them before installing rather than as an error afterwards.
+
 ## [0.9.0] - 2026-09-08
 
 ### Added

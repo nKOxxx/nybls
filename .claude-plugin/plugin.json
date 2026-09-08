@@ -1,7 +1,7 @@
 {
   "name": "nybls",
   "displayName": "nybls",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Low cost, iterative video watching for AI agents. Transcript first, then only the frames it asks for, with receipts. Needs ffmpeg and `pip install nybls`; run `nybls doctor` to check.",
   "author": {
     "name": "Ares",

@@ -68,19 +68,33 @@ two samples.
 
 ## Install
 
+**Or let Claude do it.** Paste this repository's URL into Claude Code and say
+"install this". [INSTALL.md](INSTALL.md) is written to be followed by an agent:
+it detects the platform, installs what is needed, verifies the result with
+`nybls doctor`, and is told to stop and say so rather than improvise if
+something cannot be installed.
+
+By hand, one system package and one pip line:
+
 ```bash
-brew install ffmpeg yt-dlp
+brew install ffmpeg
 ```
 
 ```bash
-pip install nybls
+pip install "nybls[download]"
 ```
+
+ffmpeg is the only thing that needs a package manager, because nothing else can
+decode a video. On Linux that line is `sudo apt install ffmpeg` or your
+distribution's equivalent; [INSTALL.md](INSTALL.md) has the table. The
+`[download]` extra pulls in yt-dlp for URLs and adds about 25 MB. Plain
+`pip install nybls` works fine on local files.
 
 That is the whole setup. There are no API keys, no account and no telemetry,
 because your agent brings its own model and everything else runs on your machine.
-The install comes to about 50 MB, which is numpy and Pillow and nothing else. It
-was 293 MB before 0.8.0, and the difference was two libraries we were using one
-function from each.
+The base install comes to about 50 MB, which is numpy and Pillow and nothing
+else. It was 293 MB before 0.8.0, and the difference was two libraries we were
+using one function from each.
 
 Videos without captions need speech recognition, which is one more line
 (`brew install whisper-cpp`). The model fetches itself the first time you need
@@ -226,7 +240,7 @@ reported to you rather than obeyed.
 
 ## Docs
 
-[Protocol](docs/PROTOCOL.md) · [Research and evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Changelog](CHANGELOG.md)
+[Install](INSTALL.md) · [Protocol](docs/PROTOCOL.md) · [Research and evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Changelog](CHANGELOG.md)
 
 Benchmarks: [round 1](bench/RESULTS.md) · [round 2](bench/RESULTS_round2.md) · [round 3](bench/RESULTS_round3.md) · [round 4, blind judged](bench/RESULTS_round4.md) · [question audit](bench/QUESTION_AUDIT.md) · [where information lives](bench/RESULTS_modality.md) · [change detection signals](bench/RESULTS_signals.md)
 

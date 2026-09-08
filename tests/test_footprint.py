@@ -61,3 +61,26 @@ def test_phash_matches_reference_library_if_available():
     for seed in range(5):
         img = _img(seed)
         assert str(imagehash.phash(img)) == media.phash_hex(img)
+
+
+def test_download_extra_exists_and_base_install_stays_lean():
+    """`yt-dlp` is a Python package, so URL downloads need no system package
+    manager. It stays an extra rather than a dependency because it adds ~25 MB
+    and local files work without it, which keeps the advertised base install
+    honest."""
+    import tomllib
+    from pathlib import Path
+    proj = tomllib.loads((Path(__file__).parent.parent / "pyproject.toml").read_text())["project"]
+    extras = proj["optional-dependencies"]
+    assert "download" in extras and any("yt-dlp" in d for d in extras["download"])
+    assert not any("yt-dlp" in d for d in proj["dependencies"]), "must not be a base dependency"
+
+
+def test_install_doc_covers_more_than_homebrew():
+    """The install page is meant to be followed by an agent on someone else's
+    machine. Homebrew-only instructions would make it guess on Linux."""
+    from pathlib import Path
+    doc = (Path(__file__).parent.parent / "INSTALL.md").read_text()
+    for token in ("brew install ffmpeg", "apt", "dnf", "winget", "nybls doctor"):
+        assert token in doc, token
+    assert "sudo" in doc, "must tell the agent to ask before sudo"
