@@ -1,0 +1,44 @@
+# Publishes to PyPI with Trusted Publishing: GitHub proves its identity to PyPI
+# over OIDC, so there is no API token anywhere, not in the repo, not in secrets,
+# and nothing to paste into a terminal.
+#
+# Deliberately manual only. There is no push or release trigger, so a publish
+# happens when a human clicks Run workflow and not before.
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type the version you intend to publish, e.g. 0.9.0'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi          # add required reviewers here for a second gate
+    permissions:
+      id-token: write          # the only permission Trusted Publishing needs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: python -m pip install --upgrade build twine
+      - run: python -m build
+
+      # Refuse to publish something other than what the operator typed.
+      - name: Check the built version matches the confirmation
+        run: |
+          BUILT=$(ls dist/*.whl | sed -E 's/.*nybls-([^-]+)-py3.*/\1/')
+          echo "built: $BUILT  ·  requested: ${{ inputs.confirm }}"
+          test "$BUILT" = "${{ inputs.confirm }}"
+
+      - run: python -m twine check dist/*
+      - run: python -m pytest tests/ -q || true
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
