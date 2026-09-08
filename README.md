@@ -126,10 +126,19 @@ is no API to integrate against, because your agent simply reads the files.
 
 ### With Claude Code
 
+The plugin drives the CLI, it does not replace it, so install the CLI first or
+the skill will have nothing to run:
+
 ```
+brew install ffmpeg
+pip install "nybls[download]"
 /plugin marketplace add nKOxxx/nybls
 /plugin install nybls@nybls
 ```
+
+Then restart Claude Code, or run `/reload-plugins`. A newly installed plugin
+does not load into a session that is already running, and neither command says
+so.
 
 Then just ask it about a video. The plugin ships the protocol itself, including a
 mandatory confidence check on every round, a rule that the model has to name what

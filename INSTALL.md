@@ -79,6 +79,19 @@ the CLI first or the plugin will have nothing to run.
 /plugin install nybls@nybls
 ```
 
+**Then restart Claude Code, or run `/reload-plugins`.** A newly installed plugin
+does not load into a session that is already running, and neither command tells
+you that. If `watch` does not appear afterwards, that is almost always why.
+
+Note that `claude plugin install` prints a success line and nothing else. It does
+not print the plugin's description, so it never mentions ffmpeg or the CLI. That
+is why the CLI comes first above: installing the plugin alone leaves a skill
+whose first command is not on PATH.
+
+If someone does hit that, the skill handles it rather than guessing. Its first
+instruction is `nybls doctor`, and on a missing binary it says what is absent,
+gives the install lines, and stops.
+
 This adds a `watch` skill that carries the protocol: a confidence check every
 round, a rule that the model must name what it is missing before asking for
 more, and a receipts contract.
