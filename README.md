@@ -77,21 +77,28 @@ it detects the platform, installs what is needed, verifies the result with
 `nybls doctor`, and is told to stop and say so rather than improvise if
 something cannot be installed.
 
-By hand, one system package and one pip line:
+By hand, two lines:
 
 ```bash
-brew install ffmpeg
+brew install ffmpeg pipx
 ```
 
 ```bash
-pip install "nybls[download]"
+pipx install "nybls[download]"
 ```
 
-ffmpeg is the only thing that needs a package manager, because nothing else can
-decode a video. On Linux that line is `sudo apt install ffmpeg` or your
-distribution's equivalent; [INSTALL.md](INSTALL.md) has the table. The
+**Use pipx, not pip.** Homebrew's Python, and most current Linux distributions,
+refuse `pip install` into the system environment under PEP 668, so `pip install
+nybls` fails outright on a normal modern Mac. pipx is built for command line
+tools: it puts nybls in its own environment and the `nybls` command on your PATH.
+If you would rather not add pipx, a virtual environment works too:
+`python3 -m venv ~/.venvs/nybls && ~/.venvs/nybls/bin/pip install "nybls[download]"`.
+
+ffmpeg is the only thing that needs a system package manager, because nothing
+else can decode a video. On Linux that line is `sudo apt install ffmpeg pipx` or
+your distribution's equivalent; [INSTALL.md](INSTALL.md) has the table. The
 `[download]` extra pulls in yt-dlp for URLs and adds about 25 MB. Plain
-`pip install nybls` works fine on local files.
+`pipx install nybls` works fine on local files.
 
 That is the whole setup. There are no API keys, no account and no telemetry,
 because your agent brings its own model and everything else runs on your machine.
@@ -133,8 +140,8 @@ The plugin drives the CLI, it does not replace it, so install the CLI first or
 the skill will have nothing to run:
 
 ```
-brew install ffmpeg
-pip install "nybls[download]"
+brew install ffmpeg pipx
+pipx install "nybls[download]"
 /plugin marketplace add nKOxxx/nybls
 /plugin install nybls@nybls
 ```

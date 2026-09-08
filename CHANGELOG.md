@@ -17,6 +17,21 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.9.2] - 2026-09-08
+
+### Fixed
+- **The install instructions did not work.** `pip install nybls` is refused under
+  PEP 668 on Homebrew's Python and on most current Linux distributions, so the
+  documented first step failed on a normal modern Mac. Both the README and
+  INSTALL.md now lead with `pipx`, which exists for precisely this case, and
+  explain why rather than just asserting it. A venv is given as the fallback, and
+  the agent instructions explicitly forbid reaching for
+  `--break-system-packages` on someone else's machine.
+  This survived seven releases because nobody had ever installed nybls the way a
+  user would; on the author's own machine it existed only inside the development
+  virtualenv and was not on PATH at all. Found by installing it properly for the
+  first time. A test now pins both documents.
+
 ## [0.9.1] - 2026-09-08
 
 ### Fixed

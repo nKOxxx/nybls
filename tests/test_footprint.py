@@ -84,3 +84,22 @@ def test_install_doc_covers_more_than_homebrew():
     for token in ("brew install ffmpeg", "apt", "dnf", "winget", "nybls doctor"):
         assert token in doc, token
     assert "sudo" in doc, "must tell the agent to ask before sudo"
+
+
+def test_install_docs_use_pipx_not_bare_pip():
+    """`pip install nybls` is refused under PEP 668 on Homebrew Python and most
+    current Linux distributions, so it fails on a normal modern Mac. Both docs
+    must lead with pipx, and must never suggest overriding the guard with
+    --break-system-packages on someone else's machine."""
+    from pathlib import Path
+    root = Path(__file__).parent.parent
+    for name in ("README.md", "INSTALL.md"):
+        doc = (root / name).read_text()
+        assert "pipx install" in doc, f"{name} must lead with pipx"
+        assert "PEP 668" in doc, f"{name} must say why"
+        # The flag may be named in prose in order to forbid it. What must never
+        # happen is it appearing in a command someone can copy and run.
+        import re
+        blocks = re.findall(r"```[a-z]*\n(.*?)```", doc, re.S)
+        assert not any("--break-system-packages" in b for b in blocks), \
+            f"{name} must not put --break-system-packages in a runnable block"

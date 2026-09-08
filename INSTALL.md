@@ -15,36 +15,48 @@ package, so it does not need a system package manager on any platform.
 
 Python 3.12 or newer.
 
-## Step 1: ffmpeg
+## Step 1: ffmpeg and pipx
 
 Pick the line that matches the machine. Do not guess the platform, check it.
 
 | Platform | Command |
 |---|---|
-| macOS (Homebrew) | `brew install ffmpeg` |
-| Debian, Ubuntu | `sudo apt update && sudo apt install -y ffmpeg` |
-| Fedora, RHEL | `sudo dnf install -y ffmpeg` |
-| Arch | `sudo pacman -S ffmpeg` |
-| Windows (winget) | `winget install Gyan.FFmpeg` |
-| Windows (Chocolatey) | `choco install ffmpeg` |
-| Anything else | Download a build from https://ffmpeg.org/download.html and put it on PATH |
+| macOS (Homebrew) | `brew install ffmpeg pipx` |
+| Debian, Ubuntu | `sudo apt update && sudo apt install -y ffmpeg pipx` |
+| Fedora, RHEL | `sudo dnf install -y ffmpeg pipx` |
+| Arch | `sudo pacman -S ffmpeg python-pipx` |
+| Windows (winget) | `winget install Gyan.FFmpeg` then `py -m pip install --user pipx` |
+| Windows (Chocolatey) | `choco install ffmpeg` then `py -m pip install --user pipx` |
+| Anything else | Download ffmpeg from https://ffmpeg.org/download.html and put it on PATH; pipx from https://pipx.pypa.io |
 
-If ffmpeg is already present, skip this. Check with `ffmpeg -version`.
+If either is already present, skip it. Check with `ffmpeg -version` and
+`pipx --version`.
 
 ## Step 2: nybls
 
 ```bash
-pip install nybls
+pipx install "nybls[download]"
 ```
 
-To also download from YouTube and the ~1,800 other sites yt-dlp supports, take
-the extra instead. It adds about 25 MB:
+**Do not use plain `pip install` here, it will usually fail.** Homebrew's Python
+and most current Linux distributions mark the system environment as externally
+managed under PEP 668 and refuse the install outright. This is the single most
+likely way an install goes wrong, and the error message names PEP 668 when it
+does. pipx exists for exactly this case: command line tools each get their own
+environment, with the command placed on PATH.
+
+If pipx cannot be installed on this machine, a virtual environment is the
+fallback, but say clearly that the `nybls` command will then live inside it:
 
 ```bash
-pip install "nybls[download]"
+python3 -m venv ~/.venvs/nybls
+~/.venvs/nybls/bin/pip install "nybls[download]"
 ```
 
-Without it, nybls still works on local video files.
+The `[download]` extra pulls in yt-dlp so nybls can fetch from YouTube and the
+~1,800 other sites it supports. It adds about 25 MB. Without it, nybls still
+works on local video files, so `pipx install nybls` is fine if the user only has
+files on disk.
 
 ## Step 3: verify
 
@@ -102,6 +114,9 @@ more, and a receipts contract.
   wrong one fails confusingly.
 - **Ask before running a command with `sudo`.** On Linux ffmpeg needs it, and
   the user should approve that themselves.
+- **Never reach for `--break-system-packages`.** If `pip install` is refused
+  under PEP 668, that refusal is correct and the answer is pipx or a venv, not
+  overriding the guard on someone else's machine.
 - **Do not substitute a package manager the machine does not have.** If neither
   Homebrew nor a known Linux manager is present, say so and link the ffmpeg
   download page rather than improvising.
