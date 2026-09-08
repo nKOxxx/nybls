@@ -19,6 +19,13 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.9.1] - 2026-09-08
 
+### Fixed
+- **Caption text kept its HTML entities.** VTT carries them, and YouTube's auto
+  captions use `&gt;&gt;` as a speaker marker, so on a real 67-minute video 288
+  of 1,666 segments read as `&gt;&gt;` rather than `>>`. That is noise in every
+  quote pulled from a transcript and in everything the verifier matches against.
+  Found by running the tool on a video nobody had chosen for it.
+
 ### Added
 - **`INSTALL.md`, written to be followed by an agent.** Someone can paste the
   repository URL into Claude Code and say "install this". It detects the
@@ -31,6 +38,14 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   local files work without it and the base install is advertised at about 50 MB.
 
 ### Changed
+- **The README never said a bare URL is a complete instruction.** A user pasted
+  one, got a full digest, and afterwards said he had not known he was supposed to
+  ask a question or that he could. Study mode was already the default for a URL
+  with no question attached, but that was documented as an implementation detail
+  under "two modes" rather than as the thing most people want. There is now a
+  section saying it plainly, and it leads into `contract`, which is the answer to
+  the question underneath: how to make a watched video leave something behind
+  rather than being read once and lost.
 - The README overstated the requirements. It said `brew install ffmpeg yt-dlp`,
   which is macOS only and put yt-dlp behind a system package manager it does not
   need: yt-dlp is a Python package and nybls invokes it as a binary from PATH,

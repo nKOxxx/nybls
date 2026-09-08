@@ -48,6 +48,9 @@ against UDP, a TCP header breakdown, the networking infrastructure slide, and
 live browser devtools showing a real HTTP request. Six distinct teaching moments,
 and not one redundant shot of a talking head.
 
+You do not have to ask it anything to get that. Pasting a URL on its own means
+"digest this", and that is [the common case](#you-do-not-need-to-ask-it-anything).
+
 ## Why this exists
 
 Almost every tool that claims to watch YouTube is really just reading the
@@ -172,16 +175,47 @@ later, and which buying signal went past unremarked.
 Naming solves identity and the video solves segmentation, so both halves are
 needed. If the camera was off there is nothing to attach a name to.
 
-## Two modes, and it picks for you
+## You do not need to ask it anything
 
-**Answer mode** is for when you asked a question, so it stops the moment it can
-answer. A 35-minute video, asked what happens in it, came back for three images
-and about a cent.
+Paste a URL and stop there. That is a complete instruction, and it is the common
+case.
 
-**Study mode** is for when you want to learn the thing, so it covers the whole
-video. Spending as little as possible is the wrong goal for a lecture, and a
-48-minute lesson answered from a single image only describes the layout rather
-than the content.
+```
+https://www.youtube.com/watch?v=...
+```
+
+With no question attached, nybls reads it as "digest this" and runs **study
+mode**: it covers the whole video, end to end, and hands back what the video
+actually contains. Spending as little as possible is the wrong goal here. A
+48-minute lesson answered from a single image describes the layout instead of
+the content, so study mode deliberately does not stop early.
+
+Ask a question instead and it switches to **answer mode**, which stops the moment
+it can answer. A 35-minute video, asked only what happens in it, came back for
+three images and about a cent.
+
+You never choose between them. The presence or absence of a question decides it.
+
+### Turning a video into something that lasts
+
+A digest you read once and lose is not much better than watching it yourself. If
+you want the video to leave something behind, a set of notes, a decision record,
+a procedure your agent can follow later, ask for a **contract**:
+
+```bash
+nybls contract --purpose "teach me the technique in this video" --shape teach
+```
+
+Four shapes, each a different job. `teach` pulls out concepts, prerequisites,
+worked examples and the errors people make. `rebuild` pulls out decisions and
+the reasoning behind them, so you can build your own version of what you
+watched. `procedure` pulls out ordered steps with checkpoints. `brief` pulls out
+claims and what backs each one.
+
+Every field carries a timestamp, and `nybls verify` checks those citations
+against the transcript mechanically. So what you keep is grounded in the video
+rather than in the model's memory of it, which is the difference between notes
+you can trust and notes you have to re-check.
 
 ## Why it is cheap without being lazy
 

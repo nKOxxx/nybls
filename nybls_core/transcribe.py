@@ -5,6 +5,7 @@ fetch, so whisper is a fallback rather than a requirement. Models are downloaded
 on demand, and the default is small on purpose: a 1.5 GB download before a tool
 does anything is an adoption tax most people decline to pay.
 """
+import html
 import re
 import shutil
 import subprocess
@@ -79,7 +80,11 @@ def condense_vtt(vtt: Path) -> list[tuple[float, str]]:
             h, mi, s = (int(x) for x in m.groups())
             start = h * 3600 + mi * 60 + s
             continue
-        text = TAG_RE.sub("", line).strip()
+        # VTT carries HTML entities, and YouTube's auto-captions use "&gt;&gt;"
+        # as a speaker marker. Left raw, 288 of 1,666 segments in one real
+        # 67-minute transcript read as "&gt;&gt;" instead of ">>", which is
+        # noise in every quote and in anything the verifier matches against.
+        text = html.unescape(TAG_RE.sub("", line)).strip()
         if not text or start is None or text.startswith(("WEBVTT", "Kind:", "Language:")):
             continue
         if text in seen_tail:

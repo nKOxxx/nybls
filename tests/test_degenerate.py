@@ -121,3 +121,23 @@ def test_sparse_but_real_narration_is_not_flagged():
     wpm, distinct = tr.word_rates(segs, 1200)
     assert 45 < wpm < 80 and 9 < distinct < 15, (wpm, distinct)
     assert tr.looks_degenerate(segs) is None
+
+
+def test_vtt_entities_are_unescaped():
+    """YouTube auto-captions use "&gt;&gt;" as a speaker marker and VTT carries
+    HTML entities generally. Left raw, 288 of 1,666 segments in one real
+    67-minute transcript read as "&gt;&gt;" rather than ">>", which is noise in
+    every quote and in anything the verifier matches against."""
+    import tempfile
+    from pathlib import Path
+    vtt = ("WEBVTT\n\n00:00:01.000 --> 00:00:03.000\n"
+           "&gt;&gt; Rock &amp; roll, it&#39;s 5 &lt; 6\n")
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d) / "x.vtt"
+        p.write_text(vtt)
+        segs = tr.condense_vtt(p)
+    assert segs, "should parse one segment"
+    text = segs[0][1]
+    assert text.startswith(">>"), text
+    assert "&" not in text.replace("&", "", 0) or "&gt;" not in text
+    assert "Rock & roll" in text and "5 < 6" in text
