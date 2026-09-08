@@ -17,6 +17,19 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.9.4] - 2026-09-08
+
+### Fixed
+- **The plugin's own description still handed out the broken install command.**
+  It is what the Claude Code Discover tab shows before anyone installs, so it was
+  the first thing a stranger read, and it said `pip install nybls`, which PEP 668
+  refuses on Homebrew Python and most current Linux.
+- **The test meant to protect that description was enforcing the bug.** It
+  asserted `"pip install nybls" in text`, so a correct description would have
+  failed it. It now requires `pipx install nybls` and rejects the bare form.
+  This is the third place the same wrong command survived a fix, after 0.9.2
+  corrected the docs and 0.9.3 corrected the skill.
+
 ## [0.9.3] - 2026-09-08
 
 ### Fixed

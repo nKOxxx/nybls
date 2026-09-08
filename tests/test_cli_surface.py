@@ -55,6 +55,10 @@ def test_plugin_description_carries_the_package_line_plus_prerequisites():
     market = json.loads((root / ".claude-plugin/marketplace.json").read_text())["plugins"]
     assert plugin.startswith(desc), "plugin description must lead with the package line"
     for text in (plugin, *[m["description"] for m in market]):
-        assert "ffmpeg" in text and "pip install nybls" in text, "state the prerequisites"
+        # This assertion used to require "pip install nybls", so it enforced the
+        # very command that PEP 668 refuses instead of catching it.
+        assert "ffmpeg" in text, "state the prerequisites"
+        assert "pipx install nybls" in text, "the stated install command must work"
+        assert "`pip install nybls`" not in text, "PEP 668 refuses this on Homebrew Python"
     for text in (desc, plugin, *[m["description"] for m in market]):
         assert "—" not in text and "–" not in text, "no dashes in shipped copy"
