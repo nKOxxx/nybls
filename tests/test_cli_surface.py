@@ -36,3 +36,18 @@ def test_plugin_manifests_match_package_version():
     market = json.loads((root / ".claude-plugin/marketplace.json").read_text())
     assert plugin["version"] == ver
     assert all(p["version"] == ver for p in market["plugins"])
+
+
+def test_plugin_description_matches_the_package():
+    """The description lives in four places: pyproject, both plugin manifests,
+    and the GitHub About line. Two of them had already drifted, one saying "the
+    frames the model asks for" and another "the frames it asks for". This pins
+    the three that live in the repo."""
+    import json, re
+    from pathlib import Path
+    root = Path(__file__).parent.parent
+    desc = re.search(r'^description = "(.+)"$', (root / "pyproject.toml").read_text(), re.M).group(1)
+    plugin = json.loads((root / ".claude-plugin/plugin.json").read_text())
+    assert plugin["description"] == desc
+    for text in (desc, plugin["description"]):
+        assert "—" not in text and "–" not in text, "no dashes in shipped copy"

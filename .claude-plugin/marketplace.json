@@ -8,7 +8,7 @@
     {
       "name": "nybls",
       "source": "./",
-      "description": "Watch videos properly: transcript first, contact sheets for coverage, then only the frames the model names a gap for \u2014 with a spend ledger and evidence receipts.",
+      "description": "Watch videos properly: transcript first, contact sheets for coverage, then only the frames the model names a gap for, with a spend ledger and evidence receipts.",
       "version": "0.9.0",
       "license": "MIT",
       "keywords": [
@@ -22,6 +22,6 @@
     }
   ],
   "metadata": {
-    "description": "Budgeted, iterative video watching for AI agents \u2014 sip the video, don't slurp it."
+    "description": "Low cost, iterative video watching for AI agents. Sip the video, don't slurp it."
   }
 }
