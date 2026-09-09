@@ -29,7 +29,7 @@ treated as void, not just the one that reported it.
 
 ## What was done about it
 
-1. The tool was pinned at commit `5864159` — the pre-experiment state, before any agent
+1. The tool was pinned at commit `5864159` (dropped by the later history rewrite; not checkable out today) — the pre-experiment state, before any agent
    edit — into a separate directory, with `nybls_core/` set read-only (`chmod -R a-w`).
 2. Ledgers were zeroed and all frames from the void run archived to `_run1_contaminated/`
    in each workspace, so no cached image could discount the re-run.

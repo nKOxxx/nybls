@@ -26,7 +26,7 @@ X:
 Y:
 - A "Get Started" welcome tab sits next to the snake.py file tab.
 - The line 5 comment is hidden under a keyboard picture in picture overlay (GT says it runs off the right edge of the editor).
-- Username in the traceback path possibly misreadable as "servetq".
+- Username in the traceback path possibly misreadable as "[redacted]".
 - frame_size_y= 840 visible on line 13 at 23:57 (f_1437000); GT says y is scrolled out of view from 1415 s onward and the last sighting of 840 is 1335 s.
 
 ## 4. Ground truth concerns

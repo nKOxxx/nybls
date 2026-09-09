@@ -1,0 +1,17 @@
+{
+ "media_id": "QtqYNyBv9r8",
+ "signature": [
+  "cargo 1.88.0"
+ ],
+ "center_s": 255.0,
+ "step_s": 1.0,
+ "n_samples": 81,
+ "n_matching": 32,
+ "longest_run_frames": 20,
+ "measured_visible_s": 20.0,
+ "run_starts_s": 266.0,
+ "duration_s": 726.2,
+ "capture_prob_uniform_30": 0.8263,
+ "frames_needed_even_odds": 19,
+ "ocr_width_px": 2560
+}

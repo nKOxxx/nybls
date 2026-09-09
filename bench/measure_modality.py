@@ -88,7 +88,9 @@ def run(media_id: str, n_frames: int) -> dict:
 
     tpath = ws / "transcript.txt"
     traw = tpath.read_text() if tpath.exists() else ""
-    lines = [l.strip() for l in traw.splitlines() if l.strip()]
+    # strip the [mm:ss] prefix before comparing lines, as the shipped guard does;
+    # an earlier version counted timestamped lines, which made every line unique
+    lines = [re.sub(r'^\[\d+:\d+\]\s*', '', l.strip()) for l in traw.splitlines() if l.strip()]
     twords = words(traw)
     only_visual = ocr_words - twords
 

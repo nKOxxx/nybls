@@ -1,0 +1,17 @@
+{
+ "media_id": "Wlu4MsBnjuk",
+ "signature": [
+  "840"
+ ],
+ "center_s": 1400.0,
+ "step_s": 1.0,
+ "n_samples": 141,
+ "n_matching": 8,
+ "longest_run_frames": 3,
+ "measured_visible_s": 3.0,
+ "run_starts_s": 1333.0,
+ "duration_s": 1445.5,
+ "capture_prob_uniform_30": 0.0623,
+ "frames_needed_even_odds": 241,
+ "ocr_width_px": 2560
+}

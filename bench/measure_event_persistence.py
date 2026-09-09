@@ -6,6 +6,7 @@ measure it: sample densely around the known event time, OCR each sample, and
 report the longest contiguous run of frames carrying the event's signature text.
 """
 import argparse
+import math
 import json
 import subprocess
 import sys
@@ -30,6 +31,7 @@ def main():
     ap.add_argument("--window", type=float, default=30.0)
     ap.add_argument("--step", type=float, default=0.5)
     ap.add_argument("--signature", required=True, help="comma-separated; a frame matches if ANY appears")
+    ap.add_argument("--width", type=int, default=960, help="OCR working width; 2560 reads small terminal text")
     a = ap.parse_args()
 
     ws = workspace(a.media_id)
@@ -43,7 +45,7 @@ def main():
         f = tmp / f"e_{int(t*1000)}.png"
         try:
             subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t:.3f}",
-                            "-i", str(vids[0]), "-frames:v", "1", "-vf", "scale=960:-2", str(f)],
+                            "-i", str(vids[0]), "-frames:v", "1", "-vf", f"scale={a.width}:-2", str(f)],
                            check=True, timeout=60)
         except subprocess.CalledProcessError:
             t += a.step; continue
@@ -70,7 +72,8 @@ def main():
            "longest_run_frames": best, "measured_visible_s": round(v, 2),
            "run_starts_s": best_start, "duration_s": round(dur, 1),
            "capture_prob_uniform_30": round(min(1.0, v * 30 / dur), 4) if v else 0.0,
-           "frames_needed_even_odds": int(dur / (2 * v)) if v else None}
+           "frames_needed_even_odds": math.ceil(dur / (2 * v)) if v else None,
+           "ocr_width_px": a.width}
     print(json.dumps(res, indent=1))
     out = Path(__file__).parent / "round3" / f"persist_{a.media_id}_{int(a.center)}.json"
     out.parent.mkdir(parents=True, exist_ok=True)

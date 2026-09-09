@@ -25,53 +25,59 @@ On silent video the narration leak that voided four earlier questions cannot occ
 | video | D | Arm A | Arm B | A on P | B on P | A on T | B on T | A tokens | B tokens | ratio |
 |---|---|---|---|---|---|---|---|---|---|---|
 | C timelapse | 6:10 | 5/10 | 7/10 | 4/4 | 4/4 | 1/6 | 3/6 | 53,760 | 26,600 | 2.0x |
-| Rust session | 12:07 | 8/10 | 10/10 | 4/4 | 4/4 | 4/6 | 6/6 | 53,760 | 5,883 | 9.1x |
-| HTML and CSS | 28:17 | 10/10 | 10/10 | 6/6 | 6/6 | 4/4 | 4/4 | 53,760 | 15,692 | 3.4x |
+| Rust session | 12:07 | 8/10 | 10/10 | 4/4 | 4/4 | 4/6 | 6/6 | 58,800 | 5,883 | 10.0x |
+| HTML and CSS | 28:17 | 10/10 | 10/10 | 6/6 | 6/6 | 4/4 | 4/4 | 168,000 | 15,692 | 10.7x |
 | Snake game | 24:05 | 8/10 | 10/10 | 4/4 | 4/4 | 4/6 | 6/6 | 53,760 | 21,514 | 2.5x |
-| **Round 4** | | **31/40 (78%)** | **37/40 (93%)** | **18/18** | **18/18** | **13/22** | **19/22** | **215,040** | **69,689** | **3.09x** |
+| **Round 4** | | **31/40 (78%)** | **37/40 (93%)** | **18/18** | **18/18** | **13/22** | **19/22** | **334,320** | **69,689** | **4.80x** |
+
+Correction from review run 024: Arm A's cost was originally written as a constant 53,760 per video. Recomputed from the one shot frames on disk with the ledger's estimator, the Rust control is 58,800 (frames 1568 by 980) and the HTML control 168,000 (frames 1568 by 2788, a vertical 360 by 640 source upscaled). The round and overall totals below use the recomputed figures; under the API's longest edge limit the HTML row would be at most 143,520 on the tier the arms ran on.
 
 Rust Arm B is 10/10 after one reference correction (`round4/GT_ERRATA.md`), verified
 against the pixels before the judge's stated conditional was applied.
 
 **All four rounds, 12 videos, 112 audited questions:** Arm A **83/112 (74%)** for
-645,120 visual tokens; Arm B **101/112 (90%)** for 189,052. **Arm A spent 3.41x the
-visual tokens for 82% of Arm B's score.**
+764,400 distinct visual tokens served (645,120 before the review run 024 recomputation); Arm B **101/112 (90%)** for 189,052. **Arm A was served 4.0x the
+distinct visual tokens for 82% of Arm B's score.** 112 is a point total over 56 audited questions.
 
 ## Predictions, scored
 
-**P1, the transcript contributes nothing. HELD.** All four transcripts are degenerate by
+**P1, the transcript contributes nothing. Substantive claim HELD; registered threshold FAILED on one video.** All four transcripts are degenerate by
 the words per minute test: 2.93, 0.33, 0.08 and 0.07 content words per minute against a
-healthy floor of 29.6. All four score a perfect 1.000 on the line ratio test, i.e. the
-shipped guard calls every one of them healthy. One wrinkle recorded honestly: the timelapse
+healthy floor of 29.6. Correction from review run 024: the shipped line ratio guard, which strips timestamps, flagged the three whisper transcripts (their manifests read UNRELIABLE); it never ran on the timelapse, whose transcript came through the caption path the guard does not check. The 1.000 figures in the first version of this file came from the bench script counting timestamped lines. One wrinkle recorded honestly: the timelapse
 carries auto captions of its music track and sits at 2.93, above the "below 1" threshold
 the prediction wrote; it is still an order of magnitude under the floor.
 
-**P2, the gap is on transient items and near zero on persistent ones. HELD, on all four
-videos.** Persistent items: 4 to 4, 4 to 4, 6 to 6, 4 to 4, a perfect tie at 18 to 18.
-Transient items: 1 to 3, 4 to 6, 4 to 4, 4 to 6, for 13 to 19. **Every one of the six
+**P2, the gap is on transient items and near zero on persistent ones. Qualitative clause HELD on all four videos; registered quantitative clause (transient gap of at least 2 points per video on average) FAILED at a mean of 1.5.** Persistent items: 4 to 4, 4 to 4, 6 to 6, 4 to 4, a perfect tie at 18 to 18.
+Transient items: 1 to 3, 4 to 6, 4 to 4, 4 to 6, for 13 to 19 (gaps +2, +2, 0, +2, mean 1.5). **Every one of the six
 points separating the arms sits on a transient item.** This is the
 round's main test and it is the sharpest confirmation of a mechanism in the benchmark.
 
 **A refinement the round forced.** The label predicts *where* a gap can be, not whether
 there is one. Two Rust items and both HTML items were labelled transient by the author
-because they happen once, but they persisted in scrollback or in the editor for 50 to 200
-seconds, longer than the control's grid interval, and both arms got all of them. The
+because they happen once, but they persisted: measured at 2560 px, 33 s and 20 s in
+scrollback for the Rust items (the 20 s item just under the 24.2 s grid interval, caught at
+p = 0.83), and 113 to 160 s by both arms' readings for the HTML items, which OCR cannot
+measure on that 360 px source. Both arms got all four. The
 control's failures are on items that are on screen for under 2 seconds: the timelapse's
 nonsense command (at most 0.5 s), its flooded terminal (at most 0.5 s), its all caps
 comment (1.25 s), and the Rust job status line (about 2 s). **What the grid cannot reach
 is decided by on screen persistence.** The P/T label is a proxy for it and a leaky one.
 
+**P3, the control's transient accuracy falls in the order Rust, Snake, HTML (excluding the timelapse). FAILED.** Observed 4/6, 4/6, 4/4: the longest video scored best on transient items. This prediction was registered and omitted from the first version of this file; review run 024 found the omission.
+
 **P4, sub three second items defeat both arms at least half the time. HELD.** Of the four
 items under 2 s, the control missed all four and the iterative arm missed two. On the
 Snake video the control's two partial answers were both content typed after its last
-sample at 1421.9 s, inside the closing dead zone of 24.1 s that Section 4 of the paper
-derives in closed form. The
+sample at 1421.4 s (D = 1445.49 s; an earlier version of this file said 1421.9 s), inside the closing dead zone of 24.1 s that Section 4 of the paper
+derives in closed form. Correction from review run 024: of the six points separating the arms, five sit on items under two seconds or typed after the last sample; the sixth, Snake Q4, is the final frame_size_y, a long lived value on screen until 1335 s and again at 1437 s that was not legible at any of the control's sample instants. That is a third failure class the capture model does not cover. The
 iterative arm found the all caps comment with a zoom and the job status line by aiming a
 sheet at the flood; it did not find either half second terminal state and reported both as
 insufficient evidence.
 
 **P5, cost ratio between 2x and 5x per video. FAILED on the high side.** Rust came in at
-9.1x, because the iterative arm answered all five from nine images. The timelapse came in
+10.0x (58,800 against 5,883 once the control's frames were costed from disk; 9.1x at the
+constant 53,760 this file first used), because the iterative arm answered all five from
+nine images. The timelapse came in
 at 2.0x, the bottom of the band, because the iterative arm spent 24 of its 25 unit budget
 hunting sub second states it never found. The band was wrong in both directions.
 

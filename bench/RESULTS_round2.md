@@ -28,7 +28,7 @@ scores 1.
 
 > **The first Arm B attempt was VOID.** An arm modified the tool mid-experiment; see
 > `round2/INCIDENT_tool_modified.md`. All three Arm B runs were repeated against the tool
-> pinned at commit `5864159` with `nybls_core/` set read-only, ledgers zeroed and every
+> pinned at commit `5864159` with `nybls_core/` set read-only (that commit was dropped by the 2026-09-04 history rewrite and cannot be checked out; no tree hash was recorded, so the "identical before and after" check rests on the incident note's record, not on a verifiable artefact), ledgers zeroed and every
 > cached frame archived. The pinned re-run is the result of record. The void run scored
 > identically but cost 44% more, so the contamination did not flatter Arm B — it added noise.
 
@@ -59,12 +59,12 @@ at confidence "partial" and reported an unresolved negative rather than a guess.
 
 We measured why. The graphic is on screen for **2.0 seconds** in a 1,642-second video,
 OCR-verified at 0.5s resolution (`round2/persist_g9xUu2StOYg_162.json`). A uniform
-30-frame grid reaches it with probability **0.037**; even odds need **410 frames**.
+30-frame grid reaches it with probability **0.037**; even odds need **411 frames**.
 
 The same holds for the McLaren messaging screenshot. Three arms missed it, so we verified
 the reference item independently rather than assume it was a ground-truth error: it is
 real, on screen for **5.5 seconds** from 2531.5s (`round2/persist_5oNHF72wbmI_2532.json`),
-capture probability **0.057**, even odds at 262 frames.
+capture probability **0.057**, even odds at 263 frames.
 
 **Answer-mode iteration does not fix transient events.** Only the dense adaptive coverage
 pass found the results graphic. Coverage density, not search strategy, is what these

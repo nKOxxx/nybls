@@ -1,0 +1,17 @@
+{
+ "media_id": "QtqYNyBv9r8",
+ "signature": [
+  "wolrd"
+ ],
+ "center_s": 220.0,
+ "step_s": 1.0,
+ "n_samples": 121,
+ "n_matching": 55,
+ "longest_run_frames": 33,
+ "measured_visible_s": 33.0,
+ "run_starts_s": 203.0,
+ "duration_s": 726.2,
+ "capture_prob_uniform_30": 1.0,
+ "frames_needed_even_odds": 12,
+ "ocr_width_px": 2560
+}

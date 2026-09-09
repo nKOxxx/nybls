@@ -296,6 +296,6 @@ reported to you rather than obeyed.
 
 [Install](INSTALL.md) · [Protocol](docs/PROTOCOL.md) · [Research and evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Changelog](CHANGELOG.md)
 
-Benchmarks: [round 1](bench/RESULTS.md) · [round 2](bench/RESULTS_round2.md) · [round 3](bench/RESULTS_round3.md) · [round 4, blind judged](bench/RESULTS_round4.md) · [question audit](bench/QUESTION_AUDIT.md) · [where information lives](bench/RESULTS_modality.md) · [change detection signals](bench/RESULTS_signals.md)
+Benchmarks: [round 1, with a superseded early tally](bench/RESULTS.md) · [round 2](bench/RESULTS_round2.md) · [round 3](bench/RESULTS_round3.md) · [round 4, blind judged](bench/RESULTS_round4.md) · [question audit](bench/QUESTION_AUDIT.md) · [where information lives](bench/RESULTS_modality.md) · [change detection signals](bench/RESULTS_signals.md)
 
 MIT.

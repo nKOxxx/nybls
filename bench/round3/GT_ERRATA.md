@@ -11,6 +11,6 @@ Both arms reported no numeric on-screen text, and both were nearly right:
 
 A 4-second event, a 5-minute video, two arms that both went looking in the right place, and
 both missed it by under a second from opposite sides. Capture probability for this event at
-N=30 is 0.399; even odds would need 37 frames.
+N=30 is 0.399; even odds would need 38 frames.
 
 This is the sharpest single data point in the benchmark, and neither arm is at fault.

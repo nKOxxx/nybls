@@ -1,8 +1,3 @@
-# Arm A (one shot, 30 uniform frames), Wlu4MsBnjuk, Snake game 24:05
-Run 2026-09-07. Clean context, blind to ground truth, no image generation permitted.
-Frames examined: 30 of 30. Declared no file modified. COST: 53,760 visual tokens.
-Verbatim answers follow; scoring is by the independent judge, not the experimenter.
-
 1. Editor: VS Code (inferred, not written on screen: the activity bar, "PROBLEMS /
    TERMINAL / OUTPUT / DEBUG CONSOLE" panel layout and the tabnine completion popups are the
    VS Code UI; no product name is visible in any frame). File: snake.py. Evidence: editor

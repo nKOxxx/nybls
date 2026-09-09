@@ -1,6 +1,6 @@
 # Benchmark — iterative vs one-shot
 
-Three rounds, **eight videos, forty questions, sixteen isolated arms.**
+Three rounds, **eight videos, forty questions (the audited count is 56 questions scored out of 112 points across 12 videos), sixteen isolated arms.**
 
 ## Method
 
@@ -16,7 +16,16 @@ other's evidence or the ground truth.
 Scoring: 2 correct and complete · 1 partial · 0 wrong or "insufficient evidence"
 · −1 confidently fabricated.
 
-## Results
+## Results, superseded (read `RESULTS_round2.md`, `RESULTS_round3.md`, `RESULTS_round4.md`)
+
+> **This table is not the result of record.** It was written on 2026-09-02 (commit
+> 4fce4da) as an eight video tally with no answer files, no ledgers, no pinned tool and no
+> blind judge, and its scores do not match the judged rounds that followed. It is kept so the
+> record of what was claimed and when is complete, and because review run 024 found that its
+> "missed by" table predates, and names the same items as, the round 3 predictions later
+> described as registered in advance (see `RESULTS_round3.md`). The audited totals are
+> 83/112 against 101/112 across 12 videos in the three files above and `QUESTION_AUDIT.md`.
+
 
 | Round | Video | Length | Cuts | One-shot | Iterative |
 |---|---|---|---|---|---|

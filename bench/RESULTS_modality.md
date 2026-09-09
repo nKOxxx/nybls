@@ -70,12 +70,16 @@ is public and anyone can re-run it. The result is the thesis in its pure form:
 - The transcript is 226 lines of `(keyboard clicking)`, a sound event annotation repeated
   for an hour. Its two content words are "keyboard" and "clicking".
 
-**And our shipped degeneracy check calls that transcript healthy, scoring it 1.000**, because
-every line is unique. The lines are unique only because each carries a distinct timestamp.
-So the line ratio check is defeated twice over: once by hallucinated variety (the stock
-market documentary) and once by timestamps (this one). Content words per minute is 0.03 here
-against a healthy floor of 29.6, and separates both cases from every healthy transcript by
-more than two orders of magnitude.
+**Correction, review run 024.** An earlier version of this section said the shipped
+degeneracy check scored this transcript 1.000 and called it healthy. That was false: the
+shipped guard strips timestamps before comparing lines and its verdict is in the store
+manifest, "UNRELIABLE: only 1 distinct lines in 226". The 1.000 came from
+`measure_modality.py`, which counted lines with their `[mm:ss]` prefixes attached, so every
+line was unique by construction. The line ratio's real blind spots are (a) fluent varied
+nonsense (the stock market documentary) and (b) the caption path, on which the guard never
+ran at all; 11 of 12 benchmark videos came through captions. Content words per minute is
+0.03 here against a healthy floor of 29.6, a factor of about a thousand; for the documentary
+it is 7.5, a factor of about four (an earlier version said two orders of magnitude for both).
 
 A transcript first tool reading this video returns "keyboard clicking" for an hour of
 programming. That is the segment the thesis is about.

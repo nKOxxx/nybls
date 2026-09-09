@@ -1,10 +1,9 @@
-# Benchmark round 3 — a duration sweep, scored against predictions registered in advance
+# Benchmark round 3, a duration sweep, scored against predictions written after launch and before any result was read
 
-**Date:** 2026-09-04 · **4 videos, 5:01 to 44:32 (an 8.9x spread), 17 valid questions.**
-Predictions were committed at `6b38d3b` **before any of the eight arms returned**
-(`round3/PREDICTIONS.md`). Ground truth was written 2026-09-02 and moved out of the
+**Date:** 2026-09-04 · **4 videos, 5:01 to 44:32 (an 8.9x spread), 18 valid questions.**
+Predictions were committed (originally `6b38d3b`; that commit was dropped by the 2026-09-04 history rewrite and is now `37c7acc`) after the arms were launched and before any result was read; the jet engine Arm B ledger closed nine seconds before the commit. **They cannot be called registered in advance**, and review run 024 found why: an earlier tally of this same round, on the same videos and question files, was committed on 2026-09-02 in `bench/RESULTS.md` (now quarantined there) with a "missed by" table naming the same items these predictions named. The experimenter had not read it and treated the round as unrun because no answer files existed. Round 4's predictions were committed five minutes before the first image was served and are the clean case. Ground truth was written 2026-09-02 and moved out of the
 repository during the runs. The tool was pinned at HEAD with `nybls_core/` read-only after
-round 2's contamination incident; **its hash was identical before and after all eight runs.**
+round 2's contamination incident; **no tree hash was recorded for this round's pin, so the "identical before and after" check made at the time cannot be verified from the released artefacts** (review run 024)
 
 ## Result
 
@@ -74,7 +73,7 @@ at 0.25 s resolution — the design note had rejected it as spoken-only. Arm A's
 at 205.68 s, **0.93 s after it disappears**. Arm B spent a frame at 200.0 s specifically to
 check, **0.75 s before it appears**. A four-second event, a five-minute video, both arms
 looking in the right place, both missing by under a second from opposite sides. Capture
-probability 0.399; even odds need 37 frames.
+probability 0.399; even odds need 38 frames.
 
 ## Two production findings
 
@@ -95,4 +94,4 @@ A 3-second snap tolerance is wider than the events we are measuring, which are 2
 - Scoring is still by the tool's author, and partial-credit calls are judgement.
 - Ground truth is still built from the tool's own study sheets, and was wrong again here.
 - One prediction (P4) failed, and one prediction set (P3) rested partly on invalid questions.
-- 17 valid questions across 4 videos remains small.
+- 18 valid questions across 4 videos remains small.

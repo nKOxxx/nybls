@@ -42,13 +42,14 @@ luck: at 1.25 s visibility a 10 s grid catches an item with probability 0.125.
 
 | item | signature | visible | basis | p(capture) at N=30 |
 |---|---|---|---|---|
-| Q3 typo in program output | `wolrd` | about 90 s, in scrollback | three readers agree; OCR 3 of 241, unusable | about 1.0 |
-| Q4 cargo version line | `cargo 1.88.0` | at least 50 s, in scrollback | both arms read it at 229 s and 278 s; OCR 0 of 121, unusable | about 1.0 |
+| Q3 typo in program output | `wolrd` | at least 33 s, in scrollback | re-measured at 2560 px: 55 of 121 matches, longest run 33.0 s from 203.0 s (`remeasure_2560/persist_QtqYNyBv9r8_220.json`); the 960 px pass had 3 of 241 | 1.0 |
+| Q4 cargo version line | `cargo 1.88.0` | at least 20 s, in scrollback | re-measured at 2560 px: 32 of 81 matches, longest run 20.0 s from 266.0 s (`remeasure_2560/persist_QtqYNyBv9r8_255.json`); the 960 px pass had 0 of 121 | 0.83 |
 | Q5 sourced binary, exit 127 | `exit 127` | about 2 s | OCR 6 of 121, run 1.5 s from 418.5 s; 2560 px check shows it at 418 to 419 s only | 0.062 |
 
 The two long lived items were labelled T by the author and are transient in the sense
-that they happen once, but they persist in scrollback for longer than the control's 24 s
-grid interval. Both arms got both. **What the grid cannot reach is decided by persistence,
+that they happen once, but they persist in scrollback: 33 s for the typo, above the
+control's 24.2 s grid interval, and 20 s for the cargo line, just under it (capture
+probability 0.83). Both arms got both. **What the grid cannot reach is decided by persistence,
 not by the P/T label.** The label predicts the gap only where T items are genuinely brief.
 
 ## vxP2PTA1GEk, HTML and CSS session (1697 s)
@@ -60,10 +61,10 @@ here rests entirely on reader agreement.
 
 | item | signature | visible | basis | p(capture) at N=30 |
 |---|---|---|---|---|
-| Q4 DevTools edited rule | `200px` | at least 113 s | Arm A read it at 1159, 1216 and 1272 s; OCR 0 of 261 (DevTools text, small), unusable | about 1.0 |
-| Q5 second media query | `1080px` | about 160 s per the author; both arms read it in 3 to 4 frames from 1555 s to the end | OCR 0 of 171, unusable | about 1.0 |
+| Q4 DevTools edited rule | `200px` | at least 113 s per readers; UNMEASURABLE by OCR | 0 of 261 at 960 px and 0 of 121 at 2560 px (`remeasure_2560/persist_vxP2PTA1GEk_1215.json`): the source is 360 by 640 and upscaling creates no pixels; rests on Arm A's three frames at 1159, 1216, 1272 s | about 1.0, unmeasured |
+| Q5 second media query | `1080px` | about 160 s per readers; UNMEASURABLE by OCR | 0 of 171 at 960 px and 0 of 86 at 2560 px (`remeasure_2560/persist_vxP2PTA1GEk_1615.json`); rests on both arms' frames from 1555 s to the end | about 1.0, unmeasured |
 
-## Wlu4MsBnjuk, Snake game (1446 s)
+## Wlu4MsBnjuk, Snake game (1445.49 s)
 
 OCR works here: the editor and terminal text is large enough at 1280 px, and match counts
 are dense, so these figures are used as measured.
@@ -73,9 +74,22 @@ are dense, so these figures are used as measured.
 | Q3 KeyboardInterrupt traceback | `KeyboardInterrupt` | 10.5 s (recurs; 21 matches in an 80 s window) | 1008.0 s | 21 of 161 | 0.218 | 68 |
 | Q4 final frame_size_x | `1380` | 27.0 s | 1419.0 s | 40 of 121 | 0.560 | 26 |
 | Q5 closing comment | `WATHING` | 25.5 s, to the end of the video | 1420.0 s | 51 of 61 | 0.529 | 28 |
+| Q4 final frame_size_y (the item that separated the arms) | `840` | intermittent: 8 of 141 matches over 140 s at 2560 px, longest run 3.0 s from 1333.0 s (`remeasure_2560/persist_Wlu4MsBnjuk_1400.json`) | | 8 of 141 | 0.062 for the longest run; not a single interval event | 241 |
 
 The control's grid interval on this video is 48.2 s, so each of these is caught by at most
 one uniform frame, and at 0.22 to 0.56 probability. The last two also sit inside the
 control's closing dead zone of 24.1 s for part of their run: the final uniform sample is
-at 1421.9 s, so anything typed after that is structurally unreachable, which is exactly
+at 1421.4 s (D = 1445.49 s), so anything typed after that is structurally unreachable, which is exactly
 what the control reported for the end of the closing comment and the final height.
+
+
+## Re-measurement at 2560 px, 2026-09-09 (review run 024, required item 12)
+
+Raising the OCR working width from 960 to 2560 px reads terminal text: `wolrd` 55 of 121
+matches, `cargo 1.88.0` 32 of 81, where the 960 px pass found 3 of 241 and 0 of 121. The
+two HTML items remain unmeasurable at any resolution because the stored source is 360 by
+640; those rows rest on reader agreement and are marked so. The Snake `840` value, which
+separated the arms and had never been measured, matches 8 of 141 samples over 140 s with
+no run longer than 3 s: a long lived value that OCR, and evidently the control's three
+nearby samples, could read only intermittently. That is a third failure class, neither a
+brief event nor a dead zone, and the paper now says so.
