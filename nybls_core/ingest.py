@@ -19,6 +19,11 @@ IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 MEDIA_SUFFIXES = VIDEO_SUFFIXES | IMAGE_SUFFIXES
 
 
+def ytdlp() -> str:
+    """yt-dlp may live beside our interpreter rather than on PATH (pipx extra)."""
+    from .store import tool
+    return tool("yt-dlp") or "yt-dlp"
+
 def _run(cmd: list[str], timeout: int = 900) -> subprocess.CompletedProcess:
     # arg-array only, never shell=True: titles and filenames are hostile input
     return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
@@ -34,7 +39,7 @@ def ingest(source: str, max_height: int = 720) -> tuple[str, Path]:
         if urlparse(source).scheme != "https":
             raise ValueError("only https URLs accepted")
 
-        probe = _run(["yt-dlp", "--no-playlist", "--dump-json", "--no-download", source], 120)
+        probe = _run([ytdlp(), "--no-playlist", "--dump-json", "--no-download", source], 120)
         if probe.returncode != 0:
             raise RuntimeError(f"yt-dlp probe failed: {probe.stderr.strip()[-400:]}")
         meta = json.loads(probe.stdout)
@@ -44,7 +49,7 @@ def ingest(source: str, max_height: int = 720) -> tuple[str, Path]:
 
         if not video.exists():
             dl = _run([
-                "yt-dlp", "--no-playlist",
+                ytdlp(), "--no-playlist",
                 "-f", f"bv*[height<={max_height}]+ba/b[height<={max_height}]",
                 "--merge-output-format", "mp4",
                 "-o", str(ws / "video.%(ext)s"),
@@ -56,7 +61,7 @@ def ingest(source: str, max_height: int = 720) -> tuple[str, Path]:
         # Captions are a bonus (whisper is the fallback), so a rate limit or a
         # missing language must never fail the run: best-effort, ignore result.
         if not any(ws.glob("*.vtt")):
-            _run(["yt-dlp", "--no-playlist", "--skip-download",
+            _run([ytdlp(), "--no-playlist", "--skip-download",
                   "--write-auto-subs", "--write-subs", "--sub-langs", SUB_LANGS,
                   "--sub-format", "vtt", "-o", str(ws / "video.%(ext)s"), source], 300)
         return media_id, video

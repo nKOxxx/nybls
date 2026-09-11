@@ -58,6 +58,11 @@ The `[download]` extra pulls in yt-dlp so nybls can fetch from YouTube and the
 works on local video files, so `pipx install nybls` is fine if the user only has
 files on disk.
 
+Note that pipx keeps the extra's `yt-dlp` inside nybls's own environment rather
+than on your PATH. nybls looks there first, so this works, but if you want
+`yt-dlp` as a command of your own, `pipx inject nybls yt-dlp --include-apps`
+exposes it.
+
 ## Step 3: verify
 
 ```bash

@@ -55,3 +55,20 @@ def read_manifest(video_id: str) -> dict:
     if not p.exists():
         raise FileNotFoundError(f"no manifest for {video_id}, run `nybls probe` first")
     return json.loads(p.read_text())
+
+def tool(name: str) -> str | None:
+    """Find an executable, checking our own environment before PATH.
+
+    pipx installs nybls into an isolated venv. An extra like `nybls[download]`
+    puts `yt-dlp` in that venv's bin directory, which is deliberately NOT on the
+    user's PATH, so `shutil.which` cannot see it and the tool reports a
+    dependency missing that it is in fact shipping. Caught by running the
+    documented install on a clean machine: it passed on the author's Mac only
+    because Homebrew had put a second yt-dlp on PATH.
+    """
+    import shutil
+    import sys
+    beside = Path(sys.executable).parent / name
+    if beside.is_file():
+        return str(beside)
+    return shutil.which(name)

@@ -10,7 +10,7 @@ from . import ingest as ing
 from . import ledger as led
 from . import media
 from . import transcribe as tr
-from .store import read_manifest, scrub, workspace, write_manifest
+from .store import read_manifest, scrub, tool as store_tool, workspace, write_manifest
 
 
 def _version() -> str:
@@ -468,7 +468,7 @@ def cmd_doctor(args) -> int:
     missing_required = []
     print("nybls doctor\n")
     for tool, need, why in checks:
-        ok = shutil.which(tool) is not None
+        ok = store_tool(tool) is not None
         mark = "✓" if ok else ("✗" if need == "required" else "·")
         state = "" if ok else f"  ← not installed ({need})"
         print(f"  {mark} {tool:<12} {why}{state}")
@@ -493,10 +493,19 @@ def cmd_doctor(args) -> int:
 
     print()
     if missing_required:
-        print(f"  install what's missing:  brew install {' '.join(missing_required)}")
+        import platform
+        mgr = {"Darwin": "brew install", "Linux": "sudo apt install -y"}.get(
+            platform.system(), "install")
+        # yt-dlp is a Python package, so pip is right everywhere and a system
+        # package manager is not needed for it.
+        pieces = [m for m in missing_required if m != "yt-dlp"]
+        if pieces:
+            print(f"  install what's missing:  {mgr} {' '.join(pieces)}")
+        if "yt-dlp" in missing_required:
+            print("  for URL downloads:       pipx inject nybls yt-dlp --include-apps")
         return 1
     print("  ready. try:  nybls probe \"https://www.youtube.com/watch?v=...\"")
-    if not shutil.which("whisper-cli"):
+    if not store_tool("whisper-cli"):
         print("  (videos without captions need speech: brew install whisper-cpp)")
     return 0
 

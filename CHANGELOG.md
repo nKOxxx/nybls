@@ -17,6 +17,23 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.9.6] - 2026-09-11
+
+### Fixed
+The clean-environment check added in 0.9.5 failed on its first run, on both
+platforms, and found two real bugs that every previous release shipped.
+
+- **`pipx install "nybls[download]"` left the tool unable to download anything.**
+  pipx keeps nybls in an isolated environment, so the extra's `yt-dlp` lands in
+  that environment's bin directory, which is deliberately not on the user's PATH.
+  `shutil.which` could not see it, so nybls reported a required dependency
+  missing that it was in fact shipping. It passed on the author's Mac only
+  because Homebrew had put a second yt-dlp on PATH. Tools are now resolved beside
+  the running interpreter before falling back to PATH.
+- **`doctor` told Linux users to run `brew install`.** The hint was hardcoded to
+  Homebrew. It is now platform aware, and no longer suggests a system package
+  manager for yt-dlp at all, since yt-dlp is a Python package.
+
 ## [0.9.5] - 2026-09-11
 
 ### Added

@@ -135,3 +135,43 @@ def test_the_skill_gives_an_install_command_that_works():
     for b in installs:
         assert "pipx install" in b, f"skill install block must use pipx:\n{b}"
         assert not re.search(r"^\s*pip install nybls", b, re.M), f"bare pip install:\n{b}"
+
+
+def test_tools_are_found_beside_our_interpreter_before_path():
+    """pipx installs nybls into an isolated venv, so an extra like
+    `nybls[download]` puts yt-dlp in that venv's bin directory, deliberately not
+    on the user's PATH. `shutil.which` cannot see it, so the tool reported a
+    dependency missing that it was in fact shipping.
+
+    This passed on the author's Mac because Homebrew had put a second yt-dlp on
+    PATH. Two clean CI runners found it in one run."""
+    import os
+    import stat
+    import sys
+    import tempfile
+    from pathlib import Path
+    from unittest import mock
+    from nybls_core import store
+
+    with tempfile.TemporaryDirectory() as d:
+        fake_bin = Path(d) / "bin"
+        fake_bin.mkdir()
+        exe = fake_bin / "totally-not-on-path"
+        exe.write_text("#!/bin/sh\n")
+        exe.chmod(exe.stat().st_mode | stat.S_IEXEC)
+        with mock.patch.object(sys, "executable", str(fake_bin / "python")):
+            found = store.tool("totally-not-on-path")
+        assert found == str(exe), "must look beside the running interpreter"
+        # and it must still fall through to PATH for system tools
+        with mock.patch.object(sys, "executable", str(fake_bin / "python")):
+            assert store.tool("sh") is not None
+
+
+def test_doctor_does_not_tell_linux_users_to_run_brew():
+    """doctor hardcoded `brew install` in its missing-dependency hint, which is
+    wrong on every Linux machine. Found by a clean Ubuntu runner."""
+    import inspect
+    from nybls_core import cli
+    src = inspect.getsource(cli.cmd_doctor)
+    assert "platform.system()" in src, "the hint must depend on the platform"
+    assert 'f"  install what\'s missing:  brew install' not in src
