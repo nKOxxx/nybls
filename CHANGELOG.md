@@ -17,6 +17,31 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.9.5] - 2026-09-11
+
+### Added
+- **The documented install is now executed, not asserted.**
+  `scripts/check_documented_install.py` reads the platform table out of
+  `INSTALL.md`, runs those exact commands on a machine that has never seen this
+  project, confirms `nybls` lands on PATH, then generates a video with ffmpeg and
+  watches it end to end. Using ffmpeg to make its own input means the check needs
+  no network and cannot be broken by a platform blocking downloads.
+- It runs three ways: on every push and pull request, weekly against PyPI to
+  catch drift nobody caused (a new PEP, a platform change, a yanked dependency),
+  and as a **gate in the release workflow**. A build a stranger cannot install no
+  longer gets published.
+- `pytest` in the publish workflow no longer ends in `|| true`, so a failing test
+  now actually stops a release.
+
+### Why
+  This closes the class of bug, not the instance. For eight releases the first
+  command in the README was `pip install nybls`, which PEP 668 refuses. 56 tests,
+  a blind-judged benchmark round and an adversarial review pass all missed it,
+  because every one of them was aimed at the claims rather than the premises. The
+  test written to protect that instruction asserted the broken command was
+  present, so a correct README would have failed CI. A test written by whoever
+  wrote the bug inherits the bug's assumption; it is only wrong against a machine.
+
 ## [0.9.4] - 2026-09-08
 
 ### Fixed

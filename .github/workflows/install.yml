@@ -1,0 +1,35 @@
+# Runs the install this project documents, on a machine that does not have it.
+#
+# Every other check reads the install command as a string. For eight releases
+# that command was `pip install nybls`, which PEP 668 refuses, and every check
+# passed anyway. One of them asserted the broken command was present, so a
+# correct README would have failed CI.
+#
+# This job executes what INSTALL.md says instead of reading it, so the docs
+# cannot document something that does not run.
+name: documented install
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Weekly, because this can break without anyone touching the repo: a new
+    # PEP, a platform change, a dependency yanked from PyPI.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+jobs:
+  from-pypi:
+    name: as documented, from PyPI (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/check_documented_install.py --source published

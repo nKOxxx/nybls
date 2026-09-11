@@ -272,6 +272,31 @@ directly rather than asserted.
 Four earlier questions were voided when an audit found the narration stated the
 answer, and that audit is published alongside the results.
 
+## Testing the premises, not just the claims
+
+For eight releases the first command in this README did not work. `pip install
+nybls` is refused under PEP 668 on Homebrew Python and most current Linux, and
+nobody noticed because the tool only ever ran from the folder it was built in.
+
+The benchmark did not catch it. Neither did 56 tests, a blind-judged
+benchmark round, or an adversarial review pass. All of that was aimed at the
+claims, at whether the tool beats a uniform control. None of it was aimed at the
+premises, at whether the first thing a stranger types actually runs.
+
+Worse: the test written to protect that instruction asserted the broken command
+was present, so a correct README would have failed CI. A test written by whoever
+wrote the bug inherits the bug's assumption, and it reads as perfectly reasonable
+to a reviewer. It is only wrong against a machine.
+
+So the install is no longer described and asserted, it is executed.
+`scripts/check_documented_install.py` reads the platform table out of
+`INSTALL.md`, runs those exact commands on a runner that has never seen this
+project, then makes a video with ffmpeg and watches it. It runs on every push,
+weekly against PyPI to catch drift nobody caused, and as a gate in the release
+workflow: a build that a stranger cannot install does not get published.
+
+If the docs drift, that breaks. That is the point of it.
+
 ## Honest limits
 
 - **No live video.** Download first, then analyse.

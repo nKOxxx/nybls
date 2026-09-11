@@ -39,6 +39,13 @@ jobs:
           test "$BUILT" = "${{ inputs.confirm }}"
 
       - run: python -m twine check dist/*
-      - run: python -m pytest tests/ -q || true
+      - run: python -m pytest tests/ -q
+
+      # The release gate. Install the wheel we are about to publish exactly the
+      # way INSTALL.md tells a stranger to, on a runner that has never seen it,
+      # and watch a video with it. A release that a stranger cannot install is
+      # not a release, and reading the command was never enough to know.
+      - name: The documented install must work before this ships
+        run: python scripts/check_documented_install.py --source local
 
       - uses: pypa/gh-action-pypi-publish@release/v1
