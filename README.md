@@ -288,6 +288,9 @@ was present, so a correct README would have failed CI. A test written by whoever
 wrote the bug inherits the bug's assumption, and it reads as perfectly reasonable
 to a reviewer. It is only wrong against a machine.
 
+The rules that came out of this, each naming the incident that produced it
+and the file that enforces it, are in [TESTING.md](TESTING.md).
+
 So the install is no longer described and asserted, it is executed.
 `scripts/check_documented_install.py` reads the platform table out of
 `INSTALL.md`, runs those exact commands on a runner that has never seen this
@@ -319,7 +322,7 @@ reported to you rather than obeyed.
 
 ## Docs
 
-[Install](INSTALL.md) · [Protocol](docs/PROTOCOL.md) · [Research and evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Changelog](CHANGELOG.md)
+[Install](INSTALL.md) · [Testing standards](TESTING.md) · [Protocol](docs/PROTOCOL.md) · [Research and evidence](docs/RESEARCH.md) · [Security](docs/SECURITY.md) · [Changelog](CHANGELOG.md)
 
 Benchmarks: [round 1, with a superseded early tally](bench/RESULTS.md) · [round 2](bench/RESULTS_round2.md) · [round 3](bench/RESULTS_round3.md) · [round 4, blind judged](bench/RESULTS_round4.md) · [question audit](bench/QUESTION_AUDIT.md) · [where information lives](bench/RESULTS_modality.md) · [change detection signals](bench/RESULTS_signals.md)
 

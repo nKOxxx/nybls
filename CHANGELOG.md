@@ -17,6 +17,23 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.9.7] - 2026-09-11
+
+### Added
+- **`TESTING.md`**, six rules, each naming the incident in this repository that
+  produced it and the file that enforces it. The distinction it rests on: a claim
+  is something the tool asserts about the world, a premise is something you assume
+  in order to test the claims at all. Premises feel like the floor, which is why
+  58 tests, a blind-judged benchmark round and an adversarial review pass all
+  missed that the README's first command had not worked for eight releases. A test
+  can only fail if you were willing to be wrong about the thing it checks.
+- `tests/test_testing_doc.py` checks the document's own enforcement claims: every
+  file it cites must exist, the install check must still be wired into both CI and
+  the release gate, no workflow may swallow a failure, and the "what this does not
+  cover" section must remain substantive. A standards document is the easiest
+  thing in a repository to let rot, and rotting quietly is the exact failure it
+  was written about.
+
 ## [0.9.6] - 2026-09-11
 
 ### Fixed
