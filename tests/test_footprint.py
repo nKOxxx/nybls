@@ -128,10 +128,14 @@ def test_the_skill_gives_an_install_command_that_works():
     which is refused under PEP 668 on Homebrew Python and most current Linux."""
     import re
     from pathlib import Path
-    skill = (Path(__file__).parent.parent / "skills/watch/SKILL.md").read_text()
-    blocks = re.findall(r"```[a-z]*\n(.*?)```", skill, re.S)
-    installs = [b for b in blocks if "install" in b and "nybls" in b]
-    assert installs, "the skill must show an install command"
+    skills = sorted((Path(__file__).parent.parent / "skills").glob("*/SKILL.md"))
+    assert len(skills) >= 2, "expected watch and browse-and-watch"
+    installs = []
+    for path in skills:
+        blocks = re.findall(r"```[a-z]*\n(.*?)```", path.read_text(), re.S)
+        found = [b for b in blocks if "install" in b and "nybls" in b]
+        assert found, f"{path.parent.name} must show an install command"
+        installs += found
     for b in installs:
         assert "pipx install" in b, f"skill install block must use pipx:\n{b}"
         assert not re.search(r"^\s*pip install nybls", b, re.M), f"bare pip install:\n{b}"

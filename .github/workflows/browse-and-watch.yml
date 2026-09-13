@@ -1,0 +1,30 @@
+# Runs the browse-and-watch recipe with no agent: a local Goliath opens a local
+# page, the skill's own read-only expression finds the video, nybls watches it.
+# macOS only, because Goliath's browser needs no display server there.
+name: browse and watch
+
+on:
+  push:
+    paths:
+      - "skills/browse-and-watch/**"
+      - "scripts/check_browse_and_watch.py"
+      - "nybls_core/**"
+      - ".github/workflows/browse-and-watch.yml"
+  schedule:
+    - cron: "0 8 * * 1"      # weekly: Goliath's API can change without us touching anything
+  workflow_dispatch:
+
+jobs:
+  recipe:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: brew install ffmpeg pipx
+      - run: pipx install .
+      - run: python scripts/check_browse_and_watch.py
