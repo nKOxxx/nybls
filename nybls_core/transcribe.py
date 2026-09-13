@@ -227,12 +227,29 @@ def looks_degenerate(segs: list[tuple[float, str]]) -> str | None:
     return None
 
 
+def has_audio(video: Path) -> bool:
+    """True if the file carries at least one audio stream.
+
+    A screen recording often has no audio track at all, which is different from a
+    silent one. Extracting audio from it made ffmpeg fail and took probe down
+    with it, on exactly the content this tool is best at. Found by the
+    browse-and-watch check, whose fixture video has no audio track.
+    """
+    r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a",
+                        "-show_entries", "stream=index", "-of", "csv=p=0", str(video)],
+                       capture_output=True, text=True)
+    return bool(r.stdout.strip())
+
+
 def build_transcript(media_id: str, ws: Path, video: Path,
                      model: str = DEFAULT_MODEL) -> tuple[Path | None, str]:
     vtts = sorted(ws.glob("*.vtt"))
     if vtts:
         vtt = _pick_vtt(vtts)
         segs, source = condense_vtt(vtt), f"captions:{vtt.name}"
+    elif not has_audio(video):
+        return None, ("none, this video has no audio track, so there is no speech to "
+                      "transcribe. The frames are the only place its content exists")
     elif not have_whisper():
         return None, ("none, no captions on this video, and whisper-cli is not installed. "
                       "Frames still work; for speech install it with: brew install whisper-cpp")

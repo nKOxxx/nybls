@@ -17,6 +17,19 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.9.8] - 2026-09-13
+
+### Fixed
+- **Probing a video with no audio track crashed.** Audio extraction ran
+  unconditionally, ffmpeg refused to write a file with no stream in it, and probe
+  died. Screen recordings often carry no audio track at all, which is the content
+  this tool is best at. It now reports that there is no speech and sends the agent
+  straight to the frames. Found by a check whose fixture video happened to have no
+  audio track; the documented-install check had used a tone, so it never hit it.
+- An older test pinned the exact source line of the silent-video branch rather than
+  its behaviour, and broke on a harmless change. It now checks the property
+  (TESTING.md rule 3).
+
 ## [0.9.7] - 2026-09-11
 
 ### Added

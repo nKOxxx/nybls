@@ -57,9 +57,11 @@ def test_silent_video_guidance_is_inverted():
     import inspect
     from nybls_core import cli
     src = inspect.getsource(cli.cmd_probe)
-    assert 'if "UNRELIABLE" in tsource:' in src
+    # Pin the property, not the line (TESTING.md rule 3): the unreliable-transcript
+    # branch exists and comes before the default advice.
+    assert '"UNRELIABLE" in tsource' in src
     # the misleading default must not be what a silent video receives
-    i_guard = src.index('if "UNRELIABLE" in tsource:')
+    i_guard = src.index('"UNRELIABLE" in tsource')
     i_default = src.index("Read the transcript first")
     assert i_default > i_guard, "silent-video branch must precede the default advice"
 
@@ -141,3 +143,26 @@ def test_vtt_entities_are_unescaped():
     assert text.startswith(">>"), text
     assert "&" not in text.replace("&", "", 0) or "&gt;" not in text
     assert "Rock & roll" in text and "5 < 6" in text
+
+
+def test_no_audio_track_is_not_a_crash():
+    """A video with no audio stream made probe crash, because audio extraction
+    ran unconditionally. Screen recordings often have no audio track, which is
+    the content this tool is best at. It must report no speech and carry on."""
+    from unittest import mock
+    from pathlib import Path
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        ws = Path(d)
+        with mock.patch.object(tr, "has_audio", return_value=False), \
+             mock.patch.object(tr, "whisper", side_effect=AssertionError("must not transcribe")):
+            path, source = tr.build_transcript("x", ws, ws / "video.mp4")
+    assert path is None and "no audio track" in source
+
+
+def test_probe_sends_a_no_audio_video_straight_to_the_frames():
+    """The silent-video guidance must fire for a missing audio track, not only
+    for an unreliable transcript."""
+    import inspect
+    from nybls_core import cli
+    assert '"no audio track" in tsource' in inspect.getsource(cli.cmd_probe)

@@ -71,7 +71,7 @@ def cmd_probe(args) -> int:
     # first") is exactly backwards. Four build-in-public reels showed this: the
     # transcripts were stock filler, the captions were one-line headlines, and
     # the architecture being demonstrated existed solely in pixels.
-    if "UNRELIABLE" in tsource:
+    if "UNRELIABLE" in tsource or "no audio track" in tsource:
         print("cost so far: 0 images. There is no usable transcript, for a silent "
               "screen recording the frames ARE the content, so go straight to "
               "`sheet` and expect to spend the budget rather than save it.")
