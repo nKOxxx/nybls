@@ -19,19 +19,44 @@ DEFAULT_MODEL = "sonnet-5"
 
 # ── token formulas, one per vendor ───────────────────────────────────────────
 
-def _anthropic(w: int, h: int, spec: dict) -> int:
-    """Anthropic: ceil(w/28) * ceil(h/28)."""
+def _cells(w: float, h: float) -> int:
     return math.ceil(w / 28) * math.ceil(h / 28)
 
 
-def _openai_patch(w: int, h: int, spec: dict) -> int:
-    """OpenAI patch models: 32px patches, times a per-model multiplier.
+def _anthropic(w: int, h: int, spec: dict) -> int:
+    """Anthropic: ceil(w/28) * ceil(h/28), after the tier's downscale.
 
-    Upper bound: the API downscales very large images to a per-model patch
-    budget before counting, and we do not model that step. nybls images are
-    at most 1568px wide, well under the budgets published for detail=high.
+    Each tier has a long-edge limit and a visual-token cap; larger images are
+    scaled down, aspect preserved, to the largest size that fits both. Standard
+    tier (models before Claude 4.7): 1568 px, 1568 tokens. High-resolution tier
+    (Claude 4.7 and later): 2576 px, 4784 tokens. Checked against the worked
+    table in Anthropic's vision docs, 2026-09-15.
     """
-    return math.ceil(math.ceil(w / 32) * math.ceil(h / 32) * spec["multiplier"])
+    edge, cap = spec["max_edge"], spec["max_tokens"]
+    scale = min(1.0, edge / max(w, h))
+    if _cells(w * scale, h * scale) > cap:
+        scale = min(scale, math.sqrt(cap * 784 / (w * h)))
+        while _cells(w * scale, h * scale) > cap:
+            scale *= 0.995
+    return _cells(w * scale, h * scale)
+
+
+def _patches(w: float, h: float) -> int:
+    return math.ceil(w / 32) * math.ceil(h / 32)
+
+
+def _openai_patch(w: int, h: int, spec: dict) -> int:
+    """OpenAI patch models: 32px patches times a per-model multiplier, after
+    scaling to the model's maximum dimension and patch budget (detail=high).
+    Billable tokens are the patch count times the multiplier, rounded up, at
+    the model's text input price. OpenAI images-vision guide, 2026-09-15.
+    """
+    scale = min(1.0, spec["max_edge"] / max(w, h))
+    if _patches(w * scale, h * scale) > spec["patch_cap"]:
+        scale = min(scale, math.sqrt(spec["patch_cap"] * 1024 / (w * h)))
+        while _patches(w * scale, h * scale) > spec["patch_cap"]:
+            scale *= 0.995
+    return math.ceil(_patches(w * scale, h * scale) * spec["multiplier"])
 
 
 def _openai_tile(w: int, h: int, spec: dict) -> int:
@@ -48,30 +73,33 @@ def _openai_tile(w: int, h: int, spec: dict) -> int:
 FORMULAS = {"anthropic": _anthropic, "openai-patch": _openai_patch, "openai-tile": _openai_tile}
 
 # name -> vendor formula, USD per 1M input tokens, formula parameters, source.
+A_HI = {"formula": "anthropic", "max_edge": 2576, "max_tokens": 4784,
+        "source": "Anthropic vision docs + pricing, 2026-09-15"}
+A_STD = {"formula": "anthropic", "max_edge": 1568, "max_tokens": 1568,
+         "source": "Anthropic vision docs + pricing, 2026-09-15"}
+OA = "OpenAI images-vision guide + pricing, 2026-09-15"
+
 MODELS: dict[str, dict] = {
-    "sonnet-5":   {"formula": "anthropic", "usd_per_mtok": 2.00,  "source": "Anthropic pricing, 2026-06"},
-    "opus-5":     {"formula": "anthropic", "usd_per_mtok": 5.00,  "source": "Anthropic pricing, 2026-06"},
-    "fable-5.1":  {"formula": "anthropic", "usd_per_mtok": 10.00, "source": "Anthropic pricing, 2026-06"},
-    "haiku-4.5":  {"formula": "anthropic", "usd_per_mtok": 1.00,  "source": "Anthropic pricing, 2026-06"},
-    "gpt-5.5":    {"formula": "openai-patch", "usd_per_mtok": 5.00, "multiplier": 1.2,
-                   "source": "OpenAI images-vision guide + pricing, 2026-09-15"},
-    "gpt-5.4":    {"formula": "openai-patch", "usd_per_mtok": 2.50, "multiplier": 1.2,
-                   "source": "OpenAI images-vision guide + pricing, 2026-09-15"},
-    "gpt-5.2":    {"formula": "openai-patch", "usd_per_mtok": 1.75, "multiplier": 1.2,
-                   "source": "OpenAI images-vision guide + pricing, 2026-09-15"},
-    "gpt-5.1":    {"formula": "openai-tile", "usd_per_mtok": 1.25, "base": 70, "per_tile": 140,
-                   "source": "OpenAI images-vision guide + pricing, 2026-09-15"},
-    "gpt-5":      {"formula": "openai-tile", "usd_per_mtok": 1.25, "base": 70, "per_tile": 140,
-                   "source": "OpenAI images-vision guide + pricing, 2026-09-15"},
-    "gpt-4.1":    {"formula": "openai-tile", "usd_per_mtok": 2.00, "base": 85, "per_tile": 170,
-                   "source": "OpenAI images-vision guide + pricing, 2026-09-15"},
-    "gpt-4o":     {"formula": "openai-tile", "usd_per_mtok": 2.50, "base": 85, "per_tile": 170,
-                   "source": "OpenAI images-vision guide + pricing, 2026-09-15"},
+    "sonnet-5":  {**A_HI, "usd_per_mtok": 2.00},
+    "opus-5":    {**A_HI, "usd_per_mtok": 5.00},
+    "fable-5.1": {**A_HI, "usd_per_mtok": 10.00},
+    "haiku-4.5": {**A_STD, "usd_per_mtok": 1.00},
+    "gpt-5.5": {"formula": "openai-patch", "usd_per_mtok": 5.00, "multiplier": 1.2,
+                "max_edge": 2048, "patch_cap": 2500, "source": OA},
+    "gpt-5.4": {"formula": "openai-patch", "usd_per_mtok": 2.50, "multiplier": 1.2,
+                "max_edge": 2048, "patch_cap": 2500, "source": OA},
+    "gpt-5.2": {"formula": "openai-patch", "usd_per_mtok": 1.75, "multiplier": 1.2,
+                "max_edge": 2048, "patch_cap": 6144, "source": OA},
+    "gpt-5.1": {"formula": "openai-tile", "usd_per_mtok": 1.25, "base": 70, "per_tile": 140, "source": OA},
+    "gpt-5":   {"formula": "openai-tile", "usd_per_mtok": 1.25, "base": 70, "per_tile": 140, "source": OA},
+    "gpt-4.1": {"formula": "openai-tile", "usd_per_mtok": 2.00, "base": 85, "per_tile": 170, "source": OA},
+    "gpt-4o":  {"formula": "openai-tile", "usd_per_mtok": 2.50, "base": 85, "per_tile": 170, "source": OA},
     # xAI publishes the price but, on every page reachable on 2026-09-15, no
     # image token formula. The token count below is a stand-in and says so.
-    "grok-4.6":   {"formula": "openai-patch", "usd_per_mtok": 2.00, "multiplier": 1.0,
-                   "unverified": "xAI publishes no image token formula; 32px patches used as a stand-in",
-                   "source": "docs.x.ai grok-4.6 model page, 2026-09-15 (price only)"},
+    "grok-4.6": {"formula": "openai-patch", "usd_per_mtok": 2.00, "multiplier": 1.0,
+                 "max_edge": 2048, "patch_cap": 2500,
+                 "unverified": "xAI publishes no image token formula; 32px patches used as a stand-in",
+                 "source": "docs.x.ai grok-4.6 model page, 2026-09-15 (price only)"},
 }
 
 
@@ -153,8 +181,8 @@ def summary(ws: Path, duration_s: float, total_frames_hint: int | None = None,
 def models_table() -> str:
     rows = ["model         $/Mtok  image tokens                        source"]
     for name, s in MODELS.items():
-        how = {"anthropic": "ceil(w/28)*ceil(h/28)",
-               "openai-patch": f"ceil(w/32)*ceil(h/32)*{s.get('multiplier')}",
+        how = {"anthropic": f"28px cells, cap {s.get('max_tokens')} tok",
+               "openai-patch": f"32px patches x{s.get('multiplier')}, cap {s.get('patch_cap')}",
                "openai-tile": f"{s.get('base')} + {s.get('per_tile')}/512px tile"}[s["formula"]]
         flag = "  UNVERIFIED" if s.get("unverified") else ""
         rows.append(f"{name:<13} {s['usd_per_mtok']:>6.2f}  {how:<35} {s['source']}{flag}")
