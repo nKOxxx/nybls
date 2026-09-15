@@ -157,6 +157,22 @@ mandatory confidence check on every round, a rule that the model has to name wha
 it is missing before it may ask for more, and a receipts contract. The discipline
 travels with the tool instead of depending on how carefully you prompted.
 
+### With any other agent
+
+nybls never calls a model, so it does not care which one you use. Codex CLI,
+Cursor, Aider and the rest read [AGENTS.md](AGENTS.md), which carries the same
+protocol the plugin ships. Any agent that can run a shell command and open an
+image can use it. Chat apps that cannot run local commands cannot.
+
+The ledger prices images at Claude Sonnet 5 rates by default. Pass the model you
+are actually billed on and it recomputes the token count with that vendor's own
+formula, not just the price:
+
+```bash
+nybls ledger <id> --model gpt-5.5     # or export NYBLS_MODEL=gpt-5.5
+nybls ledger --models                  # every model it knows, with sources
+```
+
 ## Reviewing a recorded call
 
 When a call is recorded in speaker view, the picture cuts to whoever is talking,
