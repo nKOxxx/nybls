@@ -240,8 +240,18 @@ def cmd_speakers(args) -> int:
 
 
 def cmd_ledger(args) -> int:
+    if args.models:
+        print(led.models_table())
+        return 0
+    if not args.id:
+        print("need an id, or --models", file=sys.stderr)
+        return 1
     ws, m, _ = _ctx(args.id)
-    print(led.summary(ws, m["duration_s"]))
+    try:
+        print(led.summary(ws, m["duration_s"], model=args.model))
+    except ValueError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
     return 0
 
 
@@ -603,8 +613,10 @@ def main() -> int:
     sk.add_argument("--force", action="store_true")
     sk.set_defaults(fn=cmd_speakers)
 
-    sl = sub.add_parser("ledger", help="spend summary")
-    sl.add_argument("id")
+    sl = sub.add_parser("ledger", help="spend summary, priced for the model you are billed on")
+    sl.add_argument("id", nargs="?")
+    sl.add_argument("--model", help="e.g. sonnet-5, gpt-5.5, grok-4.6 (or set NYBLS_MODEL)")
+    sl.add_argument("--models", action="store_true", help="list known models and formulas")
     sl.set_defaults(fn=cmd_ledger)
 
     st = sub.add_parser("study", help="dense comprehension pass over the whole video")

@@ -17,6 +17,30 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Simplified small-size logo variant for favicon rendering
 - Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
+## [0.10.0] - 2026-09-15
+
+### Added
+- **`AGENTS.md`.** The same protocol the Claude Code plugin ships as a skill,
+  for agents that read that file instead: Codex CLI, Cursor, Aider and others.
+  nybls never calls a model, so nothing about it is Claude-specific except the
+  delivery mechanism and the price on the ledger.
+- **`nybls ledger --model`** and `NYBLS_MODEL`. The ledger now stores every
+  image's pixel size and recomputes tokens with the chosen vendor's published
+  formula, because a price swap alone would be wrong: Anthropic counts 28px
+  cells with a per-tier cap (1568 tokens on models before Claude 4.7, 4784
+  after), OpenAI's newer models count 32px patches with a multiplier and a patch
+  budget, its older ones count 512px tiles plus a base. Downscaling is modelled
+  and tested against the vendors' own published tables. Known models and their
+  sources are listed by `nybls ledger --models`. Grok 4.6 is included at its published price with
+  the token count marked UNVERIFIED, because xAI publishes no image token formula
+  on any page reachable on 2026-09-15, and the estimate must not look more
+  certain than its source.
+
+### Changed
+- Ledger entries now carry `dims`. Older entries without them are priced at the
+  default model's stored count, and the summary says so when another model is
+  chosen.
+
 ## [0.9.8] - 2026-09-13
 
 ### Fixed
