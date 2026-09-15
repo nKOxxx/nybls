@@ -173,6 +173,21 @@ nybls ledger <id> --model gpt-5.5     # or export NYBLS_MODEL=gpt-5.5
 nybls ledger --models                  # every model it knows, with sources
 ```
 
+Each vendor counts differently, and each one also shrinks large images before
+counting. Anthropic bills 28 pixel cells with a cap per model tier, 1568 tokens
+on models before Claude 4.7 and 4784 after. OpenAI's newer models bill 32 pixel
+patches times a multiplier, up to a per-model patch budget; its older ones bill
+512 pixel tiles plus a base. All of that is modelled, and the tests reproduce
+every row of Anthropic's own published resolution table exactly. The figures
+were read from the vendors' documentation on 2026-09-15 and each entry names
+its source.
+
+Two honest limits. Grok 4.6 is listed at its published price with the token
+count marked UNVERIFIED, because xAI publishes no image token formula, and the
+tool will not pretend otherwise. And ledger entries written before 0.10.0 have
+no stored image sizes, so for those only the price changes between models; the
+summary says so when that happens.
+
 ## Reviewing a recorded call
 
 When a call is recorded in speaker view, the picture cuts to whoever is talking,
