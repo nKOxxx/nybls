@@ -166,3 +166,80 @@ def test_probe_sends_a_no_audio_video_straight_to_the_frames():
     import inspect
     from nybls_core import cli
     assert '"no audio track" in tsource' in inspect.getsource(cli.cmd_probe)
+
+
+def _event_stream(rng, total, pool_n=4200):
+    """A healthy long-event transcript: varied speech from a large vocabulary,
+    the shape of a multi-hour build stream. Eight sampled content words per
+    line from a 4,200-word pool keeps both rate gates comfortably above the
+    measured healthy floors (30 wpm, 9 distinct/min over a ~5.5 h span), so
+    the loop checks under test are what decide the verdict."""
+    pool = _vocab(pool_n)
+    out = []
+    for i in range(total):
+        out.append((float(i * 15), " ".join(rng.sample(pool, 8)) +
+                    " so that is where we are"))
+    return out
+
+
+def test_intermission_holding_card_is_not_a_model_stall():
+    """A 6-hour event stream re-aired its 'we'll be right back' holding card
+    every 30 seconds for the whole intermission: 160 consecutive identical
+    lines, 2% of the transcript, with 4h22m of real speech around it. The old
+    unconditional run check called that a loop and told the user to discard a
+    healthy transcript. An isolated run inside an otherwise varied transcript
+    is show content, not a stall."""
+    import random
+    rng = random.Random(7)
+    segs = _event_stream(rng, 500)
+    segs += [(7500.0 + i * 30, "and we're gonna be right back with you in a bit")
+             for i in range(160)]
+    segs += [(12500.0 + ts0, t) for ts0, t in _event_stream(rng, 500)]
+    # precondition: the run exists and the rest of the transcript is varied
+    lines = [t.strip().lower() for _, t in segs]
+    worst = run = 1
+    for a, b in zip(lines, lines[1:]):
+        run = run + 1 if a == b else 1
+        worst = max(worst, run)
+    assert worst == 160 and worst / len(lines) < 0.15
+    assert len(set(lines)) / len(lines) > 0.25
+    assert tr.looks_degenerate(segs) is None
+
+
+def test_full_file_loop_is_still_caught():
+    """The share gate must not blunt the original catch: a transcript that is
+    mostly one repeated line is a stall, as before."""
+    segs = _segs(["the same line over and over"] * 160 +
+                 [f"line number {i}" for i in range(30)])
+    lines = [t.strip().lower() for _, t in segs]
+    assert 160 / len(lines) >= 0.15
+    problem = tr.looks_degenerate(segs)
+    assert problem is not None and "looped" in problem
+
+
+def test_mid_speech_phrase_loop_is_caught():
+    """The stall can happen inside one line: mid-speech audio the model cannot
+    resolve comes back with the same phrase stamped over and over. Measured on
+    a 6-hour stream: one line in 6,481, invisible to every gate - whole-line
+    comparisons never match, ratio and vocabulary stay healthy."""
+    import random
+    rng = random.Random(11)
+    segs = _event_stream(rng, 500)
+    bad = ("i work on the work you know we're going to have a lot of people "
+           "you know we're going to have a lot of people "
+           "you know we're going to have a lot of people")
+    segs[250] = (segs[250][0], bad)
+    problem = tr.looks_degenerate(segs)
+    assert problem is not None and "mid-speech hallucination" in problem, problem
+
+
+def test_natural_emphasis_is_not_mid_speech_hallucination():
+    """Real speakers repeat for emphasis, but never three times verbatim in a
+    row. Two repeats, and repeats broken up by other words, must pass."""
+    import random
+    rng = random.Random(13)
+    segs = _event_stream(rng, 100)
+    segs.append((float(100 * 15),
+                 "it works, it works, and after the fix today the pipeline "
+                 "runs clean end to end without any manual steps"))
+    assert tr.looks_degenerate(segs) is None
