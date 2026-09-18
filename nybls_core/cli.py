@@ -325,6 +325,68 @@ def cmd_study(args) -> int:
     return 0
 
 
+def cmd_digest(args) -> int:
+    """Free post-archive pass: OCR index + browsable contact sheet + scene timeline.
+
+    Motivated by a 3-day livestream corpus whose 1,686 frames had to be indexed
+    by hand-run scripts; the next capture should not start from zero. Zero
+    vision tokens are spent — the ledger is never touched."""
+    from . import digest as dg
+
+    ws, m, video = _ctx(args.id)
+    every = args.every
+    frames_dir, n_frames, extracted = dg.extract_frames(video, ws, every=every, force=args.force)
+    frames = dg.list_frames(frames_dir)
+    if not frames:
+        print("frame extraction produced nothing; check ffmpeg output", file=sys.stderr)
+        return 1
+
+    engine, hint = dg.pick_engine(args.engine)
+    if not engine:
+        print(f"no OCR engine available. {hint}", file=sys.stderr)
+        return 1
+
+    print(f"digest: {len(frames)} frames at {int(every)}s intervals "
+          f"({'extracted now' if extracted else 'reusing frames on disk'}), OCR via {engine}...")
+    records = dg.ocr_frames(frames, engine, every=every, workers=args.jobs)
+
+    digest_dir = ws / "digest"
+    digest_dir.mkdir(exist_ok=True)
+    idx = digest_dir / "ocr-index.jsonl"
+    with idx.open("w") as out:
+        for r in records:
+            out.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+    text_by_frame = {r["frame"]: r["text"] for r in records}
+    items = [{
+        "path": f"{frames_dir.name}/{p.name}",
+        "ts": dg.ts_label((n - 1) * every),
+        "kb": p.stat().st_size // 1024,
+        "snippet": text_by_frame.get(n, ""),
+    } for n, p in frames]
+    sheet = digest_dir / "contact_sheet.html"
+    sheet.write_text(dg.contact_sheet_html(items, m.get("title") or args.id))
+
+    scenes = dg.scene_events(frames, every)
+    spath = digest_dir / "scenes.txt"
+    lines = [f"=== {args.id}: {len(frames)} frames, {len(scenes)} scene changes (every {int(every)}s) ==="]
+    lines += [f"  {t}  {a}KB -> {b}KB  frame {n}" for n, t, a, b in scenes]
+    spath.write_text("\n".join(lines) + "\n")
+
+    dg.update_manifest(args.id, {
+        "digest": {"engine": engine, "every_s": every, "frames": len(frames),
+                   "ocr_hits": len(records), "scenes": len(scenes)},
+    })
+
+    pct = 100 * len(records) // max(len(frames), 1)
+    print(f"ocr:      {len(records)}/{len(frames)} frames with text ({pct}%)  -> {scrub(str(idx))}")
+    print(f"scenes:   {len(scenes)} screen changes  -> {scrub(str(spath))}")
+    print(f"browse:   {scrub(str(sheet))}")
+    print("next: grep the index (`grep -i sponsor ocr-index.jsonl`), open the sheet in a "
+          "browser, find what you need — then spend frames only on what grep could not answer.")
+    return 0
+
+
 def _frange(start, stop, step):
     t = start
     while t < stop:
@@ -423,12 +485,21 @@ def cmd_corpus(args) -> int:
 
     vids = c["videos"]
     print(f"\ncorpus '{c['name']}', {len(vids)} videos\n")
+    no_digest = []
     for v in vids:
         mins = v["duration_s"] / 60
         date = v["observed"] or "no date"
         who = f"@{v['author']}" if v["author"] else "-"
         tr = "" if v["transcript"] else "  [no transcript]"
-        print(f"  {date:<12} {who:<16} {mins:>5.1f}m  {v['id']}  {v['title'][:38]}{tr}")
+        dig = v.get("digest")
+        dgt = (f"  ocr {dig['ocr_hits']}/{dig['frames']}" if isinstance(dig, dict)
+               else "  [no digest]")
+        if not isinstance(dig, dict):
+            no_digest.append(v["id"])
+        print(f"  {date:<12} {who:<16} {mins:>5.1f}m  {v['id']}  {v['title'][:38]}{tr}{dgt}")
+    if no_digest and getattr(args, "digest_flag", False):
+        print(f"\n  {len(no_digest)} video(s) without a digest. "
+              f"One free command each:  nybls digest {no_digest[0]}")
 
     missing = cp.undated(c)
     if missing:
@@ -466,6 +537,7 @@ def _skill_drift() -> str | None:
 def cmd_doctor(args) -> int:
     """What works right now, and what any missing piece would unlock."""
     import shutil
+    from . import digest as dg
     from . import transcribe as tr
 
     checks = [
@@ -488,6 +560,12 @@ def cmd_doctor(args) -> int:
     print()
     models = [n for n, (f, _, _) in tr.MODELS.items() if (tr.MODEL_DIR / f).exists()]
     print(f"  speech models downloaded: {', '.join(models) if models else 'none yet (fetched on demand)'}")
+
+    engine, hint = dg.pick_engine()
+    if engine:
+        print(f"  ocr engine:               {engine} (`nybls digest` runs free)")
+    else:
+        print(f"  ocr engine:               none - `nybls digest` unavailable ({hint})")
 
     store = Path.home() / ".nybls" / "store"
     n = len(list(store.glob("*/manifest.json"))) if store.exists() else 0
@@ -613,6 +691,17 @@ def main() -> int:
     sk.add_argument("--force", action="store_true")
     sk.set_defaults(fn=cmd_speakers)
 
+    sdg = sub.add_parser("digest", help="free OCR index + contact sheet + scene timeline")
+    sdg.add_argument("id")
+    sdg.add_argument("--every", type=float, default=30.0,
+                     help="seconds between frames (default 30)")
+    sdg.add_argument("--engine", choices=("auto", "ocrmac", "tesseract"), default="auto",
+                     help="OCR backend (default: Apple Vision if installed, else tesseract)")
+    sdg.add_argument("--jobs", type=int, default=6, help="parallel OCR workers (default 6)")
+    sdg.add_argument("--force", action="store_true",
+                     help="re-extract frames even if frames30/ exists")
+    sdg.set_defaults(fn=cmd_digest)
+
     sl = sub.add_parser("ledger", help="spend summary, priced for the model you are billed on")
     sl.add_argument("id", nargs="?")
     sl.add_argument("--model", help="e.g. sonnet-5, gpt-5.5, grok-4.6 (or set NYBLS_MODEL)")
@@ -651,7 +740,9 @@ def main() -> int:
 
     scp = sub.add_parser("corpus", help="group videos from one source and see their timeline")
     scp.add_argument("name")
-    scp.add_argument("--add", metavar="ID,ID", help="comma-separated video ids to add")
+    scp.add_argument("--add", help="comma-separated ids to register")
+    scp.add_argument("--digest", dest="digest_flag", action="store_true",
+                     help="show digest coverage and how to fill the gaps")
     scp.set_defaults(fn=cmd_corpus)
 
     sd = sub.add_parser("doctor", help="check what is installed and what works")

@@ -126,6 +126,7 @@ tells you what works, and what any missing piece would unlock.
 | `zoom` | Crop into one frame to read small text, a chart axis, a log line. |
 | `study` | Cover a whole video properly, for when you want to learn it rather than query it. |
 | `speakers` | Work out who is on screen across a recorded call, from free probes. |
+| `digest` | Index the on-screen text of every frame for free: a grep-able OCR index, a browsable contact sheet, a scene timeline. |
 | `verify` | Check every cited timestamp against the transcript, mechanically. |
 | `contract` | Shape an extraction for a purpose: teach, rebuild, procedure, brief. |
 | `corpus` | Put several videos from one source on a timeline and see what changed. |
@@ -214,6 +215,41 @@ later, and which buying signal went past unremarked.
 
 Naming solves identity and the video solves segmentation, so both halves are
 needed. If the camera was off there is nothing to attach a name to.
+
+## Reading the frames nobody looks at
+
+`probe` answers what was said, for free, because captions and whisper are free.
+What was *shown* used to be a different story: the only way to know a slide, a
+dashboard or a leaderboard was on screen was to spend vision tokens looking.
+The `digest` pass closes that gap without spending anything:
+
+```console
+$ nybls digest <id>
+
+digest: 957 frames at 30s intervals (extracted now), OCR via tesseract...
+ocr:      792/957 frames with text (83%)  -> ~/.nybls/store/<id>/digest/ocr-index.jsonl
+scenes:   142 screen changes  -> ~/.nybls/store/<id>/digest/scenes.txt
+browse:   ~/.nybls/store/<id>/digest/contact_sheet.html
+```
+
+One uniform frame pass (ffmpeg, a JPEG every 30 seconds, or whatever `--every`
+you ask for), one OCR pass over all of it — Apple Vision if the `macos` extra is
+installed, tesseract otherwise, never a model — and three artifacts land under
+`digest/`. `ocr-index.jsonl` turns "somewhere in nine and a half hours of stream
+there was a pricing table" into a one-line grep. `contact_sheet.html` is for
+human eyes: every frame in order, timestamped, with its OCR text under the tile
+so the page itself is find-in-page searchable. `scenes.txt` times every screen
+change by JPEG-size delta, which is how you find the moment the demo started
+without looking at anything.
+
+The pass costs zero vision tokens — the ledger is never touched — so running it
+is never a budget decision. `nybls corpus <name> --digest` shows which videos in
+a collection are still missing theirs.
+
+Two honest limits. OCR reads text, not pictures: a chart's shape or a
+hand-drawn diagram still needs eyes, yours or the model's. And a 30-second grid
+can miss a flash shorter than that, which is what `frames --scene` is for
+afterwards.
 
 ## You do not need to ask it anything
 
