@@ -19,6 +19,10 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `nybls corpus <name> --digest` reports which videos in a collection lack a
   digest and the one command that adds it. `nybls doctor` reports the
   available OCR engine.
+- `digest` also runs where `probe` never can again: an archive built under a
+  transcribe-then-delete policy keeps its frames but not its media, so the
+  video is optional when `frames30/` exists and the manifest is created on the
+  fly for legacy stores that predate it.
 
 ### Known issues (found by benchmark arms, reported not fixed during the run)
 - Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom

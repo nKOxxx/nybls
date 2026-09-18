@@ -333,10 +333,40 @@ def cmd_digest(args) -> int:
     vision tokens are spent — the ledger is never touched."""
     from . import digest as dg
 
-    ws, m, video = _ctx(args.id)
+    ws = workspace(args.id)
+    # Manifests are the contract for anything probed normally, but archives
+    # built under a transcribe-then-delete policy can never re-run `probe`:
+    # the media is gone, so the front door cannot mint the id again. Digest
+    # tolerates those (manifest optional, created on the fly) because indexing
+    # pixels that outlived their video is precisely the point.
+    try:
+        m = read_manifest(args.id)
+    except FileNotFoundError:
+        m = {}
+    if m.get("kind") == "image":
+        print("this is an image post; read the image files listed by `nybls probe` "
+              "directly, digest does not apply", file=sys.stderr)
+        return 1
     every = args.every
-    frames_dir, n_frames, extracted = dg.extract_frames(video, ws, every=every, force=args.force)
-    frames = dg.list_frames(frames_dir)
+
+    # The video is optional when frames already exist. Archives built under the
+    # transcribe-then-delete policy keep transcripts and may keep frames but no
+    # media, and indexing those pixels after deletion is precisely the point.
+    videos = [p for p in sorted(list(ws.glob("video.*")) + list(ws.glob("media*")))
+              if p.suffix.lower() in ing.VIDEO_SUFFIXES]
+    frames_dir = ws / "frames30"
+    existing = dg.list_frames(frames_dir) if frames_dir.exists() else []
+    if videos:
+        video = videos[0]
+        frames_dir, _, extracted = dg.extract_frames(video, ws, every=every, force=args.force)
+        frames = dg.list_frames(frames_dir)
+    elif existing and not args.force:
+        frames = existing
+        extracted = False
+    else:
+        print("no video in workspace and no frames30/ to reuse; run `nybls probe`, "
+              "or place frames in frames30/", file=sys.stderr)
+        return 1
     if not frames:
         print("frame extraction produced nothing; check ffmpeg output", file=sys.stderr)
         return 1

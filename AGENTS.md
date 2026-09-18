@@ -82,10 +82,10 @@ view). Believe it.
 Transcripts do not carry slides, dashboards, leaderboards or chat scroll. Before
 spending budget looking, run `nybls digest <id>`: it extracts a JPEG every
 30 seconds, reads the text on every frame locally (Apple Vision via ocrmac, or
-tesseract — never a model), and writes `digest/ocr-index.jsonl`, a browsable
-`digest/contact_sheet.html`, and `digest/scenes.txt`. Grep the index first —
-"which frame shows X" becomes `grep -i x ~/.nybls/store/<id>/digest/ocr-index.jsonl`
-— open the sheet to use your own eyes, and spend `frames`/`zoom` only on what
+tesseract; never a model), and writes `digest/ocr-index.jsonl`, a browsable
+`digest/contact_sheet.html`, and `digest/scenes.txt`. Grep the index first:
+"which frame shows X" becomes `grep -i x ~/.nybls/store/<id>/digest/ocr-index.jsonl`.
+Open the sheet to use your own eyes, and spend `frames`/`zoom` only on what
 grep could not answer. The pass itself is free, so running it is never a budget
 decision; it is also not a substitute for looking when the question is visual,
 because OCR reads text, not charts.
