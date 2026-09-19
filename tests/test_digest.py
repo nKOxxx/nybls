@@ -49,6 +49,13 @@ def test_ocr_one_never_raises_on_missing_file():
     assert dg._ocr_one((1, "/nonexistent/frame.jpg", "tesseract")) == (1, "", "-")
 
 
+def test_rescue_gate_rejects_wordless_noise():
+    """psm 6 invents plausible-looking junk out of stage texture. A rescue that
+    yields no real word (4+ letters) is discarded, keeping the index honest."""
+    assert dg._has_word("; er oe = eS ee EB 2mee @") is False
+    assert dg._has_word("Introducing @ Grok Bot Galaxy") is True
+
+
 def test_pick_engine_honors_explicit_tesseract(monkeypatch):
     monkeypatch.setattr(dg.shutil, "which", lambda name: "/usr/bin/tesseract")
     engine, _ = dg.pick_engine("tesseract")

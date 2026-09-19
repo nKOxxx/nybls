@@ -68,6 +68,14 @@ def pick_engine(prefer: str = "auto") -> tuple[str, str | None]:
     return "", 'brew install tesseract (or: pipx install "nybls[macos]")'
 
 
+def _has_word(text: str) -> bool:
+    """True when the text contains at least one real word (4+ consecutive
+    letters). psm 6 rescued-text gate: single-block mode happily invents
+    '; er oe = eS' out of stage texture and gameplay noise. If a rescue
+    cannot produce even one word, the frame is textless, not misread."""
+    return bool(re.search(r"[A-Za-z]{4,}", text))
+
+
 def _ocr_one(task: tuple[int, str, str]) -> tuple[int, str, str]:
     """Worker: OCR one frame with two passes. Pass 1 is the engine's default
     segmentation (Apple Vision, or tesseract --psm 3: auto layout analysis).
@@ -75,7 +83,9 @@ def _ocr_one(task: tuple[int, str, str]) -> tuple[int, str, str]:
     uniform block of text"): chat overlays and dense dashboards defeat psm 3's
     column detection but fall to psm 6 -- the verbatim eng-factory chat in a
     Grok-corpus frame (frame_00026) was invisible at psm 3 and fully readable
-    at psm 6. Never raises -- one corrupt JPEG must not cost the whole index.
+    at psm 6. Rescued text must pass _has_word or it is discarded (psm 6
+    invents plausible-looking noise from busy pixels; see _has_word).
+    Never raises -- one corrupt JPEG must not cost the whole index.
     Returns (frame_no, text, mode); text is empty when both passes miss."""
     n, path, engine = task
 
@@ -94,10 +104,14 @@ def _ocr_one(task: tuple[int, str, str]) -> tuple[int, str, str]:
             mode = "v"
             if len(" ".join(text.split())) < MIN_TEXT:
                 text, mode = run_tess(6), "v6"
+                if not _has_word(text):
+                    return n, "", "-"
         else:
             text, mode = run_tess(3), "3"
             if len(" ".join(text.split())) < MIN_TEXT:
                 text, mode = run_tess(6), "6"
+                if not _has_word(text):
+                    return n, "", "-"
     except Exception:
         return n, "", "-"
     text = " ".join(text.split())
