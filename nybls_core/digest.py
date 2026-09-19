@@ -97,9 +97,14 @@ def _ocr_one(task: tuple[int, str, str]) -> tuple[int, str, str]:
 
     try:
         if engine == "ocrmac":
-            from ocrmac import ocr
-            parts = [t for t, conf, _ in ocr.OCR().recognize(path)
-                     if conf >= 0.3 and t.strip()]
+            try:  # ocrmac >= 1.0: the image goes to the constructor
+                from ocrmac.ocrmac import OCR  # type: ignore[import-not-found]
+                raw = OCR(path, recognition_level="accurate",
+                          confidence_threshold=0.3).recognize()
+            except TypeError:  # legacy 0.x: module-level facade
+                from ocrmac import ocr as _legacy  # type: ignore[import-not-found]
+                raw = _legacy.OCR().recognize(path)
+            parts = [t for t, conf, _ in raw if conf >= 0.3 and t.strip()]
             text = " ".join(parts)
             mode = "v"
             if len(" ".join(text.split())) < MIN_TEXT:
