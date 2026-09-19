@@ -8,7 +8,8 @@ The digest pass runs after (or instead of) any model viewing:
   1. uniform frame pass (ffmpeg, one JPEG every `--every` seconds)
   2. OCR every frame with whatever is installed — Apple Vision via `ocrmac`
      (already an optional extra) or the tesseract binary
-  3. write `digest/ocr-index.jsonl` (one record per frame that yielded text),
+  3. write `digest/ocr-index.jsonl` (one record per frame; `chars: 0` marks
+     genuinely textless pixels, so the index covers every frame),
      `digest/contact_sheet.html` (human-browsable, OCR snippets under tiles),
      `digest/scenes.txt` (JPEG-size-delta screen-change timeline)
 
@@ -67,41 +68,60 @@ def pick_engine(prefer: str = "auto") -> tuple[str, str | None]:
     return "", 'brew install tesseract (or: pipx install "nybls[macos]")'
 
 
-def _ocr_one(task: tuple[int, str, str]) -> tuple[int, str] | None:
-    """Worker: OCR one frame, return (frame_no, text) or None. Never raises —
-    one corrupt JPEG must not cost the whole index."""
+def _ocr_one(task: tuple[int, str, str]) -> tuple[int, str, str]:
+    """Worker: OCR one frame with two passes. Pass 1 is the engine's default
+    segmentation (Apple Vision, or tesseract --psm 3: auto layout analysis).
+    A frame that comes back empty gets pass 2, tesseract --psm 6 ("assume one
+    uniform block of text"): chat overlays and dense dashboards defeat psm 3's
+    column detection but fall to psm 6 -- the verbatim eng-factory chat in a
+    Grok-corpus frame (frame_00026) was invisible at psm 3 and fully readable
+    at psm 6. Never raises -- one corrupt JPEG must not cost the whole index.
+    Returns (frame_no, text, mode); text is empty when both passes miss."""
     n, path, engine = task
+
+    def run_tess(psm: int) -> str:
+        return subprocess.run(
+            ["tesseract", path, "stdout", "--psm", str(psm)],
+            capture_output=True, text=True, timeout=120,
+        ).stdout
+
     try:
         if engine == "ocrmac":
             from ocrmac import ocr
             parts = [t for t, conf, _ in ocr.OCR().recognize(path)
                      if conf >= 0.3 and t.strip()]
             text = " ".join(parts)
+            mode = "v"
+            if len(" ".join(text.split())) < MIN_TEXT:
+                text, mode = run_tess(6), "v6"
         else:
-            text = subprocess.run(
-                ["tesseract", path, "stdout", "--psm", "3"],
-                capture_output=True, text=True, timeout=120,
-            ).stdout
+            text, mode = run_tess(3), "3"
+            if len(" ".join(text.split())) < MIN_TEXT:
+                text, mode = run_tess(6), "6"
     except Exception:
-        return None
+        return n, "", "-"
     text = " ".join(text.split())
     if len(text) < MIN_TEXT:
-        return None
-    return n, text[:MAX_TEXT]
+        return n, "", "-"
+    return n, text[:MAX_TEXT], mode
 
 
 def ocr_frames(frames: list[tuple[int, Path]], engine: str,
                every: float = 30.0, workers: int = 6) -> list[dict]:
-    """OCR all frames, ordered records for frames that yielded text."""
+    """One record per frame, in frame order -- the index must cover every frame,
+    so "no text found" is a row with chars 0, not a missing row (a missing row
+    is indistinguishable from an unread one, and grep-skip stays honest only if
+    absence means absence). `mode` says which pass hit: v (Apple Vision),
+    3 (tesseract auto-layout), 6/v6 (the psm-6 rescue), - (nothing)."""
     tasks = [(n, str(p), engine) for n, p in frames]
-    records = []
+    got: dict[int, tuple[str, str]] = {}
     with Pool(min(workers, len(tasks) or 1)) as pool:
-        for rec in pool.imap_unordered(_ocr_one, tasks, chunksize=8):
-            if rec:
-                records.append(rec)
+        for n, text, mode in pool.imap_unordered(_ocr_one, tasks, chunksize=8):
+            got[n] = (text, mode)
     return [
-        {"frame": n, "ts": ts_label((n - 1) * every), "chars": len(t), "text": t}
-        for n, t in sorted(records)
+        {"frame": n, "ts": ts_label((n - 1) * every), "chars": len(got[n][0]),
+         "text": got[n][0], "mode": got[n][1]}
+        for n, _ in frames
     ]
 
 

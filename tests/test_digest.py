@@ -44,7 +44,9 @@ def test_scene_events_flag_changes_not_flicker(tmp_path):
 
 
 def test_ocr_one_never_raises_on_missing_file():
-    assert dg._ocr_one((1, "/nonexistent/frame.jpg", "tesseract")) is None
+    """One corrupt/missing JPEG must not cost the index: the worker degrades to
+    an empty-text record, which ocr_frames logs as a chars-0 row."""
+    assert dg._ocr_one((1, "/nonexistent/frame.jpg", "tesseract")) == (1, "", "-")
 
 
 def test_pick_engine_honors_explicit_tesseract(monkeypatch):

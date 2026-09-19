@@ -403,17 +403,21 @@ def cmd_digest(args) -> int:
     lines += [f"  {t}  {a}KB -> {b}KB  frame {n}" for n, t, a, b in scenes]
     spath.write_text("\n".join(lines) + "\n")
 
+    hits = sum(1 for r in records if r["chars"])
     dg.update_manifest(args.id, {
         "digest": {"engine": engine, "every_s": every, "frames": len(frames),
-                   "ocr_hits": len(records), "scenes": len(scenes)},
+                   "ocr_hits": hits, "scenes": len(scenes)},
     })
 
-    pct = 100 * len(records) // max(len(frames), 1)
-    print(f"ocr:      {len(records)}/{len(frames)} frames with text ({pct}%)  -> {scrub(str(idx))}")
+    pct = 100 * hits // max(len(frames), 1)
+    print(f"ocr:      {hits}/{len(frames)} frames with text ({pct}%; the rest are "
+          f"textless pixels, logged as chars 0)  -> {scrub(str(idx))}")
     print(f"scenes:   {len(scenes)} screen changes  -> {scrub(str(spath))}")
     print(f"browse:   {scrub(str(sheet))}")
-    print("next: grep the index (`grep -i sponsor ocr-index.jsonl`), open the sheet in a "
-          "browser, find what you need — then spend frames only on what grep could not answer.")
+    print('next: grep the index (`grep -i sponsor ocr-index.jsonl`, or '
+          '`grep \'"chars": [1-9]\' ocr-index.jsonl` for frames with text), open '
+          'the sheet in a browser, find what you need — then spend frames only on '
+          'what grep could not answer.')
     return 0
 
 
