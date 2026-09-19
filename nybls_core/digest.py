@@ -76,24 +76,49 @@ def _has_word(text: str) -> bool:
     return bool(re.search(r"[A-Za-z]{4,}", text))
 
 
+def _gray_png(path: str) -> bytes:
+    """Frame as grayscale PNG bytes. Grayscale is not cosmetic: in the Lane-B
+    genome campaign (nybls-ocr-lab) it recovered colored-chrome UI text
+    tesseract misses in RGB and eliminated the sole hallucinated frame, at
+    zero runtime cost. Fed to tesseract over stdin -- no cache files, no
+    hidden state next to the user's frames."""
+    import io
+    from PIL import Image, ImageOps
+    buf = io.BytesIO()
+    with Image.open(path) as img:
+        ImageOps.grayscale(img).save(buf, "PNG")
+    return buf.getvalue()
+
+
 def _ocr_one(task: tuple[int, str, str]) -> tuple[int, str, str]:
-    """Worker: OCR one frame with two passes. Pass 1 is the engine's default
-    segmentation (Apple Vision, or tesseract --psm 3: auto layout analysis).
-    A frame that comes back empty gets pass 2, tesseract --psm 6 ("assume one
-    uniform block of text"): chat overlays and dense dashboards defeat psm 3's
-    column detection but fall to psm 6 -- the verbatim eng-factory chat in a
-    Grok-corpus frame (frame_00026) was invisible at psm 3 and fully readable
-    at psm 6. Rescued text must pass _has_word or it is discarded (psm 6
+    """Worker: OCR one frame with two passes. Pass 1 is tesseract --psm 11
+    ("sparse text: find as much text as possible in no particular order") on a
+    grayscale copy -- livestream frames are scattered UI labels, not document
+    blocks, so sparse mode beats block modes; grayscale beats color for chrome
+    UI text. A frame that comes back empty (or wordless) gets pass 2, tesseract
+    --psm 6 ("assume one uniform block of text"): dense spreadsheets and chat
+    walls defeat sparse mode but fall to block mode -- the ad-ops spreadsheet in
+    a Grok-corpus frame (frame_00755) is invisible at psm 11 and readable at
+    psm 6. Rescued text must pass _has_word or it is discarded (psm 6
     invents plausible-looking noise from busy pixels; see _has_word).
+    Apple Vision keeps its own path: Vision already does region-finding, so
+    only its rare wordless output falls through to the psm-6 rescue.
     Never raises -- one corrupt JPEG must not cost the whole index.
     Returns (frame_no, text, mode); text is empty when both passes miss."""
     n, path, engine = task
 
-    def run_tess(psm: int) -> str:
-        return subprocess.run(
-            ["tesseract", path, "stdout", "--psm", str(psm)],
-            capture_output=True, text=True, timeout=120,
-        ).stdout
+    def run_tess(psm: int, gray: bool = False) -> str:
+        """Tesseract over a file path -- or over stdin as grayscale PNG bytes
+        ('stdin' input), when the caller wants the grayscale pass. Bytes mode
+        throughout: PNG bytes are not text, and manual decode keeps one code
+        path for both branches."""
+        res = subprocess.run(
+            ["tesseract", ("stdin" if gray else path), "stdout",
+             "--psm", str(psm)],
+            input=_gray_png(path) if gray else None,
+            capture_output=True, timeout=120,
+        )
+        return res.stdout.decode("utf-8", errors="replace")
 
     try:
         if engine == "ocrmac":
@@ -112,8 +137,8 @@ def _ocr_one(task: tuple[int, str, str]) -> tuple[int, str, str]:
                 if not _has_word(text):
                     return n, "", "-"
         else:
-            text, mode = run_tess(3), "3"
-            if len(" ".join(text.split())) < MIN_TEXT:
+            text, mode = run_tess(11, gray=True), "11"
+            if not _has_word(text):
                 text, mode = run_tess(6), "6"
                 if not _has_word(text):
                     return n, "", "-"
@@ -131,7 +156,7 @@ def ocr_frames(frames: list[tuple[int, Path]], engine: str,
     so "no text found" is a row with chars 0, not a missing row (a missing row
     is indistinguishable from an unread one, and grep-skip stays honest only if
     absence means absence). `mode` says which pass hit: v (Apple Vision),
-    3 (tesseract auto-layout), 6/v6 (the psm-6 rescue), - (nothing)."""
+    11 (tesseract sparse-on-gray), 6/v6 (the psm-6 rescue), - (nothing)."""
     tasks = [(n, str(p), engine) for n, p in frames]
     got: dict[int, tuple[str, str]] = {}
     with Pool(min(workers, len(tasks) or 1)) as pool:

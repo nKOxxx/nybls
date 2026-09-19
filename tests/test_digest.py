@@ -45,8 +45,24 @@ def test_scene_events_flag_changes_not_flicker(tmp_path):
 
 def test_ocr_one_never_raises_on_missing_file():
     """One corrupt/missing JPEG must not cost the index: the worker degrades to
-    an empty-text record, which ocr_frames logs as a chars-0 row."""
+    an empty-text record, which ocr_frames logs as a chars-0 row. The grayscale
+    primary pass reads the file BEFORE tesseract runs, so the missing-file
+    exception must be caught on that path too."""
     assert dg._ocr_one((1, "/nonexistent/frame.jpg", "tesseract")) == (1, "", "-")
+
+
+def test_gray_png_returns_mode_l_bytes(tmp_path):
+    """The sparse pass feeds tesseract grayscale PNG bytes over stdin. Pin the
+    conversion itself: output is PNG bytes that decode to an 'L' (grayscale)
+    image of unchanged size."""
+    from PIL import Image
+    import io
+    src = tmp_path / "frame_00001.jpg"
+    Image.new("RGB", (64, 32), (200, 30, 30)).save(src, "JPEG")
+    raw = dg._gray_png(str(src))
+    assert raw[:8] == b"\x89PNG\r\n\x1a\n"
+    img = Image.open(io.BytesIO(raw))
+    assert img.mode == "L" and img.size == (64, 32)
 
 
 def test_rescue_gate_rejects_wordless_noise():
