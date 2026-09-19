@@ -6,6 +6,21 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+- **digest/tesseract: sparse-text primary pass.** The tesseract path now runs
+  psm 11 ("sparse text") on a grayscale copy of the frame (fed over stdin —
+  no cache files) with the psm-6 block-mode rescue behind it, replacing the
+  psm-3 primary. On the 957-frame Grok corpus: 880/886 GT-text frames read
+  (was 854, +26), zero hallucinations on the 71 certified-empty frames (was
+  2), 6 frames short of Apple Vision's ceiling; mode label in
+  `ocr-index.jsonl` for the new primary is `11` (rescue stays `6`).
+  Livestream frames are scattered UI labels, not document blocks — sparse
+  mode reads them, block mode drops them; grayscale recovers white-on-color
+  chrome text and removes RGB hallucinations. Found by a 14-experiment
+  autonomous genome campaign (`FINDINGS.md` in the lab repo), validated on
+  the full corpus with production rules before the port, and covered by the
+  existing digest suite plus new pins for the stdin-gray conversion.
+
 ### Added
 - **`nybls digest <id>`.** The free post-archive pass: a uniform frame pass
   (a JPEG every `--every` seconds, default 30), OCR over every frame (Apple
