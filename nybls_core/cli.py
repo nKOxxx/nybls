@@ -356,13 +356,23 @@ def cmd_digest(args) -> int:
               if p.suffix.lower() in ing.VIDEO_SUFFIXES]
     frames_dir = ws / "frames30"
     existing = dg.list_frames(frames_dir) if frames_dir.exists() else []
+    meta = dg.read_frames_meta(frames_dir) if frames_dir.exists() else None
     if videos:
         video = videos[0]
         frames_dir, _, extracted = dg.extract_frames(video, ws, every=every, force=args.force)
         frames = dg.list_frames(frames_dir)
     elif existing and not args.force:
+        if meta is not None and abs(float(meta.get("every_s", -1)) - every) > 1e-6:
+            print(f"error: frames30/ was extracted at {meta.get('every_s', '?')}s intervals; "
+                  f"--every {every} would relabel every timestamp in the index. "
+                  f"Re-run with --every {meta.get('every_s', '?')}, or restore the video "
+                  "and let digest re-extract.", file=sys.stderr)
+            return 1
         frames = existing
         extracted = False
+        if meta is None:
+            print("warning: frames on disk predate extraction metadata; trusting "
+                  "their timestamps match --every as requested", file=sys.stderr)
     else:
         print("no video in workspace and no frames30/ to reuse; run `nybls probe`, "
               "or place frames in frames30/", file=sys.stderr)
@@ -378,7 +388,7 @@ def cmd_digest(args) -> int:
 
     print(f"digest: {len(frames)} frames at {int(every)}s intervals "
           f"({'extracted now' if extracted else 'reusing frames on disk'}), OCR via {engine}...")
-    records = dg.ocr_frames(frames, engine, every=every, workers=args.jobs)
+    records = dg.ocr_frames(frames, engine, every=every, workers=max(1, args.jobs))
 
     digest_dir = ws / "digest"
     digest_dir.mkdir(exist_ok=True)
@@ -399,7 +409,8 @@ def cmd_digest(args) -> int:
 
     scenes = dg.scene_events(frames, every)
     spath = digest_dir / "scenes.txt"
-    lines = [f"=== {args.id}: {len(frames)} frames, {len(scenes)} scene changes (every {int(every)}s) ==="]
+    lines = [f"=== {args.id}: {len(frames)} frames, {len(scenes)} scene-change "
+             f"hints (every {int(every)}s; JPEG-size deltas, not scene detection) ==="]
     lines += [f"  {t}  {a}KB -> {b}KB  frame {n}" for n, t, a, b in scenes]
     spath.write_text("\n".join(lines) + "\n")
 

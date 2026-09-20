@@ -22,6 +22,7 @@ import json
 import re
 import shutil
 import subprocess
+from html import escape
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -159,6 +160,7 @@ def ocr_frames(frames: list[tuple[int, Path]], engine: str,
     11 (tesseract sparse-on-gray), 6/v6 (the psm-6 rescue), - (nothing)."""
     tasks = [(n, str(p), engine) for n, p in frames]
     got: dict[int, tuple[str, str]] = {}
+    workers = max(1, workers)  # a CLI typo must not become Pool(0) ValueError
     with Pool(min(workers, len(tasks) or 1)) as pool:
         for n, text, mode in pool.imap_unordered(_ocr_one, tasks, chunksize=8):
             got[n] = (text, mode)
@@ -186,7 +188,10 @@ def scene_events(frames: list[tuple[int, Path]], every: float,
 
 def contact_sheet_html(items: list[dict], label: str) -> str:
     """Standalone, offline HTML grid. OCR snippets render under each tile so the
-    page is find-in-page searchable — for a human, grep on the JSONL."""
+    page is find-in-page searchable — for a human, grep on the JSONL.
+    The label comes from downloaded metadata, i.e. it is hostile input too:
+    escape it like OCR text before it reaches <title>/<h1>."""
+    label = escape(str(label))
     cells = []
     for it in items:
         snippet = (
@@ -225,17 +230,47 @@ def update_manifest(video_id: str, patch: dict) -> dict:
     return data
 
 
-def extract_frames(video: Path, ws: Path, every: float = 30.0,
+def read_frames_meta(d: Path) -> dict | None:
+    """Provenance of a frames30/ directory (extraction interval/width), written
+    by extract_frames. None = legacy frames with no record: their timestamps
+    can only be trusted if the operator knows how they were made, so the
+    caller decides whether to proceed (with a warning) or refuse."""
+    p = d / ".meta.json"
+    try:
+        return json.loads(p.read_text())
+    except (OSError, ValueError):
+        return None
+
+
+def extract_frames(video: Path | None, ws: Path, every: float = 30.0,
                    width: int = 1280, force: bool = False) -> tuple[Path, int, bool]:
-    """Uniform JPEG pass. Reuses an existing frames30/ unless --force. A second
-    digest run after a partial one must not re-encode an hour of video."""
+    """Uniform JPEG pass. Reuses an existing frames30/ only when its recorded
+    interval/width match the request (a second digest run must not re-encode
+    an hour of video -- but frames made at a different --every must never be
+    silently relabeled, which would corrupt every timestamp downstream).
+    Mismatch with the video present: re-extract. Mismatch with the video gone
+    (transcribe-then-delete archives): a hard error beats a wrong index.
+    No metadata at all (legacy frames): reuse, caller warns."""
     d = ws / "frames30"
     if force and d.exists():
         shutil.rmtree(d)
+    meta = read_frames_meta(d)
+    frames = list_frames(d) if d.exists() else []
+    if frames and not force:
+        if meta is None:
+            return d, len(frames), False
+        if (abs(float(meta.get("every_s", -1)) - every) < 1e-6
+                and int(meta.get("width", width)) == width):
+            return d, len(frames), False
+        if video is None:
+            raise ValueError(
+                f"frames30/ was extracted at {meta['every_s']}s intervals but "
+                f"--every {every} was requested and the video is gone; "
+                f"re-run with --every {meta['every_s']}")
+        shutil.rmtree(d)
     d.mkdir(exist_ok=True)
-    frames = list_frames(d)
-    if frames:
-        return d, len(frames), False
+    if video is None:
+        raise FileNotFoundError("no video to extract frames from")
     subprocess.run(
         ["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", str(video),
          "-vf", f"fps=1/{every},scale='min({width},iw)':-2", "-q:v", "3",
@@ -243,4 +278,5 @@ def extract_frames(video: Path, ws: Path, every: float = 30.0,
         check=True, timeout=3600,
     )
     frames = list_frames(d)
+    (d / ".meta.json").write_text(json.dumps({"every_s": every, "width": width}))
     return d, len(frames), True

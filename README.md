@@ -238,8 +238,8 @@ installed, tesseract otherwise, never a model — and three artifacts land under
 `digest/`. `ocr-index.jsonl` turns "somewhere in nine and a half hours of stream
 there was a pricing table" into a one-line grep. `contact_sheet.html` is for
 human eyes: every frame in order, timestamped, with its OCR text under the tile
-so the page itself is find-in-page searchable. `scenes.txt` times every screen
-change by JPEG-size delta, which is how you find the moment the demo started
+so the page itself is find-in-page searchable. `scenes.txt` flags scene-change
+hints by JPEG-size delta, which is how you find the moment the demo started
 without looking at anything.
 
 The pass costs zero vision tokens — the ledger is never touched — so running it

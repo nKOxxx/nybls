@@ -113,6 +113,84 @@ def test_contact_sheet_escapes_ocr_text():
     assert "SPONSOR" in html
 
 
+def test_contact_sheet_escapes_label():
+    """The title comes from downloaded metadata, i.e. hostile input too: it goes
+    into <title>/<h1>, so it must be escaped exactly like OCR snippets."""
+    html = dg.contact_sheet_html(
+        [{"path": "frames30/frame_00001.jpg", "ts": "0:00", "kb": 12,
+          "snippet": "harmless"}],
+        '<script>alert("title")</script>')
+    assert '<script>alert("title")</script>' not in html
+    assert "&lt;script&gt;" in html
+    assert "visual index" in html  # the page itself stays well-formed
+
+
+def test_frames_meta_roundtrip_and_legacy(tmp_path):
+    """extract_frames records its interval/width as .meta.json; a missing file
+    reads as legacy (None) so old archives still digest."""
+    d = tmp_path / "frames30"
+    d.mkdir()
+    assert dg.read_frames_meta(d) is None  # legacy frames: no metadata
+    (d / ".meta.json").write_text('{"every_s": 30, "width": 1280}')
+    meta = dg.read_frames_meta(d)
+    assert meta == {"every_s": 30, "width": 1280}
+
+
+def test_extract_frames_refuses_interval_mismatch_without_video(tmp_path):
+    """The reviewer's high-severity case: frames30/ made at 30s must never be
+    relabeled as 10s frames. With the video gone (transcribe-then-delete
+    archive) that mismatch is a hard error, not a silently wrong index."""
+    d = tmp_path / "frames30"
+    d.mkdir()
+    (d / "frame_00001.jpg").write_bytes(b"not a real jpeg")
+    (d / ".meta.json").write_text('{"every_s": 30, "width": 1280}')
+    with pytest.raises(ValueError, match="30s intervals"):
+        dg.extract_frames(None, tmp_path, every=10.0)
+
+
+def test_extract_frames_reuses_matching_interval(tmp_path):
+    """The flip side: an identical --every rerun must still reuse (no re-encode
+    of an hour of video), which is the whole reason frames30/ persists."""
+    d = tmp_path / "frames30"
+    d.mkdir()
+    (d / "frame_00001.jpg").write_bytes(b"not a real jpeg")
+    (d / ".meta.json").write_text('{"every_s": 30, "width": 1280}')
+    d_, n, extracted = dg.extract_frames(None, tmp_path, every=30.0)
+    assert extracted is False and n == 1 and d_ == d
+
+
+def test_extract_frames_reextracts_on_mismatch_with_video(tmp_path):
+    """With the video present, a different --every must re-extract (fresh meta
+    written), because that is strictly better than refusing."""
+    import json
+    video = tmp_path / "video.mp4"
+    video.write_bytes(b"")  # not ffmpeg-run here; extraction itself is mocked
+    d = tmp_path / "frames30"
+    d.mkdir()
+    (d / "frame_00001.jpg").write_bytes(b"not a real jpeg")
+    (d / ".meta.json").write_text('{"every_s": 30, "width": 1280}')
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        (d / "frame_00002.jpg").write_bytes(b"junk")
+        class R:
+            returncode = 0
+        return R()
+
+    orig_run = dg.subprocess.run
+    dg.subprocess.run = fake_run
+    try:
+        d_, n, extracted = dg.extract_frames(video, tmp_path, every=10.0)
+    finally:
+        dg.subprocess.run = orig_run
+    assert extracted is True and len(calls) == 1
+    assert any("fps=1/10.0" in a for a in calls[0])  # interval reached ffmpeg
+    # re-extraction starts from a fresh frames30/: only mock-created frames remain
+    assert n == 1
+    assert json.loads((d / ".meta.json").read_text())["every_s"] == 10.0
+
+
 def test_manifest_update_preserves_created_utc(tmp_path, monkeypatch):
     """write_manifest would stamp a fresh created_utc; the digest is a later pass
     and must not lie about when the video was probed."""

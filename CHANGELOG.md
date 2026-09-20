@@ -25,8 +25,9 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`nybls digest <id>`.** The free post-archive pass: a uniform frame pass
   (a JPEG every `--every` seconds, default 30), OCR over every frame (Apple
   Vision via the `macos` extra, tesseract as the portable fallback), and three
-  artifacts under `digest/`: `ocr-index.jsonl` (one record per frame that
-  yielded text), a human-browsable `contact_sheet.html` with each frame's OCR
+  artifacts under `digest/`: `ocr-index.jsonl` (one record per frame;
+  textless frames are logged as `chars: 0` so the index is also proof of
+  coverage), a human-browsable `contact_sheet.html` with each frame's OCR
   snippet under its tile, and `scenes.txt` timing every screen change by
   JPEG-size delta. Zero vision tokens — the ledger is untouched, and a source
   test pins that property. Motivated by a 1,686-frame three-day livestream
