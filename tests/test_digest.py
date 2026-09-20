@@ -159,6 +159,47 @@ def test_extract_frames_reuses_matching_interval(tmp_path):
     assert extracted is False and n == 1 and d_ == d
 
 
+def test_extract_frames_legacy_reused_without_video(tmp_path):
+    """Legacy frames (no .meta.json) without the video: the only case where
+    unknown provenance is tolerated -- nothing is destroyed, the CLI warns."""
+    d = tmp_path / "frames30"
+    d.mkdir()
+    (d / "frame_00001.jpg").write_bytes(b"not a real jpeg")
+    d_, n, extracted = dg.extract_frames(None, tmp_path, every=30.0)
+    assert extracted is False and n == 1 and d_ == d
+    assert not (d / ".meta.json").exists()  # reuse never fabricates provenance
+
+
+def test_extract_frames_legacy_reextracted_when_video_present(tmp_path):
+    """The reviewer's follow-up hole: legacy frames + video available must not
+    be silently reused at an unverified --every. They are re-extracted, which
+    both fixes the interval and backfills .meta.json provenance."""
+    import json
+    video = tmp_path / "video.mp4"
+    video.write_bytes(b"")
+    d = tmp_path / "frames30"
+    d.mkdir()
+    (d / "frame_00001.jpg").write_bytes(b"stale legacy frame")
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        (d / "frame_00002.jpg").write_bytes(b"fresh")
+        class R:
+            returncode = 0
+        return R()
+
+    orig_run = dg.subprocess.run
+    dg.subprocess.run = fake_run
+    try:
+        d_, n, extracted = dg.extract_frames(video, tmp_path, every=30.0)
+    finally:
+        dg.subprocess.run = orig_run
+    assert extracted is True and len(calls) == 1
+    assert n == 1  # stale legacy frame is gone; only the mock-created one remains
+    assert json.loads((d / ".meta.json").read_text())["every_s"] == 30.0
+
+
 def test_extract_frames_reextracts_on_mismatch_with_video(tmp_path):
     """With the video present, a different --every must re-extract (fresh meta
     written), because that is strictly better than refusing."""

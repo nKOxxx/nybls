@@ -232,9 +232,9 @@ def update_manifest(video_id: str, patch: dict) -> dict:
 
 def read_frames_meta(d: Path) -> dict | None:
     """Provenance of a frames30/ directory (extraction interval/width), written
-    by extract_frames. None = legacy frames with no record: their timestamps
-    can only be trusted if the operator knows how they were made, so the
-    caller decides whether to proceed (with a warning) or refuse."""
+    by extract_frames. None = legacy frames with no record: they are reused
+    only when the source video is gone (caller warns); with the video
+    available the caller re-extracts instead of trusting unknown provenance."""
     p = d / ".meta.json"
     try:
         return json.loads(p.read_text())
@@ -250,23 +250,28 @@ def extract_frames(video: Path | None, ws: Path, every: float = 30.0,
     silently relabeled, which would corrupt every timestamp downstream).
     Mismatch with the video present: re-extract. Mismatch with the video gone
     (transcribe-then-delete archives): a hard error beats a wrong index.
-    No metadata at all (legacy frames): reuse, caller warns."""
+    No metadata at all (legacy frames): reused only when the video is gone
+    (caller warns); with the video available they are re-extracted -- unknown
+    provenance must not win when regeneration is free."""
     d = ws / "frames30"
     if force and d.exists():
         shutil.rmtree(d)
     meta = read_frames_meta(d)
     frames = list_frames(d) if d.exists() else []
     if frames and not force:
-        if meta is None:
-            return d, len(frames), False
-        if (abs(float(meta.get("every_s", -1)) - every) < 1e-6
-                and int(meta.get("width", width)) == width):
-            return d, len(frames), False
-        if video is None:
-            raise ValueError(
-                f"frames30/ was extracted at {meta['every_s']}s intervals but "
-                f"--every {every} was requested and the video is gone; "
-                f"re-run with --every {meta['every_s']}")
+        if meta is not None:
+            if (abs(float(meta.get("every_s", -1)) - every) < 1e-6
+                    and int(meta.get("width", width)) == width):
+                return d, len(frames), False
+            if video is None:
+                raise ValueError(
+                    f"frames30/ was extracted at {meta.get('every_s', '?')}s intervals "
+                    f"but --every {every} was requested and the video is gone; "
+                    f"re-run with --every {meta.get('every_s', '?')}")
+        elif video is None:
+            return d, len(frames), False  # legacy frames: caller warns
+        # mismatched or unknown provenance with the video available:
+        # re-extract. Regeneration is cheap; silently wrong timestamps are not.
         shutil.rmtree(d)
     d.mkdir(exist_ok=True)
     if video is None:
