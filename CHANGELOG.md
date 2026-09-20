@@ -6,6 +6,40 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+- **digest/tesseract: sparse-text primary pass.** The tesseract path now runs
+  psm 11 ("sparse text") on a grayscale copy of the frame (fed over stdin —
+  no cache files) with the psm-6 block-mode rescue behind it, replacing the
+  psm-3 primary. On the 957-frame Grok corpus: 880/886 GT-text frames read
+  (was 854, +26), zero hallucinations on the 71 certified-empty frames (was
+  2), 6 frames short of Apple Vision's ceiling; mode label in
+  `ocr-index.jsonl` for the new primary is `11` (rescue stays `6`).
+  Livestream frames are scattered UI labels, not document blocks — sparse
+  mode reads them, block mode drops them; grayscale recovers white-on-color
+  chrome text and removes RGB hallucinations. Found by a 14-experiment
+  autonomous genome campaign (`FINDINGS.md` in the lab repo), validated on
+  the full corpus with production rules before the port, and covered by the
+  existing digest suite plus new pins for the stdin-gray conversion.
+
+### Added
+- **`nybls digest <id>`.** The free post-archive pass: a uniform frame pass
+  (a JPEG every `--every` seconds, default 30), OCR over every frame (Apple
+  Vision via the `macos` extra, tesseract as the portable fallback), and three
+  artifacts under `digest/`: `ocr-index.jsonl` (one record per frame;
+  textless frames are logged as `chars: 0` so the index is also proof of
+  coverage), a human-browsable `contact_sheet.html` with each frame's OCR
+  snippet under its tile, and `scenes.txt` timing every screen change by
+  JPEG-size delta. Zero vision tokens — the ledger is untouched, and a source
+  test pins that property. Motivated by a 1,686-frame three-day livestream
+  corpus that could only be indexed with hand-run scripts.
+- `nybls corpus <name> --digest` reports which videos in a collection lack a
+  digest and the one command that adds it. `nybls doctor` reports the
+  available OCR engine.
+- `digest` also runs where `probe` never can again: an archive built under a
+  transcribe-then-delete policy keeps its frames but not its media, so the
+  video is optional when `frames30/` exists and the manifest is created on the
+  fly for legacy stores that predate it.
+
 ### Known issues (found by benchmark arms, reported not fixed during the run)
 - Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom
   box derived from a tile can land on a different shot. `snap_to_tile` (added in 0.7.1)
