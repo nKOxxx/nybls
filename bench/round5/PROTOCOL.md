@@ -100,3 +100,21 @@ fabrication rate is the headline hallucination measure.
 
 Every prediction's pass or fail, every voided item with its reason, every protocol
 deviation, and the per item table. If T matches B on Part 2, the paper says so.
+
+## Deviations, recorded as they occur
+
+- **D1 (2026-10-02, before any judging).** Rounds 1 to 3 retained only experimenter
+  summaries of the A and B answers, with scores embedded, not the raw answers. A blind
+  rejudge of A and B is therefore possible only for round 4 (`round4/judge_inputs`). For
+  rounds 1 to 3 the judge sees N and T only; A and B scores of record are used. P4 is
+  evaluated on round 4 alone (40 points per arm; tolerance scaled to 3 points).
+- **D2.** Part 2 selection, category 5 (silent cooking): the "English audio track" clause
+  cannot apply to a silent category and was not applied. Selection list in
+  `round5/SELECTED.md`.
+- **D3.** The concurrency limit (20 subagents) delayed three Part 1 arms; they ran the same
+  prompt later. No content effect.
+- **D4.** Blinding is nominal for N and T. Their answers name their own evidence ("from the
+  transcript", "the metadata gives no...") and some headed themselves with the arm name.
+  Self-labels were stripped; the content still reveals the arm. A and B remain as blind as
+  in round 4. The judge rubric is mechanical (ground truth as written), which limits but
+  does not remove the risk.
