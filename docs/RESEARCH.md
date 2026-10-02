@@ -165,6 +165,15 @@ Stated up front, because a claim that cannot fail is not a claim:
   server becomes a legacy path and only the budget/evidence discipline survives.
 - If measurement on a real benchmark shows the iterative loop **failing to beat a
   one-shot 30-frame dump** at equal or lower cost, the core premise is wrong.
+  Round 5 (`bench/round5/`, 2026-10-02, pre-registered at b6f46be/e03b73e/f2ff358) added the
+  baselines the field actually ships: no video at all, and transcript-only. On 64 natural
+  questions over 8 fresh videos: no-video 24%, transcript-only 64%, 30-frame dump 91%,
+  nybls 98% at 4.2x fewer visual tokens than the dump; on screen-only items transcript-only
+  12/42 against nybls 40/42. Two framing results: models given no video **abstain rather
+  than invent** (zero fabrications in 336 blind-judged arm-items across prompts and models),
+  so nybls's value is coverage, not hallucination repair; and the quality of the frame-reading
+  model is the binding constraint (same tool, same silent videos: Fable 36/40, Haiku 11/40
+  with the round's only fabrications, both being misreads of correctly fetched frames).
   Round 1 (`bench/RESULTS.md`, 2026-09-01, n=1): iterative 10/10 vs one-shot 5/10 at
   4.2x fewer visual tokens. Round 2 (`bench/RESULTS_round2.md`, 2026-09-02, n=3 with
   a tightened control that could not zoom): **the margin did not replicate**, 25/30
