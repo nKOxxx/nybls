@@ -118,3 +118,11 @@ deviation, and the per item table. If T matches B on Part 2, the paper says so.
   Self-labels were stripped; the content still reveals the arm. A and B remain as blind as
   in round 4. The judge rubric is mechanical (ground truth as written), which limits but
   does not remove the risk.
+- **D5 (Part 1b/1c).** The Haiku nybls arm for `92gQUnMCA08` was launched while the Fable
+  nybls arm for the same video was still running, so both wrote to one ledger and frame
+  directory. Both runs were stopped before writing answers, their state moved to
+  `_void_r5_d5/` in the store, and the Fable arm rerun from a clean ledger. From then on, nybls
+  arms on the same video run strictly one after another, with state archived between them.
+- **D6 (observed, not a deviation).** The stored transcript for `oZAiHH9nrhk` (stock
+  documentary) is a Whisper repetition loop after [00:17]. All arms in rounds 3 and 5 saw
+  the same file. This is the failure `fix/transcript-loop-share-gate` detects.
