@@ -1,0 +1,102 @@
+# Round 5 protocol: does access to the video improve what the model says?
+
+**Written 2026-10-02, before any round 5 arm, author or judge ran, and before any round 5
+video was selected.** Committed together with `PREDICTIONS.md`; the commit timestamp is the
+registration time.
+
+## Why this round
+
+Rounds 1 to 4 compared nybls against another way of showing a model frames (30 uniform
+stills plus the transcript). That isolates *how* to look. It never measured the question a
+user of the tool actually has: **compared with what an agent does today, does giving it the
+video make its answers more correct and less invented?** What agents do today, per
+`docs/RESEARCH.md` section 2, is one of two things: answer from the model's own knowledge,
+or read the captions. Neither arm has ever been run.
+
+## Arms
+
+| arm | name | evidence |
+|---|---|---|
+| N | nothing | the video title, channel and duration only. Stands in for an agent that is handed a URL it cannot open. |
+| T | transcript | the transcript file only. Stands in for every caption loader in section 2 of RESEARCH.md. |
+| A | one shot | transcript plus 30 uniform frames (unchanged from rounds 1 to 4) |
+| B | nybls | the CLI and the WATCH protocol (unchanged from rounds 1 to 4) |
+
+All arms receive the same honesty instruction used since round 1 ("insufficient evidence"
+rather than a guess; a confident wrong answer scores worse). This is conservative: it
+suppresses fabrication in the weak arms, so any fabrication gap measured here is a lower
+bound on what an unprompted agent does.
+
+All roles run as Claude Code subagents on Fable 5.1, the model rounds 1 to 4 used, default
+sampling. No role can message another. Arms N and T get their inputs copied into an
+isolated scratch directory and are told to read nothing else; they run no tools beyond
+reading those files and writing their answer.
+
+Tool under test: nybls 0.10.0 as installed by pipx, `nybls_core` source sha256
+`3669416d4906b0cd3eb39bcd5d9b61595e1ca21a818741325d29e053ba108313`, rechecked after every
+B arm finishes.
+
+## Part 1: the existing 56 audited questions, two new arms
+
+The 12 videos and 56 audited questions of rounds 1 to 4 (`bench/SCORES.md`), with arms N
+and T added. **Stated bias:** these questions were selected to be answerable by looking and
+not from narration, so T is disadvantaged by construction. Part 1 therefore measures *how
+an agent behaves when the answer is not in the captions* (does it abstain or invent), not
+how often captions suffice. Part 2 measures the second.
+
+Judging: one fresh judge per video sees every available arm's answers, anonymised as
+W/X/Y/Z with the mapping withheld and arm headers stripped. Round 1 (`LP10_YdKEPw`) has no
+retained A or B answer files, so its judge sees N and T only. A and B are rejudged blind in
+rounds 2 to 4; the original scores stay the result of record for the A versus B comparison
+and the rejudge is reported as an inter judge consistency check.
+
+## Part 2: natural questions on new videos
+
+**Selection.** Eight new public videos, one per category below, chosen by rule: the first
+`yt-dlp ytsearch10:<query>` result with duration between 6 and 30 minutes that is not
+already in the store, not a livestream, and has an English audio track. Selected before any
+of its content is viewed. The query list is fixed here:
+
+| # | category | query |
+|---|---|---|
+| 1 | interview / podcast, speech carries content | `startup founder interview podcast` |
+| 2 | slide lecture | `university lecture slides machine learning` |
+| 3 | narrated coding tutorial | `python project tutorial for beginners` |
+| 4 | narrated cooking | `how to make bread recipe` |
+| 5 | silent cooking | `cooking no talking asmr` |
+| 6 | silent screen recording | `silent coding session no talking` |
+| 7 | product review / unboxing | `unboxing and review` |
+| 8 | narrated repair / DIY | `how to replace step by step repair` |
+
+**Questions.** One author agent per video, isolated from nybls, sees a dense reference
+grid (one frame every 10 s, built with ffmpeg directly) and the transcript. It writes
+**eight questions that a person who wants to learn from or act on this video would
+actually ask**, with no rule for or against visual content. Only after writing them does it
+label each **S** (answer is in the speech), **V** (answer is only on screen) or **B**
+(needs both), with grid frames and transcript lines cited. A mechanical check then searches
+the normalised transcript for each V answer's key terms (the QUESTION_AUDIT normalisation);
+a hit relabels the item to B or S, recorded.
+
+**Arms and judging.** All four arms answer; one judge per video scores all four blind.
+
+## Part 3 (exploratory, not part of any prediction): use it
+
+For the two coding videos (3 and 6), each arm is additionally asked to reproduce the
+program the video builds. The output is executed in a scratch directory and the run is
+recorded (runs or not; behaviour against the video's final state). Exploratory because
+"behaviour against the final state" needs a rubric written per program after the video is
+selected, which is weaker than the registered parts.
+
+## Scoring
+
+Unchanged: 2 correct and complete, 1 partial or labelled inference, 0 wrong or
+"insufficient evidence", minus 1 confidently fabricated. In addition the judge classifies
+every item into one outcome: **correct**, **partial**, **abstained** (honest gap),
+**wrong** (stated as fact, incorrect but not invented from nothing) or **fabricated**
+(stated as fact, specific, and with no support in any evidence the arm was given). The
+fabrication rate is the headline hallucination measure.
+
+## What is reported regardless of outcome
+
+Every prediction's pass or fail, every voided item with its reason, every protocol
+deviation, and the per item table. If T matches B on Part 2, the paper says so.
