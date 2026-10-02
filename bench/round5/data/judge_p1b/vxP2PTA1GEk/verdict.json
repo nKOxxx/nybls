@@ -1,0 +1,7 @@
+{"items":[
+{"q":1,"arms":{"W":{"score":0,"outcome":"abstained"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"}}},
+{"q":2,"arms":{"W":{"score":0,"outcome":"abstained"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"}}},
+{"q":3,"arms":{"W":{"score":0,"outcome":"abstained"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"}}},
+{"q":4,"arms":{"W":{"score":0,"outcome":"abstained"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"}}},
+{"q":5,"arms":{"W":{"score":0,"outcome":"abstained"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":1,"outcome":"partial"}}}
+]}

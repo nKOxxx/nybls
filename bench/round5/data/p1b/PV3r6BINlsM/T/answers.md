@@ -1,0 +1,19 @@
+# Answers (transcript-only; no frames were viewed)
+
+All five questions are about what is on screen. I only have the transcript, so I cannot confirm any visual. Below, each answer separates what the transcript supports from what is unverifiable.
+
+1. **Is a map shown?** CANNOT CONFIRM. The transcript never mentions a map, and nothing in the narration refers to one ("as you can see here", etc.). The narration does describe geography that a map would naturally accompany: Latium and the Tiber bend [01:47]-[01:53]; Carthage, Sicily and Sardinia [09:38]-[09:46]; Hannibal's route from Spain over the Alps [10:56]-[11:05]; the empire's extent under Trajan "from Scotland to the Sahara, Portugal to Iraq" [23:15]-[23:29]; the east/west split [31:00]; and the Visigoth/Hun movements [31:40]-[32:09]. If a map appears, these are the likely moments and content. UNVERIFIED without frames.
+
+2. **Kind of imagery.** The strongest transcript evidence is at [00:10]-[00:23]: "these scenes, these faces, these streets, were captured centuries ago in faded ink and crumbling stone. But using advanced AI reconstruction techniques, we have brought them back to life in stunning 4K." That is the narrator's own statement that the visuals are AI-generated/"reconstructed" recreations, not archival photography of real artefacts. Reasoning: (a) the claim of "4K" "reconstruction" of scenes from "faded ink and crumbling stone" describes generated imagery; (b) the opening promises "faces" and "streets" of ancient Rome, which no photograph can show; (c) the channel format ("we'll see you in the past" [44:30], "many more cities" [44:25]) is a series of AI-illustrated history videos. Some real-location footage or photos (Colosseum, Pantheon, Trevi Fountain, which the narrator says "you have almost certainly seen in photographs" [36:58]) may be mixed in, but I cannot verify that. Conclusion: predominantly AI-generated recreations, by the video's own description; exact mix UNVERIFIED.
+
+3. **Large wall / frontier fortification.** CANNOT CONFIRM depiction. The transcript describes Hadrian's Wall at [24:27]-[24:39]: a wall "stretching 73 miles across the entire width of the island, from the east coast to the west coast, to separate Roman Britain from the tribes to the north." It also mentions the Aurelian Walls of Rome and the Porta Pia gate at [39:35]-[39:42]. A video of this type would very likely show an illustration of Hadrian's Wall at [24:27], but I have not seen a frame and cannot describe how it is rendered.
+
+4. **Carved stone reliefs.** CANNOT CONFIRM depiction. The transcript describes Trajan's Column at [23:32]-[23:52]: "a 30-m tall marble pillar carved with a continuous spiral of images telling the story of his campaigns, like a stone comic strip," still standing "almost perfectly intact." The Ara Pacis (altar of peace, itself heavily carved) is named at [19:27]. The abduction of the Sabine women is said to have been painted and sculpted "for centuries" [04:07]. Any of these could be accompanied by relief imagery, most plausibly Trajan's Column at [23:32], but I cannot describe one from the transcript.
+
+5. **Ordinary Roman street scenes.** CANNOT CONFIRM. The narrator says the video shows "these streets" [00:12] brought back "in stunning 4K" via AI reconstruction [00:19]-[00:23], so street scenes are presumably AI-generated recreations rather than footage or artefacts. Plausible moments: the plebeians as "farmers, craftsmen, and traders" [06:02]; small farmers moving into "the city's poor neighborhoods" [13:52]-[13:54]; the opening montage [00:00]-[00:15]. How they are actually rendered (style, crowding, lighting, period detail) is UNVERIFIED.
+
+## Evidence strip
+None. No images were opened; this was a transcript-only pass.
+
+## Ledger line
+Not available: no `nybls ledger` run was permitted in this task (read-only transcript access).

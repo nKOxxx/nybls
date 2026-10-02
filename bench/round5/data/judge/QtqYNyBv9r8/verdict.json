@@ -1,0 +1,7 @@
+{"items":[
+{"q":1,"label":"P","arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"},"Z":{"score":0,"outcome":"abstained"}}},
+{"q":2,"label":"P","arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"},"Z":{"score":0,"outcome":"abstained"}}},
+{"q":3,"label":"T","arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"},"Z":{"score":0,"outcome":"abstained"}}},
+{"q":4,"label":"T","arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"},"Z":{"score":0,"outcome":"abstained"}}},
+{"q":5,"label":"T","arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":0,"outcome":"abstained"},"Z":{"score":0,"outcome":"abstained"}}}
+],"totals":{"W":10,"X":0,"Y":8,"Z":0}}

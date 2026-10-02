@@ -126,3 +126,8 @@ deviation, and the per item table. If T matches B on Part 2, the paper says so.
 - **D6 (observed, not a deviation).** The stored transcript for `oZAiHH9nrhk` (stock
   documentary) is a Whisper repetition loop after [00:17]. All arms in rounds 3 and 5 saw
   the same file. This is the failure `fix/transcript-loop-share-gate` detects.
+- **D7 (Part 2, in progress).** Three author agents (7R-CfL21zIY, txspjbMw6ks, p09i_hoFdd0)
+  failed twice: once on a network outage, once on the session usage limit. Part 2 results
+  are reported first on the five completed videos, marked partial; the remaining three run
+  after the limit resets, under the same registered protocol, and the combined table
+  replaces the partial one.

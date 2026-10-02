@@ -1,0 +1,31 @@
+{
+  "video": "Wlu4MsBnjuk",
+  "items": [
+    {"q": 1, "label": "P", "arms": {
+      "W": {"score": 0, "outcome": "abstained"},
+      "X": {"score": 2, "outcome": "correct"},
+      "Y": {"score": 2, "outcome": "correct"},
+      "Z": {"score": 0, "outcome": "abstained"}}},
+    {"q": 2, "label": "P", "arms": {
+      "W": {"score": 1, "outcome": "partial"},
+      "X": {"score": 2, "outcome": "correct"},
+      "Y": {"score": 2, "outcome": "correct"},
+      "Z": {"score": 1, "outcome": "partial"}}},
+    {"q": 3, "label": "T", "arms": {
+      "W": {"score": 0, "outcome": "abstained"},
+      "X": {"score": 2, "outcome": "correct"},
+      "Y": {"score": 2, "outcome": "correct"},
+      "Z": {"score": 0, "outcome": "abstained"}}},
+    {"q": 4, "label": "T", "arms": {
+      "W": {"score": 0, "outcome": "abstained"},
+      "X": {"score": 1, "outcome": "partial"},
+      "Y": {"score": 2, "outcome": "correct"},
+      "Z": {"score": 0, "outcome": "abstained"}}},
+    {"q": 5, "label": "T", "arms": {
+      "W": {"score": 0, "outcome": "abstained"},
+      "X": {"score": 1, "outcome": "partial"},
+      "Y": {"score": 2, "outcome": "correct"},
+      "Z": {"score": 0, "outcome": "abstained"}}}
+  ],
+  "totals": {"W": 1, "X": 8, "Y": 10, "Z": 1}
+}

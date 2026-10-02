@@ -1,0 +1,78 @@
+{
+ "1": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "Bill Gross",
+   "Idealab",
+   "more than 100"
+  ],
+  "transcript_hits": [
+   "Idealab",
+   "more than 100"
+  ]
+ },
+ "2": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "3": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "32%",
+   "28%",
+   "24%",
+   "14%",
+   "Idea 'Truth' Outlier",
+   "More Than 200 Companies"
+  ],
+  "transcript_hits": []
+ },
+ "4": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "5": {
+  "author_label": "V",
+  "final_label": "B",
+  "terms": [
+   "4",
+   "8",
+   "Z.com",
+   "5 5 5 8 4"
+  ],
+  "transcript_hits": [
+   "Z.com"
+  ]
+ },
+ "6": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "7": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "8": {
+  "author_label": "V",
+  "final_label": "B",
+  "terms": [
+   "10 9 8 6 10",
+   "airbnb",
+   "Plan"
+  ],
+  "transcript_hits": [
+   "airbnb",
+   "Plan"
+  ]
+ }
+}
