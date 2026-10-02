@@ -285,3 +285,48 @@ def extract_frames(video: Path | None, ws: Path, every: float = 30.0,
     frames = list_frames(d)
     (d / ".meta.json").write_text(json.dumps({"every_s": every, "width": width}))
     return d, len(frames), True
+
+
+def write_digest_artifacts(ws, frames_dir, records, every, video_id, title, engine):
+    """Write the three digest stage artifacts (index, sheet, scenes) and patch the manifest.
+
+    Extracted from cli.cmd_digest: artifact writing is digest-domain work, not
+    presentation. Returns a stats dict for the CLI to print. (cohesion law: the
+    code that owns digest outputs lives in the digest module.)"""
+    import json
+
+    frames = list_frames(frames_dir)
+
+    digest_dir = ws / "digest"
+    digest_dir.mkdir(exist_ok=True)
+
+    idx = digest_dir / "ocr-index.jsonl"
+    with idx.open("w") as out:
+        for r in records:
+            out.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+    text_by_frame = {r["frame"]: r["text"] for r in records}
+    items = [{
+        "path": f"{frames_dir.name}/{p.name}",
+        "ts": ts_label((n - 1) * every),
+        "kb": p.stat().st_size // 1024,
+        "snippet": text_by_frame.get(n, ""),
+    } for n, p in frames]
+
+    sheet = digest_dir / "contact_sheet.html"
+    sheet.write_text(contact_sheet_html(items, title))
+
+    scenes = scene_events(frames, every)
+    spath = digest_dir / "scenes.txt"
+    lines = [f"=== {video_id}: {len(frames)} frames, {len(scenes)} scene-change "
+             f"hints (every {int(every)}s; JPEG-size deltas, not scene detection) ==="]
+    lines += [f"  {t}  {a}KB -> {b}KB  frame {n}" for n, t, a, b in scenes]
+    spath.write_text("\n".join(lines) + "\n")
+
+    hits = sum(1 for r in records if r["chars"])
+    update_manifest(video_id, {
+        "digest": {"engine": engine, "every_s": every, "frames": len(frames),
+                   "ocr_hits": hits, "scenes": len(scenes)},
+    })
+    return {"idx": idx, "sheet": sheet, "scenes_path": spath,
+            "hits": hits, "n_frames": len(frames), "n_scenes": len(scenes)}

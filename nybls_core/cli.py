@@ -390,40 +390,15 @@ def cmd_digest(args) -> int:
           f"({'extracted now' if extracted else 'reusing frames on disk'}), OCR via {engine}...")
     records = dg.ocr_frames(frames, engine, every=every, workers=max(1, args.jobs))
 
-    digest_dir = ws / "digest"
-    digest_dir.mkdir(exist_ok=True)
-    idx = digest_dir / "ocr-index.jsonl"
-    with idx.open("w") as out:
-        for r in records:
-            out.write(json.dumps(r, ensure_ascii=False) + "\n")
+    stats = dg.write_digest_artifacts(ws, frames_dir, records, every, args.id,
+                                      m.get("title") or args.id, engine)
+    idx, sheet, spath = stats["idx"], stats["sheet"], stats["scenes_path"]
+    hits, n_frames, n_scenes = stats["hits"], stats["n_frames"], stats["n_scenes"]
 
-    text_by_frame = {r["frame"]: r["text"] for r in records}
-    items = [{
-        "path": f"{frames_dir.name}/{p.name}",
-        "ts": dg.ts_label((n - 1) * every),
-        "kb": p.stat().st_size // 1024,
-        "snippet": text_by_frame.get(n, ""),
-    } for n, p in frames]
-    sheet = digest_dir / "contact_sheet.html"
-    sheet.write_text(dg.contact_sheet_html(items, m.get("title") or args.id))
-
-    scenes = dg.scene_events(frames, every)
-    spath = digest_dir / "scenes.txt"
-    lines = [f"=== {args.id}: {len(frames)} frames, {len(scenes)} scene-change "
-             f"hints (every {int(every)}s; JPEG-size deltas, not scene detection) ==="]
-    lines += [f"  {t}  {a}KB -> {b}KB  frame {n}" for n, t, a, b in scenes]
-    spath.write_text("\n".join(lines) + "\n")
-
-    hits = sum(1 for r in records if r["chars"])
-    dg.update_manifest(args.id, {
-        "digest": {"engine": engine, "every_s": every, "frames": len(frames),
-                   "ocr_hits": hits, "scenes": len(scenes)},
-    })
-
-    pct = 100 * hits // max(len(frames), 1)
-    print(f"ocr:      {hits}/{len(frames)} frames with text ({pct}%; the rest are "
+    pct = 100 * hits // max(n_frames, 1)
+    print(f"ocr:      {hits}/{n_frames} frames with text ({pct}%; the rest are "
           f"textless pixels, logged as chars 0)  -> {scrub(str(idx))}")
-    print(f"scenes:   {len(scenes)} screen changes  -> {scrub(str(spath))}")
+    print(f"scenes:   {n_scenes} screen changes  -> {scrub(str(spath))}")
     print(f"browse:   {scrub(str(sheet))}")
     print('next: grep the index (`grep -i sponsor ocr-index.jsonl`, or '
           '`grep \'"chars": [1-9]\' ocr-index.jsonl` for frames with text), open '
