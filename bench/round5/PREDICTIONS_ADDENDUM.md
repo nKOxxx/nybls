@@ -8,9 +8,11 @@ task (D8).
 ## Arm AM: the cost-matched control
 
 Per Part 2 video, arm AM receives the transcript plus a uniform grid of exactly as many
-full-resolution frames as arm B examined on that video (2, 10, 4, 3, 17, 20, 8, 2; 66
-distinct timestamps per the ledgers, 68 served images counting B's two duplicate
-re-serves, matched on the 66). Frames are rendered at the same 1568 width as the one-shot
+full-resolution frames as arm B was served on that video, per the committed ledgers:
+bNpx 4, oQtz 10, 7R 4, dwwh 3, txsp 17, p09i 20, WDAm 8, jtl 2; 68 in total.
+[AMENDED 2026-10-03, before any AM arm ran: the first registration asserted "66 distinct
+timestamps, two duplicate re-serves", a claim the ledgers cannot support since they
+record no per-image timestamps; the match is on served counts.] Frames are rendered at the same 1568 width as the one-shot
 pack, so AM's token total slightly EXCEEDS B's (full-res frames cost more per image than
 B's mostly-sheet mix): the mismatch favours the control and is reported. Same prompt and
 constraints as arm A. One judge per 4 videos scores AM alone against the author ground
