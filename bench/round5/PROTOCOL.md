@@ -132,3 +132,9 @@ deviation, and the per item table. If T matches B on Part 2, the paper says so.
   after the limit resets, under the same registered protocol, and the combined table
   replaces the partial one.
 - **D8.** Part 3 not run; see RESULTS.md. Registered exploratory; skipped for budget.
+- **D9 (2026-10-03).** The Part 2 "blind judged" claim was false: the first judging's
+  packs leaked every arm's identity (run 025, Whitfield C1, chair-confirmed). All eight
+  videos were re-judged with corrected, mechanically verified anonymisation; see
+  REJUDGE.md. The re-judged scores are the scores of record; the first judging is
+  retained in data/judge_p2/ as the superseded record. D4's claim that "A and B remain
+  as blind as in round 4" was wrong for Part 2 and is withdrawn in favour of this entry.

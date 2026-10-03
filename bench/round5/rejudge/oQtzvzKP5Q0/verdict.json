@@ -1,0 +1,12 @@
+{
+  "items": [
+    {"q": 1, "arms": {"W": {"score": 1, "outcome": "partial"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 2, "outcome": "correct"}, "Z": {"score": 2, "outcome": "correct"}}},
+    {"q": 2, "arms": {"W": {"score": 1, "outcome": "partial"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 1, "outcome": "partial"}, "Z": {"score": 1, "outcome": "partial"}}},
+    {"q": 3, "arms": {"W": {"score": 1, "outcome": "partial"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 2, "outcome": "correct"}, "Z": {"score": 1, "outcome": "partial"}}},
+    {"q": 4, "arms": {"W": {"score": 0, "outcome": "abstained"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 2, "outcome": "correct"}, "Z": {"score": 1, "outcome": "partial"}}},
+    {"q": 5, "arms": {"W": {"score": 0, "outcome": "abstained"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 2, "outcome": "correct"}, "Z": {"score": 1, "outcome": "partial"}}},
+    {"q": 6, "arms": {"W": {"score": 0, "outcome": "abstained"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 2, "outcome": "correct"}, "Z": {"score": 0, "outcome": "abstained"}}},
+    {"q": 7, "arms": {"W": {"score": 0, "outcome": "abstained"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 2, "outcome": "correct"}, "Z": {"score": 1, "outcome": "partial"}}},
+    {"q": 8, "arms": {"W": {"score": 1, "outcome": "partial"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 2, "outcome": "correct"}, "Z": {"score": 1, "outcome": "partial"}}}
+  ]
+}

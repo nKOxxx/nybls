@@ -12,14 +12,14 @@ abstained / wrong / fabricated by a blind judge (Fable 5.1).
 ## The result in one line
 
 nybls (arm B) does what it is built to do: it ingests the video, pulls the frames the
-question needs, reads them, and answers. On natural questions it scores **99%** against a
-transcript-only agent's 73% and a 30-frame dump's 94%, at **6.7x fewer images** than the
-dump; on silent video, where a transcript-only agent scores 0, nybls scores 90%. The gain
-is **coverage**: it converts questions a video-less agent can only abstain on into correct,
-frame-cited answers. The failure mode a video-less agent has is not invention, it is
-silence — so nybls's value is measured in questions *answered*, not hallucinations avoided.
-The ceiling is the model that reads the frames: on Fable it is near-perfect, on Haiku it
-drops and picks up a few misreads nybls fetched correctly but the weak model misread.
+question needs, reads them, and answers. On 64 natural questions over eight videos it
+scores 97.7% against a transcript-only agent's 61.7% and a 30-frame dump's 89.8%, at 4.2x
+fewer visual tokens than the dump; on silent video, where the transcript-only arm reads
+nothing, nybls turns 0/40 into 36/40. The gain is **coverage**: it converts questions a
+video-less agent can only abstain on into correct, frame-cited answers. The failure mode a
+video-less agent has is not invention, it is silence. The ceiling is the model that reads
+the frames: near-perfect on Fable, much lower on Haiku, which also produced the round's
+only fabrications by misreading frames nybls fetched correctly.
 
 (What these runs do **not** test: the "summarize, compact, then delete the frames"
 lifecycle. Every arm kept its frames and ledger for auditing. That garbage-collecting
@@ -117,18 +117,24 @@ table supersedes them (D7).
 
 | arm | points (of 128) | % | abstained | wrong | fabricated |
 |---|---|---|---|---|---|
-| N | 31 | 24.2 | 30 | 3 | 0 |
-| T | 82 | 64.1 | 8 | 2 | 0 |
-| A | 116 | 90.6 | 1 | 1 | 0 |
+| N | 28 | 21.9 | 41 | 0 | 0 |
+| T | 79 | 61.7 | 13 | 0 | 0 |
+| A | 115 | 89.8 | 1 | 1 | 0 |
 | B | **125** | **97.7** | 0 | 0 | 0 |
+
+These are the RE-JUDGED scores of record (see `REJUDGE.md`, deviation D9): the first
+judging's anonymisation failed and was found by review run 025; re-judged properly
+blinded, B was unchanged and the baselines moved down slightly (N -3, T -3, A -1).
 
 By where the answer lives:
 
 | label | items | N | T | A | B |
 |---|---|---|---|---|---|
-| S (spoken) | 28 | 12/56 | **56/56** | 56/56 | **56/56** |
-| B (both) | 15 | 7/30 | 14/30 | 28/30 | **29/30** |
-| V (screen only) | 21 | 12/42 | 12/42 | 32/42 | **40/42** |
+| S (spoken) | 28 | 13/56 | **56/56** | 56/56 | **56/56** |
+| B (both) | 16 | 9/32 | 15/32 | 28/32 | **31/32** |
+| V (screen only) | 20 | 6/40 | 8/40 | 31/40 | **38/40** |
+
+(One item relabelled V to B per run 025 Morrow M3; label table and counts reflect it.)
 
 Cost: arm A examined 240 images (430,080 visual tokens); arm B examined **68 images
 (102,940 visual tokens)**, 4.2x fewer, while scoring 9 points higher. Per-video B spend
@@ -139,11 +145,11 @@ ranged from 2 images (repair video, speech-heavy) to 20 (silent cube) — the pr
 
 | id | prediction | result |
 |---|---|---|
-| P5 | on V items, B >= T + 40 points of percentage | **pass**: 95.2% vs 28.6% |
+| P5 | on V items, B >= T + 40 points of percentage | **pass**: 95.0% vs 20.0% (re-judged) |
 | P6 | on S items, B within 10 points of T | **pass**: both 100% |
-| P7 | B >= T + 20 points and B >= A | **pass**: +43; 125 vs 116 |
-| P8 | N has the most fabrications | **fail**: no arm fabricated anything |
-| P9 | T <= 20% on the two silent videos | **fail**: 40.6% |
+| P7 | B >= T + 20 points and B >= A | **pass**: +46; 125 vs 115 (re-judged) |
+| P8 | N has the most fabrications | **fail**: no arm fabricated anything, in either judging |
+| P9 | T <= 20% on the two silent videos | **fail**: 31.2% re-judged (40.6% first judging) |
 
 P9's failure is itself a finding, in two parts. First, the "silent" cooking video is not
 informationally silent: its caption track carries burned-in ingredient lines, and T read
