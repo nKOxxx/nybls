@@ -37,9 +37,10 @@
  },
  "7": {
   "author_label": "V",
-  "final_label": "V",
+  "final_label": "B",
   "terms": [],
-  "transcript_hits": []
+  "transcript_hits": [],
+  "note": "Relabelled V->B per run 025 Morrow M3: key-term extraction returned no terms, so the registered transcript re-check never ran on this item; manual application of the registered rule relabels it."
  },
  "8": {
   "author_label": "S",

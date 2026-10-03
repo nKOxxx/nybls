@@ -17,13 +17,24 @@ seeds; `rejudge/MAPPING.json` withheld from judges. Eight fresh judge agents (Fa
 one per video, same rubric as the first judging plus an explicit no-new-conventions
 instruction; none saw any earlier verdict.
 
-**Known residue, disclosed.** (i) Evidence filenames inside answers (`u07_*`, `sheet_*`)
-remain, as in round 4; `rejudge/filename_residue.json` lists which letters carry them.
-(ii) The scrub damaged four baseline answers whose own prose contained blocklisted words
-(three contained the word "arm", e.g. "which this arm cannot see"; one a basis clause):
-`rejudge/scrub_loss_audit.json` lists all items where more than 40% of an answer's text
-was removed. In each of the four the conclusion sentence survived, and each item is an
-N or T abstention or labelled inference; none involves arm A or B.
+**Known residue and instrument damage, disclosed.** (i) Evidence filenames inside
+answers (`u07_*`, `sheet_*`) remain, as in round 4; `rejudge/filename_residue.json`
+lists which letters carry them, and they identify the {A, B} pair in all eight videos.
+(ii) Arm B's answers open with spend narration ("Visual spend was limited to...") that
+survives the scrub in several packs and is content-identifying in the same way. A judge
+willing to infer from such content could identify arms; no pack any longer *labels* one.
+(iii) The scrub damaged six answers, listed in `rejudge/scrub_loss_audit.json`
+(regenerate with `audit_scrub_loss.py`): the line filter removed lines whose own prose
+contained blocklisted words (three contained the word "arm"), and one redaction regex
+consumed text to the first period, truncating at abbreviations such as "e.g.". The
+damage and its score effect, item by item: oQtzvzKP5Q0 T Q6 lost its entire body
+(scored 0, abstained, in both judgings); 7R-CfL21zIY N Q3 and Q7 each dropped 1 to 0,
+and those two points ARE scrub artefacts, not de-biasing; bNpx7gpSqbY A Q1 lost its
+speaker-name bullet (A's item score unchanged, verified); p09i_hoFdd0 A Q6 lost 42% of
+its text (A's total is 14 in both judgings); jtl4KKRIheo T Q8's conclusion survived.
+An earlier revision of this file understated this list as four items, claimed every
+conclusion sentence survived, and claimed no A or B item was involved; all three
+statements were wrong and were corrected by the run 025 re-verification.
 
 **Result of record (replaces the first judging; first judging retained in `data/judge_p2/`).**
 
@@ -39,9 +50,11 @@ M3): S (28 items): N 13/56, T 56/56, A 56/56, B 56/56. V (20 items): N 6/40, T 8
 A 31/40, B **38/40**. B-label (16 items): N 9/32, T 15/32, A 28/32, B 31/32. Silent
 videos: N 3/32, T 10/32, A 25/32, B 30/32.
 
-**Movement.** B is unchanged at 125/128 under correct anonymisation; the three baselines
-each moved down slightly (N -3, T -3, A -1). The direction of the first judging's leak
-bias, if any, favoured the baselines, not the tool. No prediction outcome changes: P5
+**Movement.** B is unchanged at 125/128 under correct anonymisation. The raw baseline
+movement is N -3, T -3, A -1; two of N's three points are the scrub artefacts above, so
+the movement attributable to de-biasing is N -1, T -3, A -1, B 0. The defensible
+statement is the narrow one: the first judging's identity leak did not inflate the
+tool's score, and correcting it did not close any gap. No prediction outcome changes: P5
 (V items, B 95.0% vs T 20.0%) passes, P6 (S items, both 100%) passes, P7 (B = T + 46,
 B > A) passes, P8 still fails (no arm fabricated anything; N's wrong count is now 0),
 P9 still fails (T 31.2% on silent, above the registered 20%).

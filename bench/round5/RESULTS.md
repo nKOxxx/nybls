@@ -1,8 +1,8 @@
 # Round 5 results: does giving the model the video improve what it says?
 
 Protocol `PROTOCOL.md` and predictions `PREDICTIONS.md` registered at `b6f46be`; Part 1b at
-`e03b73e`; Part 1c at `f2ff358`. All before the arms they govern ran. Deviations D1 to D6 are
-in `PROTOCOL.md`. Raw answers, judge inputs, verdicts and arm mappings are in `data/`.
+`e03b73e`; Part 1c at `f2ff358`. All before the arms they govern ran. Deviations D1 to D9 are
+in `PROTOCOL.md`. Raw answers, judge inputs, verdicts and arm mappings are in `data/`; the Part 2 re-judging of record is in `rejudge/` (REJUDGE.md). Scripts assume the repository root as working directory.
 
 Arms: **N** title/channel/duration only · **T** transcript only (what caption loaders give
 an agent) · **A** transcript + 30 uniform frames · **B** nybls + its shipped protocol.
@@ -69,7 +69,7 @@ Image spend on the four silent videos, same questions, same tool:
 | 92gQUnMCA08 | 25 images, 42,923 tok | 25 images, 43,030 tok |
 | QtqYNyBv9r8 | 16 images, 18,356 tok | 47 images, 68,458 tok |
 | Wlu4MsBnjuk | 18 images, 20,784 tok | 62 images, 84,939 tok |
-| vxP2PTA1GEk | 19 images, 28,288 tok | 46 images, 138,044 tok |
+| vxP2PTA1GEk | 19 images, 28,288 tok | 46 images, 138,044 tok (CLI output at run time; the archived ledger JSON sums to 136,367 — unreconciled, 1.2%) |
 | **score** | **36/40** | **11/40** |
 
 **The only fabrications in round 5 came from the arm that had the video.** Haiku without
@@ -147,7 +147,7 @@ ranged from 2 images (repair video, speech-heavy) to 20 (silent cube) — the pr
 |---|---|---|
 | P5 | on V items, B >= T + 40 points of percentage | **pass**: 95.0% vs 20.0% (re-judged) |
 | P6 | on S items, B within 10 points of T | **pass**: both 100% |
-| P7 | B >= T + 20 points and B >= A | **pass**: +46; 125 vs 115 (re-judged) |
+| P7 | B >= T + 20 points and B >= A | **pass**: +46 points of score, not percentage; 125 vs 115 (re-judged) |
 | P8 | N has the most fabrications | **fail**: no arm fabricated anything, in either judging |
 | P9 | T <= 20% on the two silent videos | **fail**: 31.2% re-judged (40.6% first judging) |
 
