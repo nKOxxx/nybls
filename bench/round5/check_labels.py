@@ -1,6 +1,6 @@
 """Registered mechanical check: a V item whose key terms appear in the normalised transcript
 is relabelled (B if some terms hit, S if all hit). Normalisation as in QUESTION_AUDIT."""
-import json, re, sys
+import json, os, re, sys
 
 def norm(s):
     return " " + re.sub(r"[^a-z0-9]+", " ", s.lower()).strip() + " "
@@ -27,5 +27,11 @@ for q, it in sorted(items.items()):
     if it["label"] == "V" and hits:
         final = "S" if len(hits) == len(it["terms"]) else "B"
     out[q] = {"author_label": it["label"], "final_label": final, "terms": it["terms"], "transcript_hits": hits}
-json.dump(out, open(f"{root}/p2/{vid}/labels.json", "w"), indent=1)
+lp = f"{root}/p2/{vid}/labels.json"
+if os.path.exists(lp):
+    prev = json.load(open(lp))
+    for q in out:
+        if str(q) in prev and "note" in prev[str(q)]:
+            out[q] = prev[str(q)]  # a manually recorded relabel wins over a re-run
+json.dump(out, open(lp, "w"), indent=1)
 print(vid, " ".join(f"Q{q}:{v['author_label']}->{v['final_label']}{'*' if v['transcript_hits'] else ''}" for q, v in out.items()))
