@@ -15,7 +15,7 @@ nybls (arm B) does what it is built to do: it ingests the video, pulls the frame
 question needs, reads them, and answers. On 64 natural questions over eight videos it
 scores 97.7% against a transcript-only agent's 61.7% and a 30-frame dump's 89.8%, at 4.2x
 fewer visual tokens than the dump; on silent video, where the transcript-only arm reads
-nothing, nybls turns 0/40 into 36/40. The gain is **coverage**: it converts questions a
+nothing, nybls turns 0/40 into 36/40 on the four silent screen recordings of round 4's set. The gain is **coverage**: it converts questions a
 video-less agent can only abstain on into correct, frame-cited answers. The failure mode a
 video-less agent has is not invention, it is silence. The ceiling is the model that reads
 the frames: near-perfect on Fable, much lower on Haiku, which also produced the round's
@@ -98,8 +98,7 @@ these checkable (each cites a timestamp the judge could test) but did not preven
 The thesis we set out to test was "giving an agent the video reduces hallucination." On two
 current Claude models it does not, because **there was nothing to reduce**: both models,
 told nothing about honesty, refuse to describe a video they cannot see. What a caption
-loader or a bare URL costs the user is not invented answers. It is **no answer**: 93 to
-95 abstentions in 112 questions.
+loader or a bare URL costs the user is not invented answers. It is **no answer**: 92 to 95 abstentions in 112 questions.
 
 What the video buys is coverage: turning "I can't tell from this" into a correct answer.
 On Fable 5.1 that conversion is large (silent videos: 0/40 to 36/40). On Haiku 4.5 it is
@@ -137,7 +136,7 @@ By where the answer lives:
 (One item relabelled V to B per run 025 Morrow M3; label table and counts reflect it.)
 
 Cost: arm A examined 240 images (430,080 visual tokens); arm B examined **68 images
-(102,940 visual tokens)**, 4.2x fewer, while scoring 9 points higher. Per-video B spend
+(102,940 visual tokens)**, 4.2x fewer, while scoring 10 points higher (re-judged). Per-video B spend
 ranged from 2 images (repair video, speech-heavy) to 20 (silent cube) — the protocol's
 "spend in inverse proportion to what the transcript carries" is visible in the ledgers.
 
