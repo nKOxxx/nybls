@@ -1,6 +1,6 @@
 ---
 name: watch
-description: Watch a video (YouTube URL or local file) with budgeted iterative frame analysis, transcript first, then targeted frames/zooms, ending with an answer, evidence strip, and spend ledger. Use when the user shares a video URL/file and wants it watched, summarized, or questioned.
+description: Watch a video (YouTube URL or local file) the way a person would - transcript first, then budgeted contact sheets, targeted frames and zooms, ending with an answer, timestamped evidence, and a spend ledger. Use when the user shares a video link or file and wants to watch it, summarize a lecture, tutorial, webinar, recorded meeting, demo, or screen recording, ask questions about what was said or shown, extract on-screen content, or get notes from a video with no captions or an unreliable transcript.
 ---
 
 # /watch, budgeted video watching protocol

@@ -8,6 +8,11 @@
   <b>Your AI reads the subtitles. This one actually looks, and shows you what it looked at.</b>
 </p>
 
+<p align="center">
+  Summarize lectures, tutorials, webinars, recorded meetings, demos, and screen<br>
+  recordings — YouTube or local files — with timestamped evidence and a spend ledger.
+</p>
+
 ---
 
 ```console
