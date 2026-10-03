@@ -76,6 +76,14 @@ two samples.
 
 ## Install
 
+**Any agent, one line** — installs the `watch` skill into any of the 79 agents
+the [skills.sh](https://skills.sh) ecosystem supports (Claude Code, Codex,
+Cursor, Gemini CLI, and more); installs count on the public leaderboard:
+
+```bash
+npx skills add nKOxxx/nybls
+```
+
 **Or let Claude do it.** Paste this repository's URL into Claude Code and say
 "install this". [INSTALL.md](INSTALL.md) is written to be followed by an agent:
 it detects the platform, installs what is needed, verifies the result with
