@@ -138,3 +138,10 @@ deviation, and the per item table. If T matches B on Part 2, the paper says so.
   REJUDGE.md. The re-judged scores are the scores of record; the first judging is
   retained in data/judge_p2/ as the superseded record. D4's claim that "A and B remain
   as blind as in round 4" was wrong for Part 2 and is withdrawn in favour of this entry.
+- **D10 (2026-10-04).** The registered Part 3 rubric for 7R-CfL21zIY graded against the
+  choose-your-own-adventure game the video demos, not the three-line program episode 1
+  builds. All arms but N wrote the latter, correctly. Rubric error, found at grading;
+  registered scores stand, observation disclosed in PART3.md.
+- **D11 (2026-10-04).** The addendum arms (AM, Part 3) first launched 2026-10-03 and all
+  died on an account credit limit with no output; relaunched after reset on Fable 5.1.
+  No content effect.
