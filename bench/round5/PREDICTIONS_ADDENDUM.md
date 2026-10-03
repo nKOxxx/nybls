@@ -12,7 +12,8 @@ full-resolution frames as arm B was served on that video, per the committed ledg
 bNpx 4, oQtz 10, 7R 4, dwwh 3, txsp 17, p09i 20, WDAm 8, jtl 2; 68 in total.
 [AMENDED 2026-10-03, before any AM arm ran: the first registration asserted "66 distinct
 timestamps, two duplicate re-serves", a claim the ledgers cannot support since they
-record no per-image timestamps; the match is on served counts.] Frames are rendered at the same 1568 width as the one-shot
+record no per-image timestamps; the match is on served counts, and the first list also
+had bNpx7gpSqbY at 2 where the ledger says 4.] Frames are rendered at the same 1568 width as the one-shot
 pack, so AM's token total slightly EXCEEDS B's (full-res frames cost more per image than
 B's mostly-sheet mix): the mismatch favours the control and is reported. Same prompt and
 constraints as arm A. One judge per 4 videos scores AM alone against the author ground

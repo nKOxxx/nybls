@@ -52,12 +52,15 @@ def grade_c(d):
         (1, r"distanceFromCam\w*\s*=\s*60", "distanceFromCam 60"),
         (1, r"K1\s*=\s*40", "K1 40"),
         (1, r"0\.6", "incrementSpeed 0.6"),
-        (1, r"'\.'.{0,120}'\$'.{0,240}'~'|[\"']\.\$~#;\+", "six face chars"),
+        (1, None, "six face chars"),
         (1, r"1\s*/\s*z.{0,400}x\s*\*\s*2|ooz|\*\s*2\s*\*.{0,20}ooz", "1/z and x*2 projection"),
         (1, r"\+=\s*0\.005.{0,400}usleep|usleep.{0,400}\+=\s*0\.005|\\x1b\[2J.{0,600}\\x1b\[H", "A/B 0.005, usleep, escapes"),
     ]
     for w, pat, name in checks:
-        got = have(src, pat)
+        if pat is None:  # all six distinct face characters must appear as char literals
+            got = all(f"'{c}'" in src for c in [".", "$", "~", "#", ";", "+"])
+        else:
+            got = have(src, pat)
         pts += w if got else 0
         notes.append(f"{name}: {got}")
     return pts, notes

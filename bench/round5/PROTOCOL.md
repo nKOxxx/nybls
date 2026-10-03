@@ -131,7 +131,8 @@ deviation, and the per item table. If T matches B on Part 2, the paper says so.
   are reported first on the five completed videos, marked partial; the remaining three run
   after the limit resets, under the same registered protocol, and the combined table
   replaces the partial one.
-- **D8.** Part 3 not run; see RESULTS.md. Registered exploratory; skipped for budget.
+- **D8.** Part 3 skipped for budget on 2026-10-02; run on 2026-10-04 under the registered
+  addendum (PART3.md). Registered exploratory.
 - **D9 (2026-10-03).** The Part 2 "blind judged" claim was false: the first judging's
   packs leaked every arm's identity (run 025, Whitfield C1, chair-confirmed). All eight
   videos were re-judged with corrected, mechanically verified anonymisation; see

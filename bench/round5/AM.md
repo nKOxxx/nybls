@@ -3,10 +3,12 @@
 Run 2026-10-04 on Fable 5.1. Per Part 2 video, AM received the transcript plus a uniform
 grid of exactly as many full-resolution (1568 wide) frames as arm B was served on that
 video (4, 10, 4, 3, 17, 20, 8, 2; 68 in total), under arm A's prompt and constraints.
-Frames, index and transcript per video were built by the addendum script and are
-reproducible from the ledgers' per-video counts; the answers, single-arm judge verdicts
-(two batch judges, four videos each, same rubric and outcome classes; single-arm judging
-is not blind and is not claimed to be) and `tally_am.py` are in `am/`.
+Frames (1568x882 for these 16:9 sources, 1,792 visual tokens each), index and transcript
+per video were built by the committed `build_am_packs.py` from the ledgers' per-video
+counts; the PNGs are not committed, the per-video frame indexes are (`am/<vid>/
+frames_index.json`), and the arm and judge prompts are in `am/PROMPTS.md`; the answers, single-arm judge verdicts
+(two batch judges, four videos each, DIFFERENT agents from the judges who scored A and B,
+same rubric and outcome classes; single-arm judging is not blind and is not claimed to be) and `tally_am.py` are in `am/`.
 
 **Token match.** AM's 68 full-resolution frames cost 121,856 distinct visual tokens
 against B's 102,940 for the same 68 images (B's mix is mostly 1448x544 contact sheets).
