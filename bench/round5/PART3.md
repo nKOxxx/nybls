@@ -31,7 +31,7 @@ arms. The rubric graded against the choose-your-own-adventure game the ground tr
 describes, because the author's ground truth describes that game; the video *demos* that
 game in its first two minutes as the goal of the series and then *builds* a three-line
 program (ask name, ask age, print both). T, A and B each wrote that three-line program,
-and wrote it identically (`name = input(...)`, `age = input(...)`, a print). N wrote a
+and wrote the same three-line program (`name = input(...)`, `age = input(...)`, a print). N wrote a
 number guessing game from the title alone. The arms answered the question asked; the
 rubric asked about the wrong program.
 
@@ -50,14 +50,15 @@ rather than repaired in the data.
   transcript.
 - **P20** (silent C: T <= 3, B >= 8): 2 and 10. **Pass.**
 
+- **P21** (Python: T within 2 of B): 2 and 2 under the registered rubric. **Pass**, but
+  only because the rubric failed; under the post hoc reading T and B are identical, which
+  is what the prediction meant. Reported as a pass with that caveat.
+
 **Correction (2026-10-04, addendum re-review, Chen).** The first revision of this file
 said the transcript arm wrote "a generic cube" and scored A 10/10. Both were wrong: T
 wrote a placeholder, and the grader's six-character check tested only three characters,
 so A's merged face went unnoticed. Grader fixed to require all six distinct literals,
 GRADES.txt regenerated; A is 9/10. No prediction outcome changes.
-- **P21** (Python: T within 2 of B): 2 and 2 under the registered rubric. **Pass**, but
-  only because the rubric failed; under the post hoc reading T and B are identical, which
-  is what the prediction meant. Reported as a pass with that caveat.
 
 ## Deviation D10
 

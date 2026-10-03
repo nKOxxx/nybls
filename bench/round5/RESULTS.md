@@ -162,7 +162,7 @@ prior knowledge. Judges scored those 1 (labelled inference), not 2.
 ## Deviations affecting this file
 
 D7 (three authors re-run after network and usage-limit failures; no content effect). **D8** recorded Part 3 as skipped for budget on 2026-10-02; it was then run on 2026-10-04 under
-the registered addendum, see `PART3.md` (cube: A 10, B 10, N 7, T 2; Python: rubric error D10).
+the registered addendum, see `PART3.md` (cube: B 10, A 9, N 7, T 2; Python: rubric error D10).
 
 ## Addendum (2026-10-04): Part 3 and the cost-matched control
 

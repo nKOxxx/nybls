@@ -167,10 +167,11 @@ Stated up front, because a claim that cannot fail is not a claim:
   one-shot 30-frame dump** at equal or lower cost, the core premise is wrong.
   Round 5 (`bench/round5/`, 2026-10-02, pre-registered at b6f46be/e03b73e/f2ff358) added the
   baselines the field actually ships: no video at all, and transcript-only. On 64 natural
-  questions over 8 fresh videos: no-video 24%, transcript-only 64%, 30-frame dump 91%,
+  questions over 8 fresh videos, re-judged under verified anonymisation after the first
+  judging leaked arm identity: no-video 22%, transcript-only 62%, 30-frame dump 90%,
   nybls 98% at 4.2x fewer visual tokens than the dump; on screen-only items transcript-only
-  12/42 against nybls 40/42. Two framing results: models given no video **abstain rather
-  than invent** (zero fabrications in 336 blind-judged arm-items across prompts and models),
+  8/40 against nybls 38/40. Two framing results: models given no video **abstain rather
+  than invent** (zero fabrications in 336 independently judged arm-items across prompts and models),
   so nybls's value is coverage, not hallucination repair; and the quality of the frame-reading
   model is the binding constraint (same tool, same silent videos: Fable 36/40, Haiku 11/40
   with the round's only fabrications, both being misreads of correctly fetched frames). An
