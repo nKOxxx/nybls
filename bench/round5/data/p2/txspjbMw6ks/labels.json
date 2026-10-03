@@ -1,0 +1,116 @@
+{
+ "1": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "crosshatch",
+   "scored",
+   "grid cuts",
+   "silverskin",
+   "membrane",
+   "trimming fat"
+  ],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [
+   "5-pepper blend",
+   "lemon juice",
+   "salt",
+   "honey"
+  ],
+  "transcript_hits": [
+   "5-pepper blend",
+   "lemon juice",
+   "salt",
+   "honey"
+  ]
+ },
+ "3": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [
+   "paprika",
+   "olive oil",
+   "salt"
+  ],
+  "transcript_hits": [
+   "paprika",
+   "olive oil",
+   "salt"
+  ]
+ },
+ "4": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "birch bark",
+   "pine cone",
+   "cone scales",
+   "ferro rod",
+   "fire steel",
+   "ferrocerium",
+   "striker"
+  ],
+  "transcript_hits": []
+ },
+ "5": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "grate",
+   "log rounds",
+   "stumps",
+   "across",
+   "fire pit"
+  ],
+  "transcript_hits": []
+ },
+ "6": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [
+   "mustard",
+   "soy sauce",
+   "tomato paste",
+   "onion",
+   "garlic",
+   "butter",
+   "5-pepper blend"
+  ],
+  "transcript_hits": [
+   "mustard",
+   "soy sauce",
+   "tomato paste",
+   "onion",
+   "garlic",
+   "butter",
+   "5-pepper blend"
+  ]
+ },
+ "7": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "pink",
+   "medium-rare",
+   "medium",
+   "juicy center"
+  ],
+  "transcript_hits": []
+ },
+ "8": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "five eggs",
+   "lettuce",
+   "wooden bowl",
+   "log round",
+   "stump board"
+  ],
+  "transcript_hits": []
+ }
+}

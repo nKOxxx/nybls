@@ -131,3 +131,4 @@ deviation, and the per item table. If T matches B on Part 2, the paper says so.
   are reported first on the five completed videos, marked partial; the remaining three run
   after the limit resets, under the same registered protocol, and the combined table
   replaces the partial one.
+- **D8.** Part 3 not run; see RESULTS.md. Registered exploratory; skipped for budget.

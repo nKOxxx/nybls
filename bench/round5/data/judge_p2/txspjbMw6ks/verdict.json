@@ -1,0 +1,14 @@
+{
+  "video": "txspjbMw6ks",
+  "items": [
+    {"q": 1, "label": "B", "arms": {"W": {"score": 1, "outcome": "partial"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 0, "outcome": "abstained"}, "Z": {"score": 2, "outcome": "correct"}}},
+    {"q": 2, "label": "S", "arms": {"W": {"score": 2, "outcome": "correct"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 0, "outcome": "abstained"}, "Z": {"score": 2, "outcome": "correct"}}},
+    {"q": 3, "label": "S", "arms": {"W": {"score": 2, "outcome": "correct"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 0, "outcome": "abstained"}, "Z": {"score": 2, "outcome": "correct"}}},
+    {"q": 4, "label": "V", "arms": {"W": {"score": 0, "outcome": "abstained"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 0, "outcome": "abstained"}, "Z": {"score": 0, "outcome": "wrong"}}},
+    {"q": 5, "label": "V", "arms": {"W": {"score": 0, "outcome": "abstained"}, "X": {"score": 1, "outcome": "partial"}, "Y": {"score": 0, "outcome": "abstained"}, "Z": {"score": 1, "outcome": "partial"}}},
+    {"q": 6, "label": "S", "arms": {"W": {"score": 2, "outcome": "correct"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 0, "outcome": "abstained"}, "Z": {"score": 2, "outcome": "correct"}}},
+    {"q": 7, "label": "V", "arms": {"W": {"score": 0, "outcome": "abstained"}, "X": {"score": 2, "outcome": "correct"}, "Y": {"score": 0, "outcome": "abstained"}, "Z": {"score": 2, "outcome": "correct"}}},
+    {"q": 8, "label": "V", "arms": {"W": {"score": 0, "outcome": "abstained"}, "X": {"score": 1, "outcome": "partial"}, "Y": {"score": 0, "outcome": "abstained"}, "Z": {"score": 1, "outcome": "partial"}}}
+  ],
+  "totals": {"W": 7, "X": 14, "Y": 0, "Z": 12}
+}

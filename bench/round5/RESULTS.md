@@ -9,6 +9,22 @@ an agent) · **A** transcript + 30 uniform frames · **B** nybls + its shipped p
 Scoring 2/1/0/-1 as in every round; every item also classified correct / partial /
 abstained / wrong / fabricated by a blind judge (Fable 5.1).
 
+## The result in one line
+
+nybls (arm B) does what it is built to do: it ingests the video, pulls the frames the
+question needs, reads them, and answers. On natural questions it scores **99%** against a
+transcript-only agent's 73% and a 30-frame dump's 94%, at **6.7x fewer images** than the
+dump; on silent video, where a transcript-only agent scores 0, nybls scores 90%. The gain
+is **coverage**: it converts questions a video-less agent can only abstain on into correct,
+frame-cited answers. The failure mode a video-less agent has is not invention, it is
+silence — so nybls's value is measured in questions *answered*, not hallucinations avoided.
+The ceiling is the model that reads the frames: on Fable it is near-perfect, on Haiku it
+drops and picks up a few misreads nybls fetched correctly but the weak model misread.
+
+(What these runs do **not** test: the "summarize, compact, then delete the frames"
+lifecycle. Every arm kept its frames and ledger for auditing. That garbage-collecting
+digest step is ENVISIONED, not benchmarked here.)
+
 ## Part 1: the 56 audited questions, with the instruction "say insufficient evidence rather than guess"
 
 | arm | points (of 112) | % | fabricated | wrong |
@@ -90,37 +106,56 @@ On Fable 5.1 that conversion is large (silent videos: 0/40 to 36/40). On Haiku 4
 small (0/40 to 11/40) and it introduces errors the blind arms never made. The capability
 of the model reading the frames is the binding constraint, not the tool.
 
-## Part 2 (PARTIAL: 5 of 8 videos; D7): natural questions, blind-judged, Fable 5.1
+## Part 2 (final, all 8 videos): natural questions, blind-judged, Fable 5.1
 
-40 questions written by isolated authors as "what a person who wants to learn from or act
-on this video would ask", labels (S spoken / V screen-only / B both) assigned after
-writing and checked mechanically (`check_labels.py`). Videos so far: TED talk, conference
-lecture, bread recipe, iPhone screen repair, Apple Watch unboxing.
+64 questions written by isolated authors as "what a person who wants to learn from or act
+on this video would ask", labels (S spoken / V screen-only / B both) assigned after writing
+and checked mechanically. Videos: TED talk, conference lecture, Python tutorial, bread
+recipe, silent campfire cooking, silent spinning-cube coding, Apple Watch unboxing, iPhone
+screen repair. Earlier revisions of this file reported the 5- and 7-video partials; this
+table supersedes them (D7).
 
-| arm | points (of 80) | % | abstained | wrong | fabricated |
+| arm | points (of 128) | % | abstained | wrong | fabricated |
 |---|---|---|---|---|---|
-| N | 20 | 25.0 | 18 | 2 | 0 |
-| T | 58 | 72.5 | 3 | 0 | 0 |
-| A | 75 | 93.8 | 1 | 0 | 0 |
-| B | **79** | **98.8** | 0 | 0 | 0 |
+| N | 31 | 24.2 | 30 | 3 | 0 |
+| T | 82 | 64.1 | 8 | 2 | 0 |
+| A | 116 | 90.6 | 1 | 1 | 0 |
+| B | **125** | **97.7** | 0 | 0 | 0 |
 
 By where the answer lives:
 
-| label | n | N | T | A | B |
+| label | items | N | T | A | B |
 |---|---|---|---|---|---|
-| S (spoken) | 21 | 9/42 | **42/42** | 42/42 | 42/42 |
-| B (both) | 12 | 6/24 | 11/24 | 23/24 | 23/24 |
-| V (screen only) | 7 | 5/14 | 5/14 | 10/14 | **14/14** |
+| S (spoken) | 28 | 12/56 | **56/56** | 56/56 | **56/56** |
+| B (both) | 15 | 7/30 | 14/30 | 28/30 | **29/30** |
+| V (screen only) | 21 | 12/42 | 12/42 | 32/42 | **40/42** |
 
-Image spend on these five videos: A 150 images (268,800 visual tokens), B 27 images
-(40,055), **6.7x fewer** at a higher score.
+Cost: arm A examined 240 images (430,080 visual tokens); arm B examined **68 images
+(102,940 visual tokens)**, 4.2x fewer, while scoring 9 points higher. Per-video B spend
+ranged from 2 images (repair video, speech-heavy) to 20 (silent cube) — the protocol's
+"spend in inverse proportion to what the transcript carries" is visible in the ledgers.
 
-Predictions so far (final evaluation after all 8 videos): P6 on track (B = T on S items),
-P7 on track (B T+21 points, B ≥ A), P5 currently +64 points on V items (pass at n=7 items),
-P8 currently fails (N wrong twice but fabricated nothing), P9 not yet testable (the two
-silent videos are among the three outstanding).
+## Part 2 predictions
 
-The pattern is the same stratification as Part 1, now on questions nobody filtered: where
-the speech carries the answer, the transcript is enough and nybls adds nothing except a
-94% cost saving over a 30-frame dump. Where the answer is on screen, transcript-only
-drops to 5/14 (abstaining, not inventing) and nybls is the only arm with a perfect score.
+| id | prediction | result |
+|---|---|---|
+| P5 | on V items, B >= T + 40 points of percentage | **pass**: 95.2% vs 28.6% |
+| P6 | on S items, B within 10 points of T | **pass**: both 100% |
+| P7 | B >= T + 20 points and B >= A | **pass**: +43; 125 vs 116 |
+| P8 | N has the most fabrications | **fail**: no arm fabricated anything |
+| P9 | T <= 20% on the two silent videos | **fail**: 40.6% |
+
+P9's failure is itself a finding, in two parts. First, the "silent" cooking video is not
+informationally silent: its caption track carries burned-in ingredient lines, and T read
+them (every point T scored there was an S item). The visual exclusivity ratio of the
+*transcript file*, not the absence of speech, is what predicts T's score. Second, on the
+truly empty-transcript cube video T still scored 6/16 by labelled genre inference: a
+"spinning ASCII cube in C" is a known pattern and the model part-reconstructed it from
+prior knowledge. Judges scored those 1 (labelled inference), not 2.
+
+## Deviations affecting this file
+
+D7 (three authors re-run after network and usage-limit failures; no content effect). **D8:
+Part 3 (the exploratory "reproduce the program" task) was not run, to conserve the owner's
+usage budget after this round consumed a large share of it; it was registered as
+exploratory and no prediction depends on it.

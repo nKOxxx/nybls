@@ -1,0 +1,10 @@
+{"items":[
+{"q":1,"arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":1,"outcome":"partial"},"Y":{"score":2,"outcome":"correct"},"Z":{"score":2,"outcome":"correct"}}},
+{"q":2,"arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":1,"outcome":"partial"},"Y":{"score":2,"outcome":"correct"},"Z":{"score":2,"outcome":"correct"}}},
+{"q":3,"arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":1,"outcome":"partial"},"Y":{"score":2,"outcome":"correct"},"Z":{"score":2,"outcome":"correct"}}},
+{"q":4,"arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":1,"outcome":"partial"},"Z":{"score":1,"outcome":"partial"}}},
+{"q":5,"arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":0,"outcome":"abstained"},"Z":{"score":2,"outcome":"correct"}}},
+{"q":6,"arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":1,"outcome":"partial"},"Y":{"score":1,"outcome":"partial"},"Z":{"score":2,"outcome":"correct"}}},
+{"q":7,"arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":1,"outcome":"partial"},"Y":{"score":1,"outcome":"partial"},"Z":{"score":2,"outcome":"correct"}}},
+{"q":8,"arms":{"W":{"score":2,"outcome":"correct"},"X":{"score":0,"outcome":"abstained"},"Y":{"score":2,"outcome":"correct"},"Z":{"score":2,"outcome":"correct"}}}
+]}

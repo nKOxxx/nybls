@@ -1,0 +1,101 @@
+{
+ "1": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "160",
+   "44",
+   "zBuffer",
+   "buffer",
+   "char buffer[160 * 44]"
+  ],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "cubeWidth = 10",
+   "distanceFromCam = 60",
+   "K1 = 40",
+   "incrementSpeed = 0.6"
+  ],
+  "transcript_hits": []
+ },
+ "3": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "Rotation matrix",
+   "Symbolab",
+   "matrix-multiply-calculator",
+   "(i j k)",
+   "Rx(A) Ry(B) Rz(C)"
+  ],
+  "transcript_hits": []
+ },
+ "4": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "'.'",
+   "'$'",
+   "'~'",
+   "'#'",
+   "';'",
+   "'+'",
+   "calculateForSurface"
+  ],
+  "transcript_hits": []
+ },
+ "5": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "ooz",
+   "1/z",
+   "zBuffer[idx]",
+   "ooz > zBuffer[idx]",
+   "buffer[idx] = ch",
+   "memset"
+  ],
+  "transcript_hits": []
+ },
+ "6": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "xp = (int)(width / 2 + K1 * ooz * x * 2)",
+   "yp = (int)(height / 2 + K1 * ooz * y)",
+   "* 2",
+   "aspect"
+  ],
+  "transcript_hits": []
+ },
+ "7": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "A += 0.005",
+   "B += 0.005",
+   "usleep(1000)",
+   "\\x1b[2J",
+   "\\x1b[H",
+   "putchar(k % width ? buffer[k] : 10)"
+  ],
+  "transcript_hits": []
+ },
+ "8": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "vim",
+   "clangd",
+   "touch cube.c",
+   "spinning_cube",
+   "./a.out",
+   "a.out"
+  ],
+  "transcript_hits": []
+ }
+}

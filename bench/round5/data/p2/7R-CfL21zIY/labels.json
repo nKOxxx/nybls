@@ -1,0 +1,77 @@
+{
+ "1": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "3": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "4": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "Love2D",
+   "Pyxel",
+   "Pygame",
+   "Tkinter",
+   "Java Swing",
+   "Game Development",
+   "GUI Development"
+  ],
+  "transcript_hits": [
+   "Java Swing",
+   "Game Development",
+   "GUI Development"
+  ]
+ },
+ "5": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "3.8.2",
+   "Python 3.8.2",
+   "Feb 26 2020"
+  ],
+  "transcript_hits": []
+ },
+ "6": {
+  "author_label": "V",
+  "final_label": "B",
+  "terms": [
+   "18",
+   "age >= 18",
+   "int(",
+   "int(input"
+  ],
+  "transcript_hits": [
+   "int("
+  ]
+ },
+ "7": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "Ruscica",
+   "TimRuscica",
+   "@TimRuscica"
+  ],
+  "transcript_hits": []
+ },
+ "8": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ }
+}
