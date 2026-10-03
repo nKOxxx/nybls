@@ -1,0 +1,10 @@
+== 7R-CfL21zIY
+  N: 2/10  | runs: False; int(input: False; age >= 18: False; lake/swim scenario: False; >=2 endings marker: False; loop or scene functions: True
+  T: 2/10  | runs: True; int(input: False; age >= 18: False; lake/swim scenario: False; >=2 endings marker: False; loop or scene functions: False
+  A: 2/10  | runs: True; int(input: False; age >= 18: False; lake/swim scenario: False; >=2 endings marker: False; loop or scene functions: False
+  B: 2/10  | runs: True; int(input: False; age >= 18: False; lake/swim scenario: False; >=2 endings marker: False; loop or scene functions: False
+== p09i_hoFdd0
+  N: 7/10  | compiles: True; 160x44 buffers: True; cubeWidth 10: True; distanceFromCam 60: False; K1 40: True; incrementSpeed 0.6: True; six face chars: False; 1/z and x*2 projection: True; A/B 0.005, usleep, escapes: False
+  T: 2/10  | compiles: True; 160x44 buffers: False; cubeWidth 10: False; distanceFromCam 60: False; K1 40: False; incrementSpeed 0.6: False; six face chars: False; 1/z and x*2 projection: False; A/B 0.005, usleep, escapes: False
+  A: 10/10  | compiles: True; 160x44 buffers: True; cubeWidth 10: True; distanceFromCam 60: True; K1 40: True; incrementSpeed 0.6: True; six face chars: True; 1/z and x*2 projection: True; A/B 0.005, usleep, escapes: True
+  B: 10/10  | compiles: True; 160x44 buffers: True; cubeWidth 10: True; distanceFromCam 60: True; K1 40: True; incrementSpeed 0.6: True; six face chars: True; 1/z and x*2 projection: True; A/B 0.005, usleep, escapes: True
