@@ -56,3 +56,10 @@ rather than repaired in the data.
 The Part 3 rubric for 7R-CfL21zIY targeted the demoed final game rather than the program
 the first episode builds. Found at grading, after the arms ran. Not corrected in the
 scores of record; disclosed here and in PROTOCOL.md.
+
+## Non-Claude judge (P22): not run, blocked on credentials
+
+No non-Anthropic API key exists in the environment, the keychain, or the local
+api-treasure-chest (which holds feed configuration, not credentials). Per the
+registration, P22 is recorded as not run. The same-family-judge limitation stands in the
+paper's Limitations as written.

@@ -136,7 +136,8 @@ By where the answer lives:
 (One item relabelled V to B per run 025 Morrow M3; label table and counts reflect it.)
 
 Cost: arm A examined 240 images (430,080 visual tokens); arm B examined **68 images
-(102,940 visual tokens)**, 4.2x fewer, while scoring 10 points higher (re-judged). Per-video B spend
+(102,940 visual tokens)**, 4.2x fewer, while scoring 10 points higher (re-judged). The
+cost-matched control AM (68 uniform frames, 121,856 tokens) scored 104/128: see `AM.md`. Per-video B spend
 ranged from 2 images (repair video, speech-heavy) to 20 (silent cube) — the protocol's
 "spend in inverse proportion to what the transcript carries" is visible in the ledgers.
 
@@ -160,7 +161,10 @@ prior knowledge. Judges scored those 1 (labelled inference), not 2.
 
 ## Deviations affecting this file
 
-D7 (three authors re-run after network and usage-limit failures; no content effect). **D8:
-Part 3 (the exploratory "reproduce the program" task) was not run, to conserve the owner's
-usage budget after this round consumed a large share of it; it was registered as
-exploratory and no prediction depends on it.
+D7 (three authors re-run after network and usage-limit failures; no content effect). **D8** recorded Part 3 as skipped for budget on 2026-10-02; it was then run on 2026-10-04 under
+the registered addendum, see `PART3.md` (cube: A 10, B 10, N 7, T 2; Python: rubric error D10).
+
+## Addendum (2026-10-04): Part 3 and the cost-matched control
+
+Registered in `PREDICTIONS_ADDENDUM.md` before either ran. Part 3 results and the
+non-Claude-judge status are in `PART3.md`; the cost-matched control (arm AM) is in `AM.md`.
