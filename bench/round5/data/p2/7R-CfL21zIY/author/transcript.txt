@@ -1,0 +1,764 @@
+[00:02] [Music]
+[00:06] hello everyone and welcome to a brand
+[00:08] new Python tutorial series so in this
+[00:11] series I'm going to be teaching you the
+[00:12] basics and fundamentals of a Python
+[00:14] programming language and we're going to
+[00:16] immediately be applying those into our
+[00:17] own project slash game so the idea
+[00:20] behind this series is that not only do I
+[00:22] want to teach you these concepts but I
+[00:24] want us to actually apply them into a
+[00:25] project so we can see where they're used
+[00:27] and how we use them so at the end of
+[00:29] this series you will have a complete
+[00:31] finished game that you will be able to
+[00:32] show off and the way that we're gonna be
+[00:34] making this game makes it really
+[00:35] extendable and flexible so you can add
+[00:37] your own stuff and really customize it
+[00:39] as we go through so before I say
+[00:41] anything else let me just note that this
+[00:43] tutorial series is really for complete
+[00:45] beginners this is for people looking to
+[00:46] get up and running in Python as fast as
+[00:49] possible and in these next three videos
+[00:51] we're gonna be learning a bunch of
+[00:52] different skills and syntax and then by
+[00:54] the end we're gonna have that complete
+[00:55] project so let me show you an example of
+[00:58] what this project could look like keep
+[01:00] in mind this is just like kind of a
+[01:01] smaller version of what it might be this
+[01:03] is very flexible and we might make it a
+[01:04] little bit different as we go through so
+[01:06] let me run this and the type of project
+[01:08] that we're really making here is a tune
+[01:10] your own adventure game now in my
+[01:12] opinion this is one of the best projects
+[01:14] you can work on as a beginner because of
+[01:16] how flexible it really is so let me just
+[01:18] show you what it is and then you guys
+[01:19] should get an idea pretty quickly of why
+[01:21] this is a great project to work on so
+[01:23] you can see it says welcome to my first
+[01:25] game what is your name I'm gonna put Tim
+[01:27] what is your age let's put 19 and says
+[01:30] you are old enough to play do you want
+[01:31] to play let's type yes so as you were
+[01:34] starting with 10 health alright let's
+[01:36] play first choice left or right let's
+[01:38] decide to go left you can see that
+[01:40] what's kind of happening here is these
+[01:41] first steps we're just setting up in the
+[01:43] game but now it's gonna give me a bunch
+[01:45] of decisions to make and based on what I
+[01:47] choose at previous steps it'll give me
+[01:49] different decisions so I decide to go
+[01:51] left here it says nice you follow the
+[01:53] path and reach a lake you swim across or
+[01:55] go around what do we think do we go
+[01:57] across or go around let's go across so I
+[02:00] go across says you manage to get across
+[02:02] but you were bit by a fish and lost five
+[02:04] health you notice a house in a river
+[02:05] which do you go to the river or the
+[02:07] house so let's decide to go to the river
+[02:09] and let's see you fell in the river and
+[02:11] you lost so hopefully that gives you an
+[02:13] idea of
+[02:13] how this works let me run it one more
+[02:15] time and I'll show you that there's
+[02:16] different options that will pop up based
+[02:18] on where you decide to go
+[02:20] so Tim 19 yes you were starting with 10
+[02:23] health let's play if I decided to go
+[02:25] write notice that immediately I just
+[02:27] lose right so there's all these
+[02:29] different paths and kind of decision
+[02:30] trees and branches that we can go down
+[02:32] and it makes this game really cool
+[02:34] because it's pretty simple to create
+[02:35] obviously for beginners that's what
+[02:37] we're gonna be doing but it's also
+[02:38] really cool and really flexible and you
+[02:40] can kind of make whatever you want out
+[02:41] of it so with that being said we need to
+[02:44] get our coding environment set up here
+[02:45] fortunately for us we're actually gonna
+[02:47] be using a platform called rep lit so
+[02:49] it's rappelled i Tissot repl ite this is
+[02:52] an online browser-based coding
+[02:55] environment and I'm just gonna walk us
+[02:56] through how we can actually set this
+[02:58] environment up and get started right
+[02:59] away without having to download or
+[03:01] install any software so as I mentioned
+[03:03] we're gonna be using an online coding
+[03:05] platform called repli'd so it's spelt
+[03:07] repl dot i t that is the website URL i
+[03:11] will link that in the description as
+[03:12] well but this is a free browser-based
+[03:14] coding environment so what that means is
+[03:16] that the only prerequisite for this
+[03:18] series is that you have a browser and
+[03:20] you have internet connection and it
+[03:22] doesn't really matter what that browser
+[03:23] is in fact you can actually do all of
+[03:25] what I'm gonna be showing you on your
+[03:27] phone so that's really cool you can do
+[03:28] on an iPad any mobile devices which
+[03:31] usually you wouldn't be able to do so
+[03:33] what is replic well really it's just an
+[03:35] online browser-based
+[03:37] IDE now you don't need to know what IDE
+[03:38] stands for what this allows us to do is
+[03:41] just get up and running really quickly
+[03:43] we don't need to install or download
+[03:44] anything and we can just pick a
+[03:45] programming language and start coding so
+[03:48] I'm gonna walk us through this platform
+[03:49] and show us how we can get started but I
+[03:51] just want to pitch a few the features
+[03:52] for this platform because first of all
+[03:54] it's free and I think it's a really cool
+[03:56] thing to use
+[03:56] especially if you're beginner and you
+[03:58] just want to get started really quickly
+[03:59] so you can see that the feature list is
+[04:01] kind of here it has an in-browser
+[04:03] IDE so that's what I'm talking about
+[04:05] with that coding environment it has
+[04:07] real-time collaboration which means you
+[04:09] can actually invite someone to your
+[04:10] project and you guys can work on the
+[04:12] same code at the same time which is
+[04:13] really cool and as github integration
+[04:16] I'm gonna talk about that because most
+[04:18] of you probably don't know github if
+[04:19] you're following this tutorial 50-plus
+[04:22] languages again that's pretty cool so
+[04:23] you can write in whatever you want you
+[04:24] can host and deploy applications there's
+[04:27] bunch of tutorials and learning
+[04:28] resources on this site there's team
+[04:30] plans and then api's and plugins you
+[04:33] might not know some of these things so
+[04:34] don't worry about them
+[04:35] but let's actually get started and
+[04:36] create our first rebel so to get started
+[04:39] you need to go to this link and
+[04:40] obviously sign up if you don't have an
+[04:42] account or log in so I'm gonna log in
+[04:44] but when you sign up it's gonna ask you
+[04:46] to input your favorite programming
+[04:48] language I would recommend you to select
+[04:50] Python it doesn't matter but that's just
+[04:52] something that you will have to go
+[04:53] through to get this set up so I'm gonna
+[04:54] sign in to my account and then we'll be
+[04:56] right back and talk about the actual
+[04:57] platform itself so I just signed into my
+[05:00] repli'd account and now I'm kind of on
+[05:01] the home page here I just wanted to walk
+[05:03] you through some of the features and
+[05:05] kind of things that this site has that
+[05:07] you may not know about or that you might
+[05:08] actually want to use so the first thing
+[05:10] I want to say is that if you just want
+[05:11] to get started the fastest way to do
+[05:13] that is just a hip create a wrap so you
+[05:15] can see there's Python HTML CSS
+[05:17] JavaScript Java these are the languages
+[05:19] I selected it's my favorite programming
+[05:21] languages and to get started just press
+[05:23] one of them and it will boot you up
+[05:24] right into that online coding
+[05:25] environment otherwise you can go to the
+[05:27] new repla tap here and there's like a
+[05:29] bunch of different ways on this site to
+[05:31] make new projects which are kind of
+[05:32] called rebels but this is how you can do
+[05:34] it as well now other than that there's
+[05:36] actually a ton of other things this site
+[05:38] has that aren't involved in kind of a
+[05:40] coding environment side of things so
+[05:42] first of all if I go to this talk tab
+[05:44] here you can see there's actually a
+[05:46] little bit of a kind of community space
+[05:47] here so there's a I want to call this
+[05:49] almost like a mini forum there's a few
+[05:51] different tabs here so there's some
+[05:52] announcements there's challenges
+[05:54] tutorials right you can look at all
+[05:56] these different things which I think are
+[05:57] pretty cool and of course you can make
+[05:58] your own post and then if we actually go
+[06:01] here and we select on our little logo
+[06:03] you can see that's my little drawn
+[06:05] picture of me and I go to profile this
+[06:07] is actually where all of your apples
+[06:09] will stay and where you can kind of have
+[06:11] a little portfolio to show off all the
+[06:12] stuff that you've done so at the end of
+[06:14] this kind of tutorial series you're
+[06:16] gonna have a project right here on your
+[06:18] portfolio that you can just link to and
+[06:20] show off to whoever you want so you
+[06:21] don't have to actually send them the
+[06:23] code you could just send them a link to
+[06:24] your Apple or to your profile and it's
+[06:26] kind of a little portfolio that shows
+[06:28] off the stuff that you've done and I
+[06:29] think that's pretty cool and a really
+[06:31] easy way to kind of share your work with
+[06:32] other people of course if I go back to
+[06:35] the home page you can even see it says
+[06:36] explore transfer
+[06:40] people have worked on and get some
+[06:42] inspiration motivation whatever and then
+[06:44] if you want to learn of course follow
+[06:45] along with some tutorials so the last
+[06:47] thing I'll say is that if you're
+[06:48] interested in working with some
+[06:50] frameworks repla also has that as well
+[06:52] so you can see that there is some game
+[06:54] development frameworks one of my
+[06:55] personal favorites which is PI game here
+[06:57] and then there's GUI development so to
+[06:59] kinter that's a Python module Java swing
+[07:02] I just want to show that there is some
+[07:03] modules and graphics libraries you can
+[07:05] use on here which are pretty cool and
+[07:07] then of course my rattles when you start
+[07:10] creating projects this is kind of your
+[07:11] storage space so the reason I wanted to
+[07:13] point this out is because usually when
+[07:15] you work on a coding project you're
+[07:16] doing it locally that means say you're
+[07:18] out you don't have access to your
+[07:20] computer and you want to work on it
+[07:21] while you're kind of out of luck with
+[07:23] repli'd all of this stuff stores right
+[07:25] on the website so it's pretty easy to
+[07:27] just sign in on your phone or sign in on
+[07:29] your laptop or whatever other device and
+[07:31] just start working on your project right
+[07:32] away so anyways I think that goes gone
+[07:35] through some of the core features of
+[07:36] this site there is of course a few more
+[07:38] but let's actually get started and
+[07:39] create our first rappeling first project
+[07:41] so I'm gonna go here to new rattle and
+[07:44] I'm gonna select Python and give this a
+[07:46] name now the name that I'm gonna give
+[07:48] mine is first game feel free to name
+[07:50] yours whatever you'd like and then just
+[07:52] notice that this will be a public repple
+[07:54] which means it'll show up on your
+[07:56] profile and everyone can see it if you
+[07:58] want to go for private rebels that is
+[08:00] kind of a premium feature but I wouldn't
+[08:02] worry about that we're not making
+[08:03] anything that we care if someone steals
+[08:05] so let's go create rebel and so let's
+[08:08] boot up into our first environment and
+[08:10] I'll just talk about some of the pains
+[08:11] and kind of what exists in here so you
+[08:13] guys know what I'm working with as we go
+[08:15] through this series so there's a bunch
+[08:17] of different things to talk about I'll
+[08:18] go through them quite quickly the first
+[08:20] thing is you can see this pane on the
+[08:21] side is kind of like your menu bar right
+[08:23] so you have this little drop-down list
+[08:25] this toggle is the menu I believe okay
+[08:27] yeah so that's the other menu and then
+[08:29] you have files version control packages
+[08:31] debugger and settings if you know what
+[08:34] those are
+[08:34] great you'll appreciate all of these I'm
+[08:36] not going to talk about them in depth
+[08:38] the first one is files so files is where
+[08:41] you can make your Python files for our
+[08:43] project we're just gonna have one file
+[08:45] but sometimes you'll have multiple files
+[08:47] sometimes you'll have some kind of
+[08:48] project directory so some folders some
+[08:50] other files inside of there so that's
+[08:52] how you kind of navigate that with this
+[08:53] tab here
+[08:54] you can just create them by doing that
+[08:56] then what we have is settings so
+[08:59] settings is what I like to go into right
+[09:00] away whenever I boot up a new editor and
+[09:02] just modify it a bit you can see I've
+[09:04] actually already changed my settings
+[09:06] from light mode which is this to dark
+[09:08] I just prefer dark mode but you guys are
+[09:10] welcome to use whatever you like you can
+[09:12] also change the layout from side to side
+[09:14] to stacked I like side to side better to
+[09:17] do this but again all preference font
+[09:20] size you can change that to huge you can
+[09:22] change that to normal whatever you want
+[09:23] indent type same thing not a big deal I
+[09:26] usually go indent size of four this is
+[09:29] default too and then other than that I
+[09:31] think that's about it you can turn off
+[09:33] the auto completion if you want from
+[09:34] code intelligence but those are the
+[09:36] basic settings next we have the two
+[09:39] panes here so you can see I'm toggling
+[09:41] this bar just by hitting on the same
+[09:42] kind of logo here and now we have the
+[09:44] coding environment on the left hand side
+[09:46] of my screen and our Python console or
+[09:48] shell on the right hand side so this
+[09:50] shell on the right hand side or console
+[09:53] whatever you want to call it is where
+[09:54] our code will actually run so we'll
+[09:56] write our code over here on the left so
+[09:58] maybe we'll do something I'm just
+[09:59] showing you a really quick example like
+[10:01] print hello and when I press this Rodney
+[10:03] button up here it will actually execute
+[10:05] whatever code I wrote here and show it
+[10:07] in the console but another cool thing
+[10:09] with this console is you can clear it
+[10:11] just by hitting that button and then you
+[10:12] can actually write Python code inside of
+[10:14] here so I can do something like print
+[10:19] hello right inside of here and this
+[10:22] won't execute directly inside of here
+[10:24] and we're gonna use this later in the
+[10:25] series so with that being said I'm gonna
+[10:28] change this back to dark mode I think
+[10:29] we're pretty much ready to start coding
+[10:31] so let's actually get into it and kind
+[10:33] of start the tutorial all right so the
+[10:35] first important thing that we need to
+[10:37] understand is how we can actually print
+[10:39] things and get things to show up in the
+[10:41] console so before remember how when I
+[10:43] ran the code we would see some kind of
+[10:45] output right it said like do you want to
+[10:46] play the game or it would tell us some
+[10:48] kind of message so how do we actually go
+[10:50] ahead and do that well the first command
+[10:52] we're gonna learn in python is known as
+[10:54] print so all of the things I'm about to
+[10:56] show you are pretty much called syntax
+[10:58] syntax is really like the grammar of a
+[11:01] programming language it's like where
+[11:03] does the period go where do we have
+[11:04] parenthesis it's just the structure the
+[11:06] way that we write the
+[11:07] if you hear me use the word of syntax
+[11:09] that's what that means but the syntax to
+[11:12] print something out in Python is really
+[11:14] simple we just put print we put an open
+[11:17] parenthesis and a closed parenthesis and
+[11:19] then inside of the print statement we
+[11:21] put a set of single or double quotation
+[11:24] marks and inside of these quotation
+[11:26] marks whatever we want to print to the
+[11:28] screen so you can think of it as like
+[11:30] we're printing a quote right if you
+[11:31] wanted to say that although this is
+[11:32] gonna be referred to as something else
+[11:34] that I'll talk about in a second and
+[11:35] whatever is inside of these quotation
+[11:37] marks that text will just show up in the
+[11:38] console so if I say hello world the
+[11:41] classic first program then let's run and
+[11:44] we get hello world popping up in the
+[11:47] console so this is the easiest way to
+[11:49] print something out there's a bunch of
+[11:50] other ways we can use this statement but
+[11:52] again it's just print open parentheses
+[11:54] and then you need these these double
+[11:57] quotation marks or single quotation
+[11:59] marks it doesn't matter which one but
+[12:00] make sure the set is obviously the same
+[12:02] so you don't go like single quotation
+[12:04] mark double quotation mark that won't
+[12:05] work and then whatever inside of here
+[12:07] that you want to print out so let's
+[12:09] apply this now immediately into our
+[12:11] project like I said the first thing we
+[12:13] want to do in our
+[12:13] choose-your-own-adventure game is
+[12:14] probably introduce the user whoever's
+[12:16] playing to the game right so what I'm
+[12:19] gonna say is welcome
+[12:22] oops if I could type welcome to my first
+[12:26] game now you guys can obviously put
+[12:29] whatever you want inside of here I'm
+[12:30] just gonna say welcome to my first game
+[12:32] maybe you want to be more creative input
+[12:33] the name of your came although we might
+[12:35] not even know what that is yet but don't
+[12:37] worry we can always go back and change
+[12:38] that all right so print welcome to my
+[12:40] first game great so that is the print
+[12:42] now what I need to talk about is
+[12:45] variables and data types you know this
+[12:47] is a really important concept now this
+[12:49] is gonna be a little bit more
+[12:50] theoretical it's hard to apply this but
+[12:52] we definitely need to understand this so
+[12:54] inside of Python we kind of have four
+[12:56] main types of information or data so in
+[12:59] our programming languages we have data
+[13:01] right that's information that we're
+[13:03] maybe going to store that we're gonna
+[13:04] pass around that we're gonna manipulate
+[13:05] if you think of an application where
+[13:08] we're just counting so we're just
+[13:09] counting up well we're gonna have to
+[13:11] have some notion of like what the counts
+[13:13] out right that would be an example of
+[13:14] data that we're gonna store in our
+[13:16] program there's lots of examples of this
+[13:18] but these
+[13:20] this data that we have has different
+[13:22] data types and there's kind of four main
+[13:24] ones that we need to cover so the first
+[13:26] one is screen the second one is int then
+[13:29] we have float and then we have bool now
+[13:32] a string which is represented by STR
+[13:35] I'll actually just type out string here
+[13:36] so you can see it fully is anything
+[13:39] wrapped inside of double quotation marks
+[13:41] or single quotation marks so like below
+[13:45] is an example of a string hi is an
+[13:47] example of a string 989 is an example of
+[13:51] a string anything that's inside of
+[13:53] double or single quotation marks is a
+[13:54] string and strings are just a collection
+[13:57] of characters they're just text right
+[13:59] and usually we're gonna use strings just
+[14:01] to print stuff out to the console
+[14:02] there's a bunch of other use cases of
+[14:04] them of course but for now that's what
+[14:06] we can kind of think of as strings next
+[14:09] we have int now intz are any whole
+[14:11] number so just the number they're not
+[14:13] wrapped in quotation marks or anything
+[14:14] like that just any whole number it could
+[14:17] be negative as well that's totally fine
+[14:18] it could be a really big number any
+[14:20] whole number that does not have any
+[14:22] decimal points is an int otherwise known
+[14:24] as an integer so that kind of follows
+[14:26] our understanding from math so hopefully
+[14:28] that one makes sense
+[14:29] next we have float now a float is any
+[14:32] number that has a floating decimal point
+[14:34] so if I have something like 6.0 that's a
+[14:37] float because we have a decimal point
+[14:39] and then something after we have a
+[14:40] number like 7.5 that's a float negative
+[14:44] 9.8 that's a float and negative 100
+[14:47] point o again if float so even if it's a
+[14:50] dot o which technically is still a whole
+[14:52] number right because 100 o is a whole
+[14:54] number if it has this decimal point
+[14:56] anywhere it's considered a float and
+[14:57] lastly we have a boolean a boolean is
+[15:01] one of two values true or false so these
+[15:05] two exact things that I typed nothing
+[15:07] different about them so the capital T
+[15:09] and the capital F is very important if
+[15:11] you see one of these two things and you
+[15:13] can see they're kind of highlighting in
+[15:14] blue telling us their fancy fancy thing
+[15:17] in the language and those are boolean so
+[15:20] I'll leave this and what I'm gonna call
+[15:21] a comment which is actually interesting
+[15:23] to show you guys so if I do three
+[15:25] quotation marks and then I do another
+[15:27] three quotation marks like this this is
+[15:29] actually what represents a comment or a
+[15:31] multi-line comment
+[15:32] inside of Python this isn't super
+[15:34] important to understand but what this
+[15:36] means is that whatever I wrap inside of
+[15:38] these triple quotation marks and I can
+[15:39] put these anywhere I want
+[15:41] this will just be ignored by my program
+[15:43] so right now we're gonna print this
+[15:44] right and that's gonna work fine but if
+[15:47] I were to wrap this inside of triple
+[15:49] quotation marks we can see it kind of
+[15:50] gets commented out and now that means
+[15:53] our program is just gonna ignore
+[15:54] whatever's inside of these sets of
+[15:56] triple quotation marks so if I run my
+[15:58] program I no longer am printing that out
+[16:00] and there's actually another way to make
+[16:02] a comment as well and that's to use a
+[16:03] pound sign and what this does is simply
+[16:06] comment at one line so we're just
+[16:07] comments out whatever comes after it on
+[16:09] the line this sometimes is useful if you
+[16:12] just want to comment at one line not a
+[16:13] whole block of code like I've done here
+[16:15] so I'll leave this down a little bit at
+[16:17] the bottom of the screen and now will
+[16:19] actually start writing a bit more code
+[16:20] so there we go we understand datatypes
+[16:23] now we need to talk about variables so
+[16:26] variables are essentially a way of
+[16:28] storing data now you can think of a
+[16:30] variable like in math right where we had
+[16:32] like x equals five x equals seven that's
+[16:35] a really similar way that they work here
+[16:37] in programming and to make a variable
+[16:39] just show you a few examples it's quite
+[16:40] easy you simply pick a name for your
+[16:43] variable in this case let's say X you
+[16:45] put an equal sign and on the right hand
+[16:47] side you put some data type or you
+[16:50] assign it equal to another variable or
+[16:52] some other things that we'll talk about
+[16:53] later but essentially you put something
+[16:55] on the right-hand side that you want to
+[16:57] be stored in the variable so in this
+[16:59] case maybe I want my variable X to store
+[17:01] an int which is the value five awesome
+[17:05] there we go that's all I need to do to
+[17:06] make a variable X that stores the value
+[17:08] five now if I actually go ahead and
+[17:10] write another print statement here which
+[17:12] is totally valid we can write as many
+[17:14] print statements as we want what's gonna
+[17:16] happen now is we're gonna print welcome
+[17:18] to my first game we're gonna read the
+[17:20] next line because we do read code top to
+[17:22] bottom most times other than certain
+[17:25] circumstances but you can think that
+[17:27] when we execute the program we read from
+[17:28] the top so left to right top to bottom
+[17:30] that's just the way it works so then we
+[17:32] do this we set X equal to five and now
+[17:36] what I'm gonna do is actually print X
+[17:37] now notice that I didn't surround X in
+[17:40] quotation marks the reason I didn't
+[17:43] surround it in quotation marks is
+[17:44] because it's a variable so a variable
+[17:46] is actually something that I can print
+[17:48] totally fine right inside of the print
+[17:50] statement because I'm not trying to
+[17:52] print out the letter X I'm trying to
+[17:54] print out whatever the value is that's
+[17:56] stored in the variable X so in this case
+[17:58] I'm gonna print out five because x
+[18:00] equals five so if I run this let's have
+[18:02] a look
+[18:02] welcome to my first game five awesome
+[18:04] there we go we now kind of understand
+[18:06] variables so of course I can store other
+[18:09] things in variables too I could store
+[18:11] the value true right this would be
+[18:13] considered a boolean or a bool let's
+[18:15] have a look at this now so now we print
+[18:17] out true and that's kind of the basics
+[18:19] on variables they can store things so
+[18:21] you set a variable name equal to
+[18:23] something there's a few rules with our
+[18:25] variables the first has to do with their
+[18:27] naming so when we create a variable all
+[18:29] we kind of have to do is just type
+[18:31] something out and set it equal to
+[18:32] something else but the thing that we
+[18:34] type out or the variable name has to
+[18:37] follow these rules it can only contain
+[18:39] lowercase and uppercase letters
+[18:42] underscores and numbers so it cannot
+[18:45] contain any special characters other
+[18:46] than an underscore and it cannot start
+[18:49] with a number so something like hello
+[18:51] one is totally valid hello one equals
+[18:54] nine awesome hello one underscore
+[18:56] totally balanced but as soon as I go one
+[18:58] hello
+[18:59] note you can see we're getting this red
+[19:01] squiggly line not allowed we cannot
+[19:03] start a variable with a number but I can
+[19:06] go ahead and do something like that
+[19:07] that's fine I can put a number in
+[19:08] between just follow those rules and
+[19:11] typically you don't really use numbers
+[19:12] in your variable names you're just gonna
+[19:14] use some text maybe uppercase and
+[19:15] lowercase letters and in Python if you
+[19:18] want to do a space because there's no
+[19:19] spaces allowed in variable names just
+[19:21] use an underscore so something like
+[19:23] hello underscore world this is the
+[19:25] convention for making variables you
+[19:27] separate anything that's kind of two
+[19:28] words using an underscore so let's say
+[19:30] hello equals nine right and then we can
+[19:32] print out hello and we'd get the value
+[19:34] not now of course we can make a lot of
+[19:36] other variables too we can say the
+[19:37] variable yes equals and maybe it's equal
+[19:40] to the string hello I can actually use
+[19:42] something crazy and say hello equals yes
+[19:45] now what that's saying is that hello
+[19:47] this variable hello is equal to whatever
+[19:50] is stored in the variable yes so in this
+[19:53] case Hello will be equal to hello funny
+[19:56] right but that's how that will work so
+[19:58] we can assign variables to other very
+[19:59] we can do something like hello equals
+[20:02] hello +9 totally thought and in fact
+[20:06] what I'm gonna do now excuse me is I'm
+[20:09] gonna try to actually show you how we
+[20:11] can ask the user for some input and
+[20:13] store what they type in in a variable so
+[20:16] now we're on to the next part which is
+[20:18] getting user input so to get user input
+[20:20] what that means is that in the console
+[20:22] here we're gonna let the user type
+[20:23] something in because right now if I run
+[20:25] this you see that it says welcome to my
+[20:27] first game and then the program kind of
+[20:28] just ends after that ideally I would
+[20:30] like to ask the user what their name is
+[20:32] and store that in a variable so let's go
+[20:35] ahead and do that I'll just print it out
+[20:36] and then I'll talk about how this
+[20:38] actually works so I'm gonna make a
+[20:40] variable called name the reason I've
+[20:42] called it name is because it's going to
+[20:43] store my user's name and usually we want
+[20:45] to name our variable something that are
+[20:47] meaningful and I've set that equal to
+[20:48] input and inside of this here I'm gonna
+[20:51] put a string that is the question I want
+[20:53] to ask the user so what is your name
+[20:57] question mark now notice I did a little
+[20:58] space at the end try to think of why I
+[21:01] would have done this space in just a
+[21:02] second but just keep in mind I did do
+[21:04] this space just remember that so now
+[21:07] what I'm gonna show you is what happens
+[21:09] when I run this program so let me move
+[21:10] this over here let's zoom in welcome to
+[21:13] my first game what is your name let me
+[21:16] type Tim all right so I type Tim and
+[21:18] notice that here the cursor is going and
+[21:20] I can type stuff right into the console
+[21:22] that's because I used this input key so
+[21:25] what this says if I have input and then
+[21:28] I put what's known as a prompt inside of
+[21:30] here then whenever we read this line of
+[21:32] codes when our program actually reads
+[21:34] this it will say okay print this out and
+[21:37] then wait for the user to hit enter so
+[21:40] let them type something whenever after
+[21:42] we print this out so on the same line as
+[21:44] what is your name and then as soon as
+[21:45] they hit enter we're actually gonna take
+[21:47] whatever they typed and we're gonna
+[21:49] store it in the variable name so if I
+[21:51] type Tim like that what actually ends up
+[21:54] happening and I go off the zoom back out
+[21:56] here is that the variable name is gonna
+[21:58] be equal to Tim because I typed Tim and
+[22:01] then if I type Joe the variable name is
+[22:04] gonna be equal to Joe because I typed
+[22:06] Joe so to prove that's you let me print
+[22:08] out a name because we can print out
+[22:10] variables right so this variable should
+[22:12] equal the name we
+[22:12] and then let's just print it out so
+[22:14] let's have a look what is your name
+[22:16] Tim and there we go a prints out Tim now
+[22:19] notice I'm not just lying to you here if
+[22:20] I type Jo it prints up Jo so we are
+[22:23] grabbing and storing the user's name by
+[22:25] using this input tag now the next thing
+[22:28] I actually want to grab from the user is
+[22:29] their age we're gonna do a cool thing
+[22:31] here that make sure there's certain age
+[22:33] before we let them play the game so
+[22:35] let's say age equals input and then what
+[22:37] do you guys think we should put inside
+[22:39] of here well have a think about it for a
+[22:40] second because I am about to start
+[22:42] typing pause if you need to but I'm
+[22:44] gonna put what is your age and now
+[22:47] what's gonna happen is we're gonna ask
+[22:48] the user for their name then we're gonna
+[22:50] ask the user for their age and they're
+[22:52] gonna type both of those values in so
+[22:54] let's run this and let's say what is
+[22:55] your name Tim what is your age 19 boom
+[22:58] stops there we go now age will store 19
+[23:01] and name will store Tim so if I want to
+[23:04] show you those two things what I can do
+[23:06] is actually print them out and I'm gonna
+[23:08] show you the last thing kind of for this
+[23:10] video is how we print out multiple
+[23:12] things on the same line so let's say I
+[23:14] wanted to say something like hello Tim
+[23:16] you are 19 right so I want to print
+[23:19] their name and then I want to print
+[23:20] their age and I want to combine that
+[23:22] with a few other words just to kind of
+[23:23] welcome the user well how do I do that
+[23:25] there's a few different ways to do it
+[23:28] but the way that I'm going to show you
+[23:29] is kind of the most common and it's
+[23:30] something like this essentially you can
+[23:33] separate anything that you want to print
+[23:35] on the same line with a bunch of commas
+[23:36] so I can do something like hello comma
+[23:39] name and what this will do is print out
+[23:42] the string hello that we've already
+[23:43] talked about we understand we can print
+[23:45] out this and we'll show the text then
+[23:47] we'll print out whatever the variable
+[23:48] name is so whatever is stored inside of
+[23:50] there and this comma will automatically
+[23:52] put a space in between so hello space
+[23:55] name where name will be equal to
+[23:57] whatever we typed in then I can say
+[24:00] hello Tim you are and then I'll put age
+[24:05] comma years old like that and there we
+[24:10] go that's all we need to do to print out
+[24:12] hello
+[24:12] whatever their name is you are whatever
+[24:14] their ages years old
+[24:15] so we've just separated them by commas
+[24:17] and now it'll print all those things out
+[24:19] so let's have a look here let's go Tim
+[24:21] 19 hello Tim you are 19 years old and
+[24:24] let's say
+[24:26] actually let's just leave it like that
+[24:28] for now and I think with that being said
+[24:31] that's pretty much all I need to cover
+[24:32] for this first video so I hope that you
+[24:35] guys are getting a little bit excited
+[24:36] about this I know we haven't gotten too
+[24:37] far yet but these things will start to
+[24:39] accelerate and get faster and faster and
+[24:41] faster I just really need to give you
+[24:42] guys the basics before we can jump in
+[24:44] too deep so in the next video we're
+[24:46] gonna actually do a lot more stuff we're
+[24:48] gonna actually get the game starting to
+[24:50] function hopefully talk a bit about
+[24:51] conditions and some arithmetic and then
+[24:53] of course in the final video we'll be
+[24:55] wrapping up the game doing all the
+[24:56] finishing touches and doing a lot more
+[24:58] work so if you guys enjoyed make sure
+[24:59] you leave a like subscribe and of course
+[25:01] stay tuned for the next videos in this
+[25:03] series

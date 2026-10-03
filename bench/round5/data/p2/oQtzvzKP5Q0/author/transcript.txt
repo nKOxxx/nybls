@@ -1,0 +1,219 @@
+[00:06] so we've reached our last talk
+[00:09] um I'd like to invite Assaf Dr Assaf
+[00:13] hugi a senior lecturer at the school of
+[00:15] computer science at
+[00:17] Ariel he will talk about leveraging the
+[00:19] triple exponential moving average for
+[00:22] fast adaptive moment
+[00:24] estimation Assaf completed his PhD at
+[00:27] the techon and completed his postto at
+[00:29] Stanford University we received a young
+[00:31] investigator award from the NCI NIH uh
+[00:36] please welcome me in joining please join
+[00:41] [Applause]
+[00:49] us hi uh so first thank you very much
+[00:52] for inviting me yes so I will present
+[00:55] our project about
+[00:58] um developing a new Optimizer which
+[01:02] actually is based on a tri exponential
+[01:05] moving
+[01:13] average
+[01:15] okay so what is exponential moving
+[01:18] average so all most most adaptive
+[01:22] Optimizer are actually based on
+[01:24] exponential moving average the main
+[01:27] advantage is that it can actually smooth
+[01:29] out the the the spikes in the the the
+[01:32] noise in the data but the main
+[01:35] disadvantage and limitation is that it's
+[01:37] actually can
+[01:40] cause an
+[01:41] inherent leg comparing with the real
+[01:44] data so here you can see the real
+[01:48] data and the dash line is actually the
+[01:52] estimation and you can see the leg
+[01:54] between the real data and the
+[01:58] estimation we we also see that H there
+[02:01] are several moving average the simple
+[02:03] moving average is okay the exponential
+[02:06] moving average is much better it's
+[02:08] actually estimate the trend of the data
+[02:11] much better but it still has
+[02:13] some leg in com comparing with the data
+[02:18] itself so our goal is actually to
+[02:21] present a new Optimizer an Adaptive
+[02:23] Optimizer that can actually be
+[02:25] responsive to changes in the quick
+[02:29] changes in the data much more than other
+[02:32] current exponential moving average and
+[02:36] very very important we want to reduce
+[02:38] the leg as much as we
+[02:41] can so we did it by actually combine a
+[02:45] approaches from optimization and from
+[02:48] Finance if you want to do that there are
+[02:50] two directions to do
+[02:52] that the first one is a to take
+[02:56] optimization methods in order to do a
+[02:58] lot of money
+[03:01] but we are in Academia and in Academia
+[03:03] this is more the case and not the case
+[03:05] that you saw before so the is the the
+[03:09] direction that we took is actually to
+[03:11] take some idea from Finance in order to
+[03:15] improve the
+[03:17] optimization so in
+[03:19] finance there is the double exponential
+[03:22] moving average that actually was able to
+[03:25] show much more
+[03:27] accurate ER trend ident ification
+[03:31] comparing with the EXP with the
+[03:34] regular exponential moving average by
+[03:36] the way exponential moving average is
+[03:37] something that many current Optimizer
+[03:40] actually use like Adam and all those
+[03:43] adaptive
+[03:47] optimizers so our Fame Optimizer fast
+[03:51] adaptive moment estimation is the first
+[03:54] one to use I ORD I order Emma it is a B
+[04:00] and inspired by Finance the difference
+[04:04] the main difference comparing with
+[04:07] Finance is that it actively guides the
+[04:10] optimization so it's actually change the
+[04:13] network weights and it's actually
+[04:16] influence and affect the learning
+[04:18] process while in finance it's only a
+[04:21] passive indicator that actually say okay
+[04:24] this is the data this is the trend
+[04:26] probably the next few data points will
+[04:28] be like that but it's not influence the
+[04:30] trend and that's the main the main
+[04:34] change and the main
+[04:36] contribution and we H actually analyze H
+[04:42] we we analyze 15 different architectures
+[04:45] six different data sets different tasks
+[04:48] also and we compare our Optimizer with
+[04:52] other common use optimize Optimizer like
+[04:55] Adam SGD Adam W and you will see in a
+[04:59] moment
+[05:02] I will not get I will not give you too
+[05:05] many details about that one the full
+[05:07] details are actually in our paper but in
+[05:11] summary the the the issue is that X is
+[05:13] the real data and miix is the smooth
+[05:16] version of the data by using the
+[05:19] exponential moving average when we take
+[05:22] this subtraction we get actually MMA 1
+[05:25] minus mma2 in general MMA K is to do K *
+[05:29] m on Emma if you want the double the
+[05:33] double exponential moving average which
+[05:35] is the dma we actually take this
+[05:38] subtraction and add it to emma1 which is
+[05:41] the basic one and the same way we are
+[05:44] doing for TMA so this is actually the
+[05:47] final equation is the equation for Thea
+[05:49] which is the triple exponential moving
+[05:53] average now we want to as
+[05:57] every Adam for example
+[06:00] has two different moments right it has
+[06:03] the first moment and the second moment
+[06:06] and those two first equations are
+[06:09] actually the equations of Adam of the
+[06:12] exponential moving
+[06:14] average similarly we can do that for
+[06:16] Emma 2 and similarly we can do that for
+[06:19] Emma 3 and as you remember this is the
+[06:22] equation for TMA which is a integration
+[06:25] of all those EMAs with some factors that
+[06:29] actually scale all those uh
+[06:32] sizes so if we take all those equations
+[06:36] and we put it we put them in the
+[06:38] equation of Thea we can get those two
+[06:41] equations and those two equations are
+[06:43] the new equations for the first moment
+[06:45] and the second moment when we are using
+[06:48] the triple exponential moving
+[06:51] average and here you can see
+[06:54] some simulations so for the the left
+[06:58] image is actually
+[07:00] the the purple line is actually the the
+[07:03] true
+[07:04] data the red one is actually the
+[07:06] exponential moving average and the blue
+[07:09] one is the thema is our Optimizer and
+[07:12] you can see that it's actually can
+[07:14] smooth the data but it's also reduce the
+[07:16] legging and actually estimate the data
+[07:19] Trend much
+[07:20] better the Right image is all those
+[07:23] components that I show you about the leg
+[07:26] correction and when we actually combine
+[07:29] find all them together we can get the
+[07:32] thema which is the Blue
+[07:37] Line okay some results so uh it's
+[07:42] important to say that everything we
+[07:44] actually train from scratch because we
+[07:46] wanted to evaluate the true and the pure
+[07:50] impact of our Optimizer on the
+[07:54] classification or object detection it
+[07:56] depends on the task and for example we
+[08:00] tried it on image net by using reset 18
+[08:04] we tried it also on cifer 100 by using
+[08:08] the visual Transformer and efficient Bal
+[08:12] actually the table States
+[08:16] all all architecture that we actually
+[08:18] tested only for c for we also tried Coco
+[08:23] and Pascal and other data sets you can
+[08:26] see that we also compare it to other man
+[08:29] and also here you can see that we
+[08:32] compare it to Adam W gr bound and other
+[08:36] optimizers common use optimizers and you
+[08:40] can see that we actually got better
+[08:42] accuracy we got smoother Trend
+[08:45] identification and we got actually
+[08:48] faster convergence so all those three
+[08:51] are
+[08:52] actually the the the results of the
+[08:56] impact of our uh triple exponential
+[08:59] moving average based Optimizer and also
+[09:02] in the table you can see that actually
+[09:04] in 83% of the architectures we actually
+[09:08] were better than Adam and
+[09:12] Sgt we also tried it on Coco and on
+[09:15] Pascal this is for task of object
+[09:17] detection We compare it to Adam and Adam
+[09:20] W in Coco we use YOLO v5s and in Pascal
+[09:25] we also use
+[09:26] v5m and visual Transformer and you can
+[09:30] see that the results we actually
+[09:31] significantly improve the results of
+[09:35] the comparing with the other
+[09:40] optimizers so we in our paper we also
+[09:44] did some ablation study the first one is
+[09:47] actually uh to compare our Fame with
+[09:51] Adam which is the um first order
+[09:55] exponential moving average and the
+[09:57] partial frame is actually when we took
+[09:59] the H Triple exponential moving average
+[10:03] only for the first moment not for the
+[10:05] second one and you can see that actually
+[10:08] to do that on both equations is much
+[10:11] better and we also did it did another
+[10:14] ablation study where we compare to
+[10:18] different orders so we compare it to the
+[10:21] exponential moving average like Adam We
+[10:23] compare to Dema which is the double
+[10:25] exponential and we compare to kma which
+[10:28] is the fourth order order and you can
+[10:30] see that in our case we actually the the
+[10:33] results are actually
+[10:38] better yes so uh just to conclude so uh
+[10:42] we we H present a new Optimizer I order
+[10:46] exponential moving average Optimizer we
+[10:49] actually did it we actively uh change
+[10:53] the r and affect the learning process
+[10:58] and we got much more
+[11:01] robust
+[11:02] accurate performance for every test that
+[11:05] we actually tried and comparing with
+[11:08] other optimizers
+[11:11] [Applause]

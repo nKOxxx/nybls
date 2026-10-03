@@ -1,0 +1,206 @@
+[00:00] the screen on the iphone 11 may have
+[00:01] been strengthened through a dual ion
+[00:03] exchange process but
+[00:04] it's not indestructible drops can cause
+[00:06] cracked and shattered screens but
+[00:08] replacing the screen in your iphone 11
+[00:09] is actually pretty easy and you don't
+[00:11] need to rely on apple to do it for you
+[00:13] for this repair you'll need an eye
+[00:15] opener a set of ifixit opening picks
+[00:17] a suction handle or ice clack a spudger
+[00:20] tweezers
+[00:20] and the following screwdriver bits a p
+[00:22] tube pentalobe bit
+[00:24] a y triple zero bit and a phillips
+[00:27] warning opening the iphone's display
+[00:29] will compromise its waterproof seals
+[00:31] have replacement seals ready before you
+[00:33] proceed past this step or take care to
+[00:35] avoid liquid exposure if you reassemble
+[00:37] your iphone without replacing the seals
+[00:39] before you begin your repair discharge
+[00:41] your battery to below 25
+[00:42] a charged lithium-ion battery can catch
+[00:44] fire and or explode if you accidentally
+[00:46] damage it while you're doing this repair
+[00:48] power off your phone and then remove the
+[00:50] two p2 pentalobe screws at the bottom
+[00:52] edge of the phone near the charging port
+[00:54] the iphone's display is secured with
+[00:56] some adhesive
+[00:56] to soften the adhesive you need to place
+[00:58] a heated eye opener on the bottom edge
+[01:00] of the phone
+[01:01] and leave it there for about a minute if
+[01:02] you have a cracked display suction cups
+[01:04] might have a hard time attaching to the
+[01:06] glass
+[01:06] if you're having trouble getting them to
+[01:08] stick cover the display with a piece of
+[01:10] clear packing tape if you have an ice
+[01:11] clack on hand the next step will be easy
+[01:13] but if you only have an ifixit suction
+[01:15] handle follow the opening procedure on
+[01:17] the guide at ifixit.com
+[01:19] position the cups of the ice clock near
+[01:20] the bottom edge of the iphone one on the
+[01:22] front
+[01:22] and one on the back and then press the
+[01:24] cups firmly into place
+[01:26] making sure the suction engages hold on
+[01:28] to your iphone securely and close the
+[01:30] handles of the ice clock so it slightly
+[01:31] separates the screen from the rear case
+[01:33] of your phone
+[01:34] but be careful don't try and separate
+[01:36] the whole thing we're only trying to
+[01:37] make a gap for the next step
+[01:39] when you see a small gap appear insert
+[01:40] an opening pick into the gap under the
+[01:42] display to make sure the adhesive
+[01:44] doesn't read here
+[01:45] once inserted slide the opening pick
+[01:47] around the lower left corner
+[01:48] and up the left edge of the iphone make
+[01:50] sure you slice through all the adhesive
+[01:52] holding the display in place
+[01:53] just be careful not to insert the pick
+[01:55] too far you could damage the internals
+[01:57] and you don't want to make this a
+[01:58] two-part repair to you
+[01:59] take your pick and insert it again at
+[02:01] the bottom edge but this time you
+[02:02] guessed it slide it up the right side of
+[02:04] the phone to continue separating the
+[02:06] adhesive
+[02:06] the top edge of the display is held on
+[02:08] with both adhesive and clips
+[02:10] so gently pull the right side of the
+[02:12] display down slightly towards the
+[02:13] lightning port
+[02:14] and insert your pick in the top right
+[02:16] corner while gently pulling down slide
+[02:18] the pick across the top edge of the
+[02:19] iphone
+[02:20] and cut all the adhesive in the way now
+[02:23] all the adhesives should be separated
+[02:25] you can open the iphone up by swinging
+[02:26] the display
+[02:27] up from the left side kinda like the
+[02:29] back cover of the book
+[02:31] just be careful and don't try and lift
+[02:32] it all the way off it's still attached
+[02:34] to the phone via ribbon cables
+[02:36] next grab something for you to prop up
+[02:37] the display like an old iphone box and
+[02:39] if you want you can even use a rubber
+[02:41] band to hold it there
+[02:42] you'll need your y triple zero bit to
+[02:44] remove the three screws securing the
+[02:45] battery connector in place
+[02:50] and then use some tweezers to remove the
+[02:52] bracket from the iphone
+[02:56] with the pointy tip of your spudger or a
+[02:57] clean fingernail pry the battery
+[02:59] connector up and away from its socket on
+[03:01] the logic board
+[03:02] grab your y triple zero again and remove
+[03:04] the five screws from the logic board
+[03:05] cover bracket
+[03:07] [Music]
+[03:15] and use your tweezers to remove the
+[03:17] bracket disconnect the lcd panel cable
+[03:19] the digitizer and the front panel
+[03:21] assembly connector with your spudger or
+[03:23] clean fingernail
+[03:23] once those are disconnected you can free
+[03:25] the display from the rest of the phone
+[03:27] at the top of the display we need to
+[03:28] remove the front assembly begin by
+[03:30] removing four screws
+[03:32] three being phillips and one y triple
+[03:34] zero
+[03:36] use the point of your spudger and gently
+[03:38] pry up the top edge of the speaker
+[03:39] and flip the speaker assembly down and
+[03:42] away from the top edge of the display
+[03:43] but don't pull it out yet it's still
+[03:45] held in place by a cable
+[03:46] using your eye opener heat up the top
+[03:48] front of the display for about one to
+[03:50] two minutes so that we can soften the
+[03:51] adhesive holding down the sensors
+[03:53] then carefully slide the edge of your
+[03:55] opening pick underneath the flex cable
+[03:56] making sure to get under the microphone
+[03:58] slowly twist the pick to separate the
+[04:00] microphone lifting it up
+[04:02] just be really careful with your
+[04:04] tweezers slide the small bracket
+[04:06] straight up and off the ambient light
+[04:07] sensor
+[04:09] then use the same tweezers to wiggle the
+[04:11] ambient light sensor from its notch in
+[04:13] the display
+[04:14] don't pull it off the display though
+[04:16] it's still attached via the flex cable
+[04:18] working from left to right slide your
+[04:20] pick beneath the flex cable and
+[04:21] underneath the proximity sensor flood
+[04:23] illuminator module
+[04:24] gently wiggle and lift the earpiece
+[04:26] speaker and front sensor assembly to
+[04:28] separate it from its notch in the front
+[04:29] panel
+[04:30] once everything is free set aside your
+[04:32] front panel assembly as you'll need to
+[04:33] transfer this part to your new display
+[04:36] with your new display in hand grab your
+[04:37] earpiece speaker and front sensor
+[04:39] assembly
+[04:40] gently press the proximity sensor and
+[04:42] flood illuminator into the respective
+[04:44] slots on the display
+[04:46] next with some tweezers slide the
+[04:48] ambient light sensor back into place
+[04:49] and place its bracket straight onto it
+[04:52] with your finger gently press the
+[04:54] microphone back into place
+[04:56] and press the flex cable below the
+[04:57] microphone onto the display making sure
+[04:59] it's all well adhered
+[05:01] you can also use a spudger for this step
+[05:03] now you can flip the speaker assembly
+[05:05] over and reinstall the four screws
+[05:06] securing the front assembly in place
+[05:12] before you attach your display you need
+[05:13] to add new adhesive so you can retain
+[05:15] water resistance in your phone
+[05:17] we have a video on how to do that and
+[05:19] we'll link to it in the description
+[05:20] below
+[05:20] bring your display over to your phone
+[05:22] and with your clean finger or spudger
+[05:24] reconnect all the cables from the
+[05:26] display back onto the logic board
+[05:32] now you can connect the battery again
+[05:36] once finished lay the bracket that
+[05:38] covers the connectors back on and screw
+[05:39] it back into place
+[06:00] if your display still has the adhesive
+[06:02] liner go ahead and remove it
+[06:03] now we're ready to lay the display back
+[06:05] down on the phone carefully lower the
+[06:07] display and align the clips along the
+[06:09] top edge
+[06:10] and then carefully press the top edge
+[06:11] into place before you press the rest of
+[06:13] the display down
+[06:14] if you catch some resistance check the
+[06:16] condition of the clips around the
+[06:18] perimeter of the display
+[06:19] and make sure they're not bent
+[06:22] now go ahead and screw back in the
+[06:24] pentalobe screws
+[06:37] you
