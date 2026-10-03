@@ -196,8 +196,37 @@ def looks_degenerate(segs: list[tuple[float, str]]) -> str | None:
     for a, b in zip(lines, lines[1:]):
         longest = longest + 1 if a == b else 1
         worst = max(worst, longest)
-    if worst >= 12:
+    if worst >= 12 and worst / len(lines) >= 0.15:
         return f"one line repeated {worst} times consecutively, the model looped"
+    # A repeated line only condemns the file when the run is a meaningful share
+    # of it. Measured counter-case: a 6-hour event stream re-aired its "we'll
+    # be right back" holding card every 30 seconds for the whole intermission -
+    # 160 consecutive identical lines, 2% of the transcript - while 4h22m of
+    # real speech kept the line ratio and vocabulary far above every other
+    # gate. Calling that a model stall told the user to throw away a healthy
+    # transcript. An isolated stall inside an otherwise varied transcript still
+    # has to survive the ratio gate above and the rate gates below, which is
+    # where a real stall shows up anyway.
+
+    # The same stall can happen inside a single line: mid-speech audio the
+    # model cannot resolve comes back as one sentence with the same phrase
+    # stamped three or more times ("...we're going to have a lot of people,
+    # you know, we're going to have a lot of people..."). Measured on a 6-hour
+    # stream: one line in 6,481, invisible to every other gate - line ratio and
+    # vocabulary were healthy, and the consecutive-run check needs whole lines
+    # to match, which this line never does. Three repeats of a five-word window
+    # is far past natural emphasis; "it works, it works" tops out at two.
+    for ts, text in segs:
+        toks = text.lower().split()
+        if len(toks) < 15:
+            continue
+        counts: dict[tuple[str, ...], int] = {}
+        for i in range(len(toks) - 4):
+            gram = tuple(toks[i:i + 5])
+            counts[gram] = counts.get(gram, 0) + 1
+            if counts[gram] >= 3:
+                return (f"a phrase repeats {counts[gram]} times inside one line "
+                        f"({_fmt(ts)} {text[:60]!r}), mid-speech hallucination")
 
     # These go last because they are the general case and the checks above are
     # specific. They catch what those cannot: a transcript of varied nonsense
