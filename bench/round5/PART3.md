@@ -2,22 +2,24 @@
 
 Run 2026-10-04 on Fable 5.1 after the usage reset (the first launch on 2026-10-03 died on
 credits with no output; nothing from it survives). Artefacts, notes and the mechanical
-grades are in `part3/` (`GRADES.txt` is `grade_part3.py part3`, re-runnable).
+grades are in `part3/` (`GRADES.txt` is `grade_part3.py part3`, re-runnable; compiled
+binaries are not tracked).
 
 ## Silent C spinning cube (p09i_hoFdd0), rubric of 10
 
 | arm | grade | compiles | what it missed |
 |---|---|---|---|
 | N | 7 | yes | distanceFromCam, the face characters, the timing/escape idiom |
-| T | 2 | yes | everything but compiling: a generic cube, none of THIS video's constants |
-| A | **10** | yes | nothing |
+| T | 2 | yes | wrote an explicit placeholder ("nothing in this file is determined by the video"), compiling but empty of content: an honest abstention, scored as such |
+| A | 9 | yes | one face character: it merged two faces into `;`, five distinct characters where the video has six |
 | B | **10** | yes | nothing |
 
 B spent 51 images (81,857 visual tokens) to reach 10/10 here, against 20 images for the
 same video's question answering: reproducing a whole program needs every constant and
 the loop structure, and the protocol kept buying frames until it had them. A reached
-the same 10/10 from its fixed 30 frames, because this video's code is on screen almost
-continuously and a uniform grid cannot miss it. **N's 7/10 from the title alone** is
+9/10 from its fixed 30 frames, because this video's code is on screen almost
+continuously and a uniform grid cannot miss much of it; the one point it dropped is a
+face character the grid never caught legibly. **N's 7/10 from the title alone** is
 the clearest instance in the whole benchmark of what a transcript or a bare URL buys an
 agent on a famous pattern: the "spinning ASCII cube in C" is a known program, and the
 model reconstructed most of it from memory. It is a cube, not this cube.
@@ -41,12 +43,18 @@ rather than repaired in the data.
 
 ## Predictions
 
-- **P19** (B >= A >= T >= N on both): cube, B = A = 10 > T = 2 but N = 7 > T, so the
+- **P19** (B >= A >= T >= N on both): cube, B = 10 >= A = 9 > T = 2 but N = 7 > T, so the
   T >= N clause **fails**; Python, all tied under the registered rubric, trivially
   holds, uninformatively. **Fail**, and the failure is the same finding as Part 2's
   genre-inference partials: on a famous pattern, prior knowledge beats an empty
   transcript.
 - **P20** (silent C: T <= 3, B >= 8): 2 and 10. **Pass.**
+
+**Correction (2026-10-04, addendum re-review, Chen).** The first revision of this file
+said the transcript arm wrote "a generic cube" and scored A 10/10. Both were wrong: T
+wrote a placeholder, and the grader's six-character check tested only three characters,
+so A's merged face went unnoticed. Grader fixed to require all six distinct literals,
+GRADES.txt regenerated; A is 9/10. No prediction outcome changes.
 - **P21** (Python: T within 2 of B): 2 and 2 under the registered rubric. **Pass**, but
   only because the rubric failed; under the post hoc reading T and B are identical, which
   is what the prediction meant. Reported as a pass with that caveat.

@@ -177,9 +177,9 @@ Stated up front, because a claim that cannot fail is not a claim:
   addendum (2026-10-04, `bench/round5/AM.md`, `PART3.md`) ran the long-promised cost-matched
   control, a uniform grid at nybls's own image count with 18% more tokens: 104/128 against
   nybls's 125, the whole loss on screen-only and mixed items; and a two-video "reproduce the
-  program" pilot in which nybls and the 30-frame grid both rebuilt a silent C program
-  exactly, the transcript arm wrote a generic one, and the title-only arm wrote 7/10 of it
-  from memory.
+  program" pilot in which nybls rebuilt a silent C program exactly (10/10), the 30-frame
+  grid reached 9/10, the transcript arm wrote an explicit placeholder, and the title-only
+  arm wrote 7/10 of it from memory.
   Round 1 (`bench/RESULTS.md`, 2026-09-01, n=1): iterative 10/10 vs one-shot 5/10 at
   4.2x fewer visual tokens. Round 2 (`bench/RESULTS_round2.md`, 2026-09-02, n=3 with
   a tightened control that could not zoom): **the margin did not replicate**, 25/30

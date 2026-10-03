@@ -9,3 +9,4 @@ brand/nybls_180.png
 dist/
 build/
 *.egg-info/
+bench/round5/part3/**/a.out
