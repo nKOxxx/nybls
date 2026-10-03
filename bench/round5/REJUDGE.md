@@ -36,6 +36,12 @@ An earlier revision of this file understated this list as four items, claimed ev
 conclusion sentence survived, and claimed no A or B item was involved; all three
 statements were wrong and were corrected by the run 025 re-verification.
 
+**Third-party content policy.** Usernames and other personal strings that appear on
+screen in the public source videos (for example a commenter handle visible in a frame)
+are quoted screen content: the arms wrote them as read, and packs are not edited after
+judging. The push-time pseudonymity re-grep (gate G3) covers the author's own
+identifiers only.
+
 **Result of record (replaces the first judging; first judging retained in `data/judge_p2/`).**
 
 | arm | first judging | re-judged (of 128) | % | abstained | wrong | fabricated |
