@@ -152,7 +152,7 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   same query: -uJAz0fmPOY (genre 8, primary query, rank 3, 729 s, 1080p, en), the first
   quota-filled candidate that passes every filter when re-evaluated. Recorded in SELECTED.md.
 - **D7 (2026-10-06, at probe).** OH-5LJFiYHA (genre 1, Korean lecture) stays UNRELIABLE
-  under `--model turbo` as well (one line repeated 28 times; probe's own flag). The video is
-  kept: the tool's contract for an unreliable transcript is "the frames are the only carrier",
-  and that is exactly the case the benchmark should include. Arm T receives the same flagged
-  transcript. Reported per video.
+  under `--model turbo` as well: probe's flag fired on one line repeated 28 times in a row.
+  Inspection of the file shows 688 lines of real Korean speech otherwise, so the flag marks a
+  looping stretch, not an empty transcript. The video and the flagged transcript are kept as
+  the tool produced them; arm T receives the same file. Reported per video.
