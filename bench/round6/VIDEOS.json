@@ -1,0 +1,219 @@
+{
+ "J7DzL2_Na80": {
+  "stratum": "S",
+  "genre": 1,
+  "duration_s": 2389,
+  "height": 480,
+  "lang": "en-US"
+ },
+ "OH-5LJFiYHA": {
+  "stratum": "S",
+  "genre": 1,
+  "duration_s": 1868,
+  "height": 1080,
+  "lang": "ko"
+ },
+ "5bVQqrzjCI8": {
+  "stratum": "S",
+  "genre": 2,
+  "duration_s": 1039,
+  "height": 1080,
+  "lang": "en"
+ },
+ "2TvP0aXC4Ss": {
+  "stratum": "S",
+  "genre": 2,
+  "duration_s": 1265,
+  "height": 1080,
+  "lang": "en"
+ },
+ "vRaghhAFsFo": {
+  "stratum": "S",
+  "genre": 3,
+  "duration_s": 1176,
+  "height": 1080,
+  "lang": "fr"
+ },
+ "J8PEymuDf6A": {
+  "stratum": "S",
+  "genre": 3,
+  "duration_s": 691,
+  "height": 1080,
+  "lang": "fr"
+ },
+ "qVIzSMux720": {
+  "stratum": "S",
+  "genre": 4,
+  "duration_s": 2190,
+  "height": 720,
+  "lang": "ar"
+ },
+ "qSIX7qvPmlo": {
+  "stratum": "S",
+  "genre": 4,
+  "duration_s": 3300,
+  "height": 720,
+  "lang": "ar"
+ },
+ "Xxq8hZc6mws": {
+  "stratum": "S",
+  "genre": 5,
+  "duration_s": 1234,
+  "height": 720,
+  "lang": "en"
+ },
+ "0oJG3EkcR2o": {
+  "stratum": "S",
+  "genre": 5,
+  "duration_s": 1397,
+  "height": 2160,
+  "lang": "en-US"
+ },
+ "AvCFhznItLU": {
+  "stratum": "S",
+  "genre": 6,
+  "duration_s": 696,
+  "height": 1080,
+  "lang": "en"
+ },
+ "n0VSqz69k3Q": {
+  "stratum": "S",
+  "genre": 7,
+  "duration_s": 478,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "y08TrAsHZzI": {
+  "stratum": "S",
+  "genre": 7,
+  "duration_s": 598,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "DVx22QXGTT4": {
+  "stratum": "S",
+  "genre": 8,
+  "duration_s": 1341,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "WjUeusWRXp4": {
+  "stratum": "S",
+  "genre": 8,
+  "duration_s": 907,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "pQC3JsbgaTw": {
+  "stratum": "S",
+  "genre": 9,
+  "duration_s": 315,
+  "height": 1080,
+  "lang": "en"
+ },
+ "Yb4ajV0C1BE": {
+  "stratum": "S",
+  "genre": 9,
+  "duration_s": 739,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "l_mOoZNuuDg": {
+  "stratum": "S",
+  "genre": 10,
+  "duration_s": 646,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "Ze1s_FB8CeI": {
+  "stratum": "S",
+  "genre": 10,
+  "duration_s": 409,
+  "height": 2160,
+  "lang": "en"
+ },
+ "t8pcKyc3XbM": {
+  "stratum": "S",
+  "genre": 11,
+  "duration_s": 2495,
+  "height": 2160,
+  "lang": "en"
+ },
+ "fDEFGpMoPkk": {
+  "stratum": "S",
+  "genre": 11,
+  "duration_s": 978,
+  "height": 480,
+  "lang": "en"
+ },
+ "WSYAW4U7ZYc": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 6258,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "pQ6G9TQfGIA": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 1675,
+  "height": 360,
+  "lang": "en"
+ },
+ "7GIULwETan4": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 1224,
+  "height": 2160,
+  "lang": "en"
+ },
+ "d95J8yzvjbQ": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 5047,
+  "height": 1080,
+  "lang": "en"
+ },
+ "k1njvbBmfsw": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 6594,
+  "height": 1080,
+  "lang": "en"
+ },
+ "x_YwyhAcHRE": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 2345,
+  "height": 2160,
+  "lang": "en-US"
+ },
+ "GaQE-voqIfc": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 4374,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "LCEmiRjPEtQ": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 2371,
+  "height": 1080,
+  "lang": "en-US"
+ },
+ "bmRJjcsFOoE": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 1739,
+  "height": 2160,
+  "lang": "en"
+ },
+ "Px3HfB2UkyU": {
+  "stratum": "N",
+  "genre": null,
+  "duration_s": 3330,
+  "height": 2160,
+  "lang": "en"
+ }
+}

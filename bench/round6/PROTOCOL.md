@@ -116,3 +116,18 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   the first query: yt-dlp prints the literal `NA` where a video has no caption dictionary,
   which the script parsed as JSON. Fixed to treat `NA` as empty; no filter or rule changed.
   No candidate had been selected.
+- **D2 (2026-10-06, at selection).** Genre 6 (handheld walking vlog) yielded one survivor
+  from 30 candidates (primary and fallback). 16 failed duration (walking tours run 1 to 12
+  hours), 13 failed the caption filter: most walking tours have no speech and YouTube tags
+  no audio language, so the "caption track in the video's own language" rule cannot be met.
+  Three of those 13 did carry English captions with the language untagged; the script treats
+  an untagged language as a fail, which is the registered rule read strictly, and it was not
+  loosened after the fact because that would be selection with the results in view. Round 6
+  therefore has 31 videos (10 + 21) and 248 items; predictions stated as counts of 32 apply
+  to 31. A consequence worth stating: the stratum S filter excludes silent video, so every
+  silent-video result in the paper still rests on round 5.
+- **D3 (2026-10-06, at selection, disclosure).** The rule picked some off-target videos and
+  they stay: genre 1 second pick is a Korean-language lecture (ko captions, used untranslated);
+  genre 7 picked two talks about giving keynotes rather than slide-dense keynotes; genre 10
+  first pick has a finance-styled title ("I Paid My Credit Cards Off With These") returned for
+  a woodworking query. Genre labels in the per-genre table describe the query, not the content.

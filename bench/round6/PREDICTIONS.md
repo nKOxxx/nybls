@@ -1,6 +1,8 @@
 # Round 6 predictions. Registered 2026-10-06 before any author, arm or judge ran.
 
 Scores are out of 2 per item; 8 items per video; 32 videos, 256 items, 512 points pooled.
+[Amended 2026-10-06 at selection, before any author ran: 31 videos, 248 items, 496 points;
+see PROTOCOL D2. Thresholds unchanged; counts "of 32" / "in 256" read as of 31 / in 248.]
 "pp" means points of percentage of the maximum.
 
 - **P23.** Pooled, B >= T + 20 pp. (Round 5: +36 pp. Long-form and news have more speech,
