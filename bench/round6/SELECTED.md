@@ -25,3 +25,9 @@
 | 11 | fallback | 1 | fDEFGpMoPkk | 978 | 480 | en | demo lecture - PHYSICS |
 
 21 videos. Every result seen and every exclusion reason is in candidates.jsonl. Replacements after probe failures are appended below.
+
+## Replacements after probe failures
+
+| replaced | reason | replacement | genre | query | rank | duration (s) | height | lang | title |
+|---|---|---|---|---|---|---|---|---|---|
+| DVx22QXGTT4 | HTTP 403 on download, twice (D6) | -uJAz0fmPOY | 8 | primary | 3 | 729 | 1080 | en | rory gilmore diaries, cozy fall days in my life |

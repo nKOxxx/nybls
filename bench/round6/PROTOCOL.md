@@ -131,3 +131,23 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   genre 7 picked two talks about giving keynotes rather than slide-dense keynotes; genre 10
   first pick has a finance-styled title ("I Paid My Credit Cards Off With These") returned for
   a woodworking query. Genre labels in the per-genre table describe the query, not the content.
+- **D4 (2026-10-06, at probe, tool finding).** nybls as shipped fetches only English caption
+  tracks (`SUB_LANGS = "en"` in ingest.py) and falls back to the English-only whisper `base`
+  model. On the four non-English videos (OH-5LJFiYHA ko, vRaghhAFsFo fr, qVIzSMux720 and
+  qSIX7qvPmlo ar) probe therefore produced looping transcripts it itself flagged UNRELIABLE,
+  although yt-dlp reports caption tracks in those languages. Per the registered rule the
+  four were re-probed with `--model turbo` (multilingual); the unreliable store entries were
+  archived under `_void_r6_base_<id>`, not deleted. This is reported in the paper as a
+  limitation of the tool, not of the benchmark: an agent using nybls on non-English video
+  today gets no usable transcript unless it passes `--model turbo` itself. Arm T uses the
+  same store transcript as arm B, so the arms stay comparable.
+- **D5 (2026-10-06, at probe).** Eight English videos for which yt-dlp reported English
+  captions were transcribed by whisper `base` instead (probe's caption fetch is best-effort
+  and YouTube rate-limited it): 0oJG3EkcR2o, n0VSqz69k3Q, y08TrAsHZzI, WjUeusWRXp4,
+  l_mOoZNuuDg, x_YwyhAcHRE, GaQE-voqIfc, LCEmiRjPEtQ. This is the tool's normal fallback and
+  the transcripts are kept; the source is recorded per video in `VIDEOS.json` once probing
+  closes.
+- **D6 (2026-10-06, at probe).** DVx22QXGTT4 (genre 8, rank 1) failed download twice with
+  HTTP 403, an hour apart. Per the registered rule it is replaced by the next survivor of the
+  same query: -uJAz0fmPOY (genre 8, primary query, rank 3, 729 s, 1080p, en), the first
+  quota-filled candidate that passes every filter when re-evaluated. Recorded in SELECTED.md.

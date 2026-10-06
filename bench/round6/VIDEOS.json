@@ -90,13 +90,6 @@
   "height": 1080,
   "lang": "en-US"
  },
- "DVx22QXGTT4": {
-  "stratum": "S",
-  "genre": 8,
-  "duration_s": 1341,
-  "height": 1080,
-  "lang": "en-US"
- },
  "WjUeusWRXp4": {
   "stratum": "S",
   "genre": 8,
@@ -215,5 +208,13 @@
   "duration_s": 3330,
   "height": 2160,
   "lang": "en"
+ },
+ "-uJAz0fmPOY": {
+  "stratum": "S",
+  "genre": 8,
+  "duration_s": 729,
+  "height": 1080,
+  "lang": "en",
+  "replaces": "DVx22QXGTT4"
  }
 }
