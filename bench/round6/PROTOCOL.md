@@ -108,4 +108,7 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
 
 ## Deviations, recorded as they occur
 
-(none yet)
+- **D1 (2026-10-06, before any selection).** The first run of `sample_videos.py` crashed on
+  the first query: yt-dlp prints the literal `NA` where a video has no caption dictionary,
+  which the script parsed as JSON. Fixed to treat `NA` as empty; no filter or rule changed.
+  No candidate had been selected.

@@ -46,7 +46,10 @@ def search(query):
     for ln in out.splitlines():
         p = ln.split("\t")
         if len(p) < 9: continue
-        subs = json.loads(p[6] or "{}"); auto = json.loads(p[7] or "{}")
+        def jd(x):
+            try: return json.loads(x) if x and x != "NA" else {}
+            except json.JSONDecodeError: return {}
+        subs = jd(p[6]); auto = jd(p[7])
         rows.append({"id": p[0], "duration": float(p[1]) if p[1] not in ("NA", "") else None,
                      "height": int(p[2]) if p[2] not in ("NA", "") else None, "language": p[3],
                      "live": p[4] == "True" or p[5] in ("is_live", "is_upcoming"),
