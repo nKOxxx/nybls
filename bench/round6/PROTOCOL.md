@@ -155,4 +155,6 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   under `--model turbo` as well: probe's flag fired on one line repeated 28 times in a row.
   Inspection of the file shows 688 lines of real Korean speech otherwise, so the flag marks a
   looping stretch, not an empty transcript. The video and the flagged transcript are kept as
-  the tool produced them; arm T receives the same file. Reported per video.
+  the tool produced them; arm T receives the same file. Reported per video. The same flag
+  fired on qSIX7qvPmlo (one line repeated 121 times, a looping stretch inside an otherwise
+  real Arabic transcript); kept on the same basis.
