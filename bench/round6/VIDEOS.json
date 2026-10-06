@@ -4,210 +4,270 @@
   "genre": 1,
   "duration_s": 2389,
   "height": 480,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 46
  },
  "OH-5LJFiYHA": {
   "stratum": "S",
   "genre": 1,
   "duration_s": 1868,
   "height": 1080,
-  "lang": "ko"
+  "lang": "ko",
+  "transcript_source": "whisper:turbo, UNRELIABLE: one line repeated 28 times consecutively, the model looped.",
+  "scene_count": 1
  },
  "5bVQqrzjCI8": {
   "stratum": "S",
   "genre": 2,
   "duration_s": 1039,
   "height": 1080,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 170
  },
  "2TvP0aXC4Ss": {
   "stratum": "S",
   "genre": 2,
   "duration_s": 1265,
   "height": 1080,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 161
  },
  "vRaghhAFsFo": {
   "stratum": "S",
   "genre": 3,
   "duration_s": 1176,
   "height": 1080,
-  "lang": "fr"
+  "lang": "fr",
+  "transcript_source": "whisper:turbo",
+  "scene_count": 99
  },
  "J8PEymuDf6A": {
   "stratum": "S",
   "genre": 3,
   "duration_s": 691,
   "height": 1080,
-  "lang": "fr"
+  "lang": "fr",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 75
  },
  "qVIzSMux720": {
   "stratum": "S",
   "genre": 4,
   "duration_s": 2190,
   "height": 720,
-  "lang": "ar"
+  "lang": "ar",
+  "transcript_source": "whisper:turbo, UNRELIABLE: only 0 words per minute, against 30 for the sparsest real narration we have measured. The audio is silent or nearly so, and the frames are the only place the content exists.",
+  "scene_count": 2
  },
  "qSIX7qvPmlo": {
   "stratum": "S",
   "genre": 4,
   "duration_s": 3300,
   "height": 720,
-  "lang": "ar"
+  "lang": "ar",
+  "transcript_source": "whisper:turbo, UNRELIABLE: one line repeated 121 times consecutively, the model looped.",
+  "scene_count": 1
  },
  "Xxq8hZc6mws": {
   "stratum": "S",
   "genre": 5,
   "duration_s": 1234,
   "height": 720,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 158
  },
  "0oJG3EkcR2o": {
   "stratum": "S",
   "genre": 5,
   "duration_s": 1397,
   "height": 2160,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "whisper:base",
+  "scene_count": 237
  },
  "AvCFhznItLU": {
   "stratum": "S",
   "genre": 6,
   "duration_s": 696,
   "height": 1080,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 85
  },
  "n0VSqz69k3Q": {
   "stratum": "S",
   "genre": 7,
   "duration_s": 478,
   "height": 1080,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "whisper:base",
+  "scene_count": 29
  },
  "y08TrAsHZzI": {
   "stratum": "S",
   "genre": 7,
   "duration_s": 598,
   "height": 1080,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "whisper:base",
+  "scene_count": 23
  },
  "WjUeusWRXp4": {
   "stratum": "S",
   "genre": 8,
   "duration_s": 907,
   "height": 1080,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "whisper:base",
+  "scene_count": 163
  },
  "pQC3JsbgaTw": {
   "stratum": "S",
   "genre": 9,
   "duration_s": 315,
   "height": 1080,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 8
  },
  "Yb4ajV0C1BE": {
   "stratum": "S",
   "genre": 9,
   "duration_s": 739,
   "height": 1080,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 44
  },
  "l_mOoZNuuDg": {
   "stratum": "S",
   "genre": 10,
   "duration_s": 646,
   "height": 1080,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "whisper:base",
+  "scene_count": 124
  },
  "Ze1s_FB8CeI": {
   "stratum": "S",
   "genre": 10,
   "duration_s": 409,
   "height": 2160,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 65
  },
  "t8pcKyc3XbM": {
   "stratum": "S",
   "genre": 11,
   "duration_s": 2495,
   "height": 2160,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 188
  },
  "fDEFGpMoPkk": {
   "stratum": "S",
   "genre": 11,
   "duration_s": 978,
   "height": 480,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 1
  },
  "WSYAW4U7ZYc": {
   "stratum": "N",
   "genre": null,
   "duration_s": 6258,
   "height": 1080,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 262
  },
  "pQ6G9TQfGIA": {
   "stratum": "N",
   "genre": null,
   "duration_s": 1675,
   "height": 360,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 66
  },
  "7GIULwETan4": {
   "stratum": "N",
   "genre": null,
   "duration_s": 1224,
   "height": 2160,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 356
  },
  "d95J8yzvjbQ": {
   "stratum": "N",
   "genre": null,
   "duration_s": 5047,
   "height": 1080,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 917
  },
  "k1njvbBmfsw": {
   "stratum": "N",
   "genre": null,
   "duration_s": 6594,
   "height": 1080,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 115
  },
  "x_YwyhAcHRE": {
   "stratum": "N",
   "genre": null,
   "duration_s": 2345,
   "height": 2160,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "whisper:base",
+  "scene_count": 516
  },
  "GaQE-voqIfc": {
   "stratum": "N",
   "genre": null,
   "duration_s": 4374,
   "height": 1080,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "whisper:base",
+  "scene_count": 2942
  },
  "LCEmiRjPEtQ": {
   "stratum": "N",
   "genre": null,
   "duration_s": 2371,
   "height": 1080,
-  "lang": "en-US"
+  "lang": "en-US",
+  "transcript_source": "whisper:base",
+  "scene_count": 154
  },
  "bmRJjcsFOoE": {
   "stratum": "N",
   "genre": null,
   "duration_s": 1739,
   "height": 2160,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 76
  },
  "Px3HfB2UkyU": {
   "stratum": "N",
   "genre": null,
   "duration_s": 3330,
   "height": 2160,
-  "lang": "en"
+  "lang": "en",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 605
  },
  "-uJAz0fmPOY": {
   "stratum": "S",
@@ -215,6 +275,8 @@
   "duration_s": 729,
   "height": 1080,
   "lang": "en",
-  "replaces": "DVx22QXGTT4"
+  "replaces": "DVx22QXGTT4",
+  "transcript_source": "captions:video.en.vtt",
+  "scene_count": 168
  }
 }
