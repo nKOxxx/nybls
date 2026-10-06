@@ -84,13 +84,17 @@ One author agent per video, isolated from nybls, prompt unchanged from round 5 P
 (`PROMPTS.md`), with one change for long videos: the reference grid interval is
 `max(10, ceil(duration_s / 120))` seconds, so no author sees more than about 120 frames.
 Eight questions per video, S/V/B labels after writing, mechanical transcript re-check
-(`../round5/check_labels.py`, relabel-safe) unchanged.
+by `check_labels.py` here, which is round 5's checker with one change: normalisation keeps
+every Unicode word character, because round 5's ASCII-only normalisation would delete all
+Arabic and accented text and make the re-check vacuous on genres 3 and 4. Relabel-safe as
+before.
 
 ## Judging
 
 One blind judge per video, Fable 5.1, prompt unchanged from `../round5/rejudge/JUDGE_PROMPT.md`,
-four anonymised arms W/X/Y/Z (T, B, B2, AM) built by `../round5/build_judge_packs_p2_v2.py`
-with its blocklist and in-line REDACT, and the scrub-loss audit run before judging as in D9.
+four anonymised arms W/X/Y/Z (T, B, B2, AM) built by `build_judge_packs.py` here (round 5's
+D9 builder with `sonnet`, `fable`, `claude` and `_s55` added to the blocklist, since B2
+differs from B only by model), and the scrub-loss audit run before judging as in D9.
 Blinding is nominal for T, as in round 5 D4. Scoring and outcome classes unchanged.
 
 ## Reporting
