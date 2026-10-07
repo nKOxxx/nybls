@@ -6,7 +6,7 @@ Reads judge/<vid>/verdict.json + judge/MAPPING.json, data/<vid>/labels.json, VID
 import collections, json, os, random, statistics
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ARMS = ["T", "B", "B2", "AM"]
+ARMS = ["T", "B", "AM", "BF"]  # BF only on the 8-video Fable subset
 
 def load():
     vids = json.load(open(f"{HERE}/VIDEOS.json"))
@@ -25,13 +25,13 @@ def load():
     return per
 
 def pts(per, vids, arm, label=None):
-    return sum(it[arm]["score"] for v in vids for it in per[v]["items"] if label is None or it["label"] == label)
+    return sum(it[arm]["score"] for v in vids for it in per[v]["items"] if arm in it and (label is None or it["label"] == label))
 
-def mx(per, vids, label=None):
-    return 2 * sum(1 for v in vids for it in per[v]["items"] if label is None or it["label"] == label)
+def mx(per, vids, label=None, arm="B"):
+    return 2 * sum(1 for v in vids for it in per[v]["items"] if arm in it and (label is None or it["label"] == label))
 
 def pct(per, vids, arm, label=None):
-    m = mx(per, vids, label); return 100 * pts(per, vids, arm, label) / m if m else float("nan")
+    m = mx(per, vids, label, arm); return 100 * pts(per, vids, arm, label) / m if m else float("nan")
 
 def boot(per, vids, a, b, reps=20000, seed=7):
     random.seed(seed); gs = []
@@ -53,8 +53,8 @@ def main():
     print(f"videos judged: {len(vids)}")
     out = {"n_videos": len(vids), "pooled": {}, "strata": {}, "genres": {}, "labels": {}, "per_video": {}, "outcomes": {}}
     for a in ARMS:
-        out["pooled"][a] = {"points": pts(per, vids, a), "max": mx(per, vids), "pct": round(pct(per, vids, a), 1)}
-        out["outcomes"][a] = dict(collections.Counter(it[a]["outcome"] for v in vids for it in per[v]["items"]))
+        out["pooled"][a] = {"points": pts(per, vids, a), "max": mx(per, vids, None, a), "pct": round(pct(per, vids, a), 1)}
+        out["outcomes"][a] = dict(collections.Counter(it[a]["outcome"] for v in vids for it in per[v]["items"] if a in it))
     print("pooled:", {a: f"{d['points']}/{d['max']} ({d['pct']}%)" for a, d in out["pooled"].items()})
     print("outcomes:", out["outcomes"])
     for s in ("N", "S"):
@@ -66,20 +66,22 @@ def main():
         gv = [v for v in vids if per[v]["meta"].get("genre") == g]
         out["genres"][g] = {a: pts(per, gv, a) for a in ARMS}; out["genres"][g]["max"] = mx(per, gv)
     for lab in "SBV":
-        out["labels"][lab] = {a: f"{pts(per, vids, a, lab)}/{mx(per, vids, lab)}" for a in ARMS}
+        out["labels"][lab] = {a: f"{pts(per, vids, a, lab)}/{mx(per, vids, lab, a)}" for a in ARMS}
     print("labels:", out["labels"])
     for v in vids:
         out["per_video"][v] = {a: pts(per, [v], a) for a in ARMS}
     if len(vids) >= 2:
-        out["bootstrap_95"] = {f"{b}-{a}": boot(per, vids, a, b) for a, b in [("T", "B"), ("AM", "B"), ("B2", "B")]}
+        out["bootstrap_95"] = {f"{b}-{a}": boot(per, vids, a, b) for a, b in [("T", "B"), ("AM", "B")]}
         print("bootstrap 95% (pp):", out["bootstrap_95"])
     # predictions (reported whenever computable; of record only at 32 videos)
     P = {}
     P["P23"] = pct(per, vids, "B") - pct(per, vids, "T") >= 20
     P["P24"] = pct(per, vids, "B") - pct(per, vids, "AM") >= 8
     P["P25"] = sum(1 for v in vids if pts(per, [v], "B") < 14.4) >= 2
-    fabB2 = out["outcomes"]["B2"].get("fabricated", 0)
-    P["P26"] = pts(per, vids, "B2") >= 0.85 * pts(per, vids, "B") and fabB2 <= 2
+    bf = [v for v in vids if per[v]["meta"].get("bf_subset") and any("BF" in it for it in per[v]["items"])]
+    if bf:
+        P["P26"] = pts(per, bf, "B") >= 0.85 * pts(per, bf, "BF") and out["outcomes"]["B"].get("fabricated", 0) <= 2
+        out["bf_subset"] = {"n": len(bf), "B": pts(per, bf, "B"), "BF": pts(per, bf, "BF"), "T": pts(per, bf, "T"), "AM": pts(per, bf, "AM"), "max": mx(per, bf)}
     if "N" in out["strata"] and "S" in out["strata"]:
         gN = out["strata"]["N"]["B"] - out["strata"]["N"]["T"]; gS = out["strata"]["S"]["B"] - out["strata"]["S"]["T"]
         P["P27"] = gS >= gN - 10
