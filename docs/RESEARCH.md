@@ -239,3 +239,16 @@ statement: on EG-VQA, GPT-4o and Gemini-2.5-Flash reach 45.1% and 41.2% relaxed 
 accuracy but 8.5% and 12.6% EG-F1 at (0.3, 0.5), falling to 1.2% and 1.5% at (0.3, 0.75).
 
 **2026-09-02, arXiv:2502.19680 miscited (CORRECTED above in section 3).**
+
+**Round 6 (2026-10-06 to 07, `bench/round6/`).** Scaled the grounding benchmark from 8 to 31
+videos (10 owner-supplied, 21 sampled by a committed yt-dlp rule across 11 genres incl. French,
+Arabic and Korean, news, sports and long-form up to 110 min), 248 author-written questions,
+blind judging, 12 recorded deviations. Under a Fable budget cap the agent model became Claude
+Sonnet 5.5 for all arms and judges (registered before any arm ran, D8), with nybls on Fable 5.1
+on an 8-video bridge subset. Pooled: transcript-only 60.7%, cost-matched uniform grid 69.6%,
+nybls 90.5% (215 images over 31 videos); on screen-only items 7% / 28% / 81%. nybls beat the
+transcript arm in all 11 genres and the matched grid on every video; the set is no longer
+saturated (nybls under 90% on 11 videos). On the bridge subset Sonnet nybls scored 93.8% to
+Fable nybls 96.9%. Nine of nine registered predictions passed. Zero fabrications by any arm.
+Tool findings: nybls fetches only English captions (D4) and agents given a store id reach for
+`probe` and fail (D12). Round 5 and 6 are reported side by side, never pooled.
