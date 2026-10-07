@@ -1,0 +1,55 @@
+{
+ "1": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "3": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "Double-esc",
+   "--resume"
+  ],
+  "transcript_hits": [
+   "--resume"
+  ]
+ },
+ "4": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "5": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "6": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "7": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "8": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [],
+  "transcript_hits": []
+ }
+}

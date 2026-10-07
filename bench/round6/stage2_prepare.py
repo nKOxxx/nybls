@@ -22,7 +22,7 @@ def complete(d):
     if not (os.path.exists(q) and os.path.exists(g)): return False
     nq = len(re.findall(r"(?m)^\s*\**\d+[.)]", open(q).read()))
     gt = open(g).read()
-    secs = re.split(r"(?m)^##\s+Q(?:uestion)?\s*(\d+)", gt)
+    secs = re.split(r"(?m)^##\s+(?:Q(?:uestion)?\s*)?(\d+)", gt)
     nl = sum(1 for i in range(2, len(secs), 2) if re.search(r"Label:?\**\s*\**[SVB]\b", secs[i]) or header_label(secs[i].split("\n", 1)[0]))
     return nq >= 8 and nl >= 8
 

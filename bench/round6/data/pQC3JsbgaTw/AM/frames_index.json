@@ -1,0 +1,17 @@
+{
+ "video": "pQC3JsbgaTw",
+ "n": 2,
+ "width": 1568,
+ "frames": [
+  {
+   "i": 0,
+   "ts": 78.737,
+   "file": "am00_78s.png"
+  },
+  {
+   "i": 1,
+   "ts": 236.212,
+   "file": "am01_236s.png"
+  }
+ ]
+}

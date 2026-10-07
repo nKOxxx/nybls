@@ -1,0 +1,73 @@
+{
+ "1": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "3": {
+  "author_label": "V",
+  "final_label": "B",
+  "terms": [
+   "credibility",
+   "logic",
+   "triad",
+   "emotion",
+   "emotionally"
+  ],
+  "transcript_hits": [
+   "emotionally"
+  ]
+ },
+ "4": {
+  "author_label": "V",
+  "final_label": "B",
+  "terms": [
+   "Part",
+   "Welcome to My House",
+   "Combining the Models"
+  ],
+  "transcript_hits": [
+   "Part"
+  ]
+ },
+ "5": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "6": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "7": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "8": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "15 minutes",
+   "fasttrackgrad.com",
+   "938",
+   "private group",
+   "accelerator session",
+   "@fasttrackgrad"
+  ],
+  "transcript_hits": [
+   "15 minutes"
+  ]
+ }
+}

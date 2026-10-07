@@ -7,7 +7,7 @@ Usage: build_judge_packs.py <vid> [<vid> ...]
 import json, os, random, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ARMS = ["T", "B", "B2", "AM"]
+ARMS = ["T", "B", "AM", "BF"]  # BF only on the Fable subset; packs hold 3 or 4 arms
 BLOCK = re.compile(
     r"nybls|ledger|oneshot|watch protocol|\barm\b|no-video|transcript-only|"
     r"uniform grid|uniform stills|\d+ stills|evidence available|"
@@ -41,15 +41,17 @@ def main():
     residue = {}
     for vid in sys.argv[1:]:
         random.seed(f"r6-{vid}")
-        arms = {a: scrub(open(f"{HERE}/data/{vid}/{a}/answers.md").read()) for a in ARMS}
+        arms = {a: scrub(open(f"{HERE}/data/{vid}/{a}/answers.md").read()) for a in ARMS
+                if os.path.exists(f"{HERE}/data/{vid}/{a}/answers.md")}
         keys = list(arms); random.shuffle(keys)
+        letters = "WXYZ"[:len(keys)]
         d = f"{HERE}/judge/{vid}"; os.makedirs(d, exist_ok=True)
         open(f"{d}/ground_truth.md", "w").write(open(f"{HERE}/data/{vid}/author/ground_truth.md").read())
-        for L, k in zip("WXYZ", keys):
+        for L, k in zip(letters, keys):
             open(f"{d}/{L}.md", "w").write(arms[k])
-        mapping[vid] = dict(zip("WXYZ", keys))
+        mapping[vid] = dict(zip(letters, keys))
         bad, res = [], []
-        for L in "WXYZ":
+        for L in letters:
             for ln in open(f"{d}/{L}.md"):
                 if BLOCK.search(ln): bad.append((vid, L, ln.strip()[:90]))
                 if re.search(r"\bu\d\d_\d+s|sheet_\d+|z_\d+_|\bam\d\d_", ln): res.append(L)
@@ -57,7 +59,7 @@ def main():
             print("LEAK", bad); sys.exit(1)
         residue[vid] = sorted(set(res))
         # scrub-loss audit: count numbered answer lines before/after
-        for a in ARMS:
+        for a in arms:
             before = len(re.findall(r"(?m)^\s*\**\d+[.)]", open(f"{HERE}/data/{vid}/{a}/answers.md").read()))
             after = len(re.findall(r"(?m)^\s*\**\d+[.)]", arms[a]))
             if after < before: print(f"SCRUB LOSS {vid} {a}: {before}->{after} numbered lines")

@@ -20,7 +20,7 @@ def header_label(header):
     return toks[-1] if toks else None
 
 def parse(gt):
-    secs = re.split(r"(?m)^##\s+Q(?:uestion)?\s*(\d+)", gt)
+    secs = re.split(r"(?m)^##\s+(?:Q(?:uestion)?\s*)?(\d+)", gt)
     items = {}
     for i in range(1, len(secs), 2):
         q, body = int(secs[i]), secs[i + 1]

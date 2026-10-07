@@ -1,0 +1,100 @@
+{
+ "1": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "FLA WINS MATCH",
+   "UK WINS SET 1",
+   "FLA WINS SET 2"
+  ],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "3 Kentucky",
+   "7 Florida",
+   "11-2",
+   "3-0",
+   "11-1",
+   "2-0"
+  ],
+  "transcript_hits": []
+ },
+ "3": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "27 apiece",
+   "SET POINTS",
+   "UK: 2",
+   "FLA: 3",
+   "FLA WINS SET 2"
+  ],
+  "transcript_hits": [
+   "27 apiece"
+  ]
+ },
+ "4": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [
+   "number 20",
+   "33 33 33",
+   "calculator in her head"
+  ],
+  "transcript_hits": [
+   "number 20",
+   "33 33 33",
+   "calculator in her head"
+  ]
+ },
+ "5": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [
+   "8 Kills",
+   ".462"
+  ],
+  "transcript_hits": []
+ },
+ "6": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [
+   "all last year"
+  ],
+  "transcript_hits": [
+   "all last year"
+  ]
+ },
+ "7": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [
+   "16 digs",
+   "USA uniform",
+   "playing for the USA",
+   "watch both of them"
+  ],
+  "transcript_hits": [
+   "16 digs",
+   "USA uniform",
+   "playing for the USA",
+   "watch both of them"
+  ]
+ },
+ "8": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [
+   "22nd season",
+   "serve the crap out of the ball"
+  ],
+  "transcript_hits": [
+   "22nd season",
+   "serve the crap out of the ball"
+  ]
+ }
+}

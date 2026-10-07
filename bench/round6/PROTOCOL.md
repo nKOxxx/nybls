@@ -188,3 +188,9 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   flagged a typo in its own ground truth (a transcript range written "[18:43]-[18:04]" for
   [17:43]-[18:04]); ground truth is not edited after writing, so it stands as written and the
   judge sees it. Authors wrote labels in two header formats; the checker reads both.
+- **D10 (2026-10-07, before judging).** With B2 dropped under D8, each judge pack holds
+  three anonymised arms (T, B, AM as W/X/Y in a per-video shuffled order) and four on the
+  eight BF videos (plus BF). The judge prompt names the arms present rather than "four".
+  Sonnet 5.5 as arm B spent far fewer images than round 5's Fable B (0 to 28 per video,
+  215 in total over 31 videos, one video at zero); the AM control is matched to those
+  counts as registered, so on the zero-image video AM and T received identical evidence.

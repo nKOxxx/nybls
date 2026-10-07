@@ -1,0 +1,58 @@
+{
+ "1": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "3": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "special inlay"
+  ],
+  "transcript_hits": [
+   "special inlay"
+  ]
+ },
+ "4": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "5": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "6": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "0 3 5"
+  ],
+  "transcript_hits": []
+ },
+ "7": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "only 0s and 2s"
+  ],
+  "transcript_hits": []
+ },
+ "8": {
+  "author_label": "V",
+  "final_label": "V",
+  "terms": [],
+  "transcript_hits": []
+ }
+}

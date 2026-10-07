@@ -1,0 +1,110 @@
+{
+ "1": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "Q",
+   "coulomb",
+   "[C]",
+   "Charles",
+   "Coulomb"
+  ],
+  "transcript_hits": [
+   "Q",
+   "coulomb",
+   "Charles",
+   "Coulomb"
+  ]
+ },
+ "3": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "4": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "5": {
+  "author_label": "V",
+  "final_label": "B",
+  "terms": [
+   "A",
+   "wider",
+   "broader",
+   "left",
+   "B",
+   "narrow",
+   "right"
+  ],
+  "transcript_hits": [
+   "A",
+   "broader",
+   "B",
+   "narrow"
+  ]
+ },
+ "6": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "80",
+   "20",
+   "insulator",
+   "isolated",
+   "thermal equilibrium",
+   "10 degrees",
+   "T°C"
+  ],
+  "transcript_hits": [
+   "80",
+   "20",
+   "insulator",
+   "isolated",
+   "thermal equilibrium",
+   "10 degrees"
+  ]
+ },
+ "7": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "proton",
+   "electrons were not discovered",
+   "¹₊₁P",
+   "+1 P",
+   "⁰₋₁e",
+   "−1 e"
+  ],
+  "transcript_hits": [
+   "proton"
+  ]
+ },
+ "8": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [
+   "1.5",
+   "volt",
+   "positive",
+   "high potential",
+   "H.L",
+   "L.L"
+  ],
+  "transcript_hits": [
+   "1.5",
+   "volt",
+   "positive",
+   "high potential"
+  ]
+ }
+}

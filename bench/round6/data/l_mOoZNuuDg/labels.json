@@ -1,0 +1,70 @@
+{
+ "1": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "2": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "3": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "4": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "Forster",
+   "1/2 inch",
+   "blue tape",
+   "Diablo",
+   "9.47"
+  ],
+  "transcript_hits": [
+   "Forster",
+   "1/2 inch",
+   "blue tape"
+  ]
+ },
+ "5": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "6": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [],
+  "transcript_hits": []
+ },
+ "7": {
+  "author_label": "B",
+  "final_label": "B",
+  "terms": [
+   "golden oak",
+   "sealer",
+   "Rubio Mona Coat",
+   "25 years"
+  ],
+  "transcript_hits": [
+   "golden oak",
+   "sealer",
+   "Rubio Mona Coat",
+   "25 years"
+  ]
+ },
+ "8": {
+  "author_label": "S",
+  "final_label": "S",
+  "terms": [],
+  "transcript_hits": []
+ }
+}
