@@ -9,7 +9,7 @@ import json, os, random, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARMS = ["T", "B", "AM", "BF"]  # BF only on the Fable subset; packs hold 3 or 4 arms
 BLOCK = re.compile(
-    r"nybls|ledger|oneshot|watch protocol|\barm [A-Z]{1,2}\b|\b(this|control|my) arm\b|no-video|transcript-only|"
+    r"nybls|ledger|oneshot|watch protocol|\barm [A-Z]{1,2}\b|\b(this|control|my) arm\b|"
     r"uniform grid|uniform stills|evidence available|"
     r"frames? examined|files? (i )?read|i examined \d+ (frames|images|stills)|modif(y|ied) no|did not modify|"
     r"no file was modified|image units|visual tokens|evidence pack|_s55|sonnet|fable|claude (sonnet|fable|opus|haiku|5)",
@@ -19,6 +19,7 @@ REDACT = [
     (re.compile(r"\s*\((?:Basis|Source|Evidence)[^)]*\)", re.I), ""),
     (re.compile(r"(?:Basis|Source):[^.\n]*\.", re.I), ""),
     (re.compile(r"video\.txt|the metadata|metadata", re.I), "the available material"),
+    (re.compile(r"transcript-only|no-video", re.I), "limited-evidence"),
 ]
 
 def scrub(text):

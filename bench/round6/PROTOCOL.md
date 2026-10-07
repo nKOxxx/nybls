@@ -204,3 +204,8 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   pass found two more content collisions on qSIX7qvPmlo AM (the word "arm" for a wrist, and
   "5 stills" in an abstention); the patterns were narrowed again ("arm" only as an arm label
   such as "arm B"; "stills" only as "uniform stills") and the final build shows zero loss.
+  For the eight four-arm packs one more collision appeared ("transcript-only" inside an AM
+  abstention on bmRJjcsFOoE); that phrase and "no-video" moved from the line blocklist to the
+  in-line REDACT list (replaced by "limited-evidence"), and those packs were rebuilt with zero
+  loss. The 23 three-arm packs had already been judged with the previous blocklist, under
+  which none of them lost a line.
