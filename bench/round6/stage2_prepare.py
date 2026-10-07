@@ -9,12 +9,21 @@ import json, os, re, shutil, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 STORE = os.path.expanduser("~/.nybls/store")
 
+
+def header_label(header):
+    """Last standalone S, V or B token in a question header line, e.g. "## Q1 - label S",
+    "## Q1: V", "## Q1 (V)", "## Q1. Title — **B** (mostly visual)"."""
+    toks = [t.strip("*()[]:.,;") for t in header.split()]
+    toks = [t for t in toks if t in ("S", "V", "B")]
+    return toks[-1] if toks else None
+
 def complete(d):
     q, g = f"{d}/questions.md", f"{d}/ground_truth.md"
     if not (os.path.exists(q) and os.path.exists(g)): return False
     nq = len(re.findall(r"(?m)^\s*\**\d+[.)]", open(q).read()))
     gt = open(g).read()
-    nl = len(re.findall(r"Label:?\**\s*\**[SVB]\b", gt)) + len(re.findall(r"(?m)^##[^\n]*[—-]\s*\**[SVB]\**", gt))
+    secs = re.split(r"(?m)^##\s+Q(?:uestion)?\s*(\d+)", gt)
+    nl = sum(1 for i in range(2, len(secs), 2) if re.search(r"Label:?\**\s*\**[SVB]\b", secs[i]) or header_label(secs[i].split("\n", 1)[0]))
     return nq >= 8 and nl >= 8
 
 def main():

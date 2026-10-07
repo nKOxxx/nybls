@@ -11,15 +11,25 @@ def norm(s):
     s = re.sub(r"[\u064b-\u0652\u0670]", "", s)          # Arabic short vowels / tanween
     return " " + re.sub(r"[^\w]+", " ", s, flags=re.UNICODE).strip() + " "
 
+
+def header_label(header):
+    """Last standalone S, V or B token in a question header line, e.g. "## Q1 - label S",
+    "## Q1: V", "## Q1 (V)", "## Q1. Title — **B** (mostly visual)"."""
+    toks = [t.strip("*()[]:.,;") for t in header.split()]
+    toks = [t for t in toks if t in ("S", "V", "B")]
+    return toks[-1] if toks else None
+
 def parse(gt):
     secs = re.split(r"(?m)^##\s+Q(?:uestion)?\s*(\d+)", gt)
     items = {}
     for i in range(1, len(secs), 2):
         q, body = int(secs[i]), secs[i + 1]
-        m = re.search(r"Label:?\**\s*\**\s*([SVB])\b", body) or re.search(r"^[^\n]*[—-]\s*\**([SVB])\**", body)
+        m = re.search(r"Label:?\**\s*\**\s*([SVB])\b", body)
+        hl = header_label(body.split("\n", 1)[0])
+        lab = m.group(1) if m else hl
         kt = re.search(r"(?im)^\**Key terms:?\**(.*)$", body)
         terms = re.findall(r'["“«]([^"”»]+)["”»]', kt.group(1)) if kt else []
-        items[q] = {"label": m.group(1) if m else None, "terms": terms}
+        items[q] = {"label": lab, "terms": terms}
     return items
 
 root, vid = sys.argv[1], sys.argv[2]
