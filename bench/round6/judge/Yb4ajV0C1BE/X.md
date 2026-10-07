@@ -1,0 +1,13 @@
+1. Six lines, one per string. Bottom line = low E (thickest, lowest-sounding). From the bottom line up: low E, A, D, G, B, high E (top line). [00:33-01:10 transcript]. Evidence: transcript only. (Caveat: he says the high E is "on the bottom of the guitar", meaning lowest physically; it is the top line of the tab.)
+2. Top to bottom: 3, 3, 0, 0, 2, 3. Evidence: frame 02:32 (f_152000_1568.png), orange numbers on six lines; he names it a G chord at [02:31].
+3. The A string (5th line from top, second from bottom): practice tab shows 3,3,0,0,X,3 (frame 08:09, f_489000_1568.png). X = dead note: you do not want to hear that string, so mute it [08:04-08:10]. He suggests playing the G chord and blocking the A string from ringing with your second finger [08:16-08:21]; says muting takes patience and years to perfect.
+4. Bend: "4b5" on the G string: fret the 4th fret and bend up until it sounds like the 5th fret, hold it ringing [09:00-09:45]. Bend release: "4b5r4" (frame 09:53, f_593000_1568.png): bend up to 5, then release back to the normal note 4 in one pick [09:48-09:55; he spoke it as "BR"]. Pre-bend: "5pb4" (frame 10:40, f_640000_1568.png): pick the string while already bent, then lower it to the normal note [10:01-10:08].
+5. Written "<12>" (orange, angle brackets) on the G string (third line from top), 12th fret (frame 10:40). Harmonics playable on the 12th, 7th and 5th frets; hover the finger over the fret rather than pressing [10:15-10:30].
+6. Alternatives: pull-off as "P" (e.g. 7P5), or with the same curved symbol (slur/arc) used for hammer-ons [07:17-07:28]; hammer-on may also be written "H". To distinguish: a pull-off goes to a LOWER note (cannot hammer on to a lower note), a hammer-on goes to a higher one [07:28-07:33]. Also a pull-off: finger flicks down/off, no second pick [06:15-06:45].
+7. Sponsor Tomplay: free 14-day trial of premium membership via the description link [04:10-04:16]. Catalog: over 6,000 interactive songs, sheet music and tabs for guitar, bass, piano etc. [03:11-03:18]. Tracks recorded on real instruments, synced to interactive tabs.
+8. Caveats [11:01-12:08]: (a) online tabs are made by random people, so different tabs of the same song can differ (transcribed by ear), not necessarily wrong; try both; (b) sometimes a tab has a plain mistake, so don't follow it strictly if it sounds wrong; (c) tabs show left-hand info well but not timing/rhythm, so keep the song playing alongside or you may play right notes but the song wrong; tabs best paired with a good ear.
+
+Images examined: f_152000_1568.png (02:32 G chord numbers), f_489000_1568.png (08:09 practice tab G chord with X, slurs), f_593000_1568.png (09:53 4b5r4), f_640000_1568.png (10:40 4b5, 5pb4, <12>).
+
+
+Modified any tool file: No.

@@ -194,3 +194,10 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   Sonnet 5.5 as arm B spent far fewer images than round 5's Fable B (0 to 28 per video,
   215 in total over 31 videos, one video at zero); the AM control is matched to those
   counts as registered, so on the zero-image video AM and T received identical evidence.
+- **D11 (2026-10-07, before judging).** The first pack build removed four numbered answer
+  lines: the bare word "Claude" (added to the blocklist under D8) matched a video that is
+  about Anthropic's Claude (Px3HfB2UkyU Q8, all three arms), and "I examined" matched an
+  abstention sentence (-uJAz0fmPOY B Q4). The blocklist was narrowed before any judge ran
+  ("claude" only when followed by a model name or version; "I examined" only with a frame
+  count) and the packs rebuilt with zero numbered-line loss. Round 5 had to disclose such
+  damage after judging (REJUDGE.md); here the scrub-loss audit caught it first.
