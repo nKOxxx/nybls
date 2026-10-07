@@ -209,3 +209,11 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   in-line REDACT list (replaced by "limited-evidence"), and those packs were rebuilt with zero
   loss. The 23 three-arm packs had already been judged with the previous blocklist, under
   which none of them lost a line.
+- **D12 (2026-10-07, BF arms, tool finding).** Six of the eight Fable BF agents reported that
+  `nybls probe <media-id>` fails with "not a file" (probe takes a URL or a path, not a store id)
+  and that they worked from the store directly. Two of them then ran probe on the stored
+  video file, which created a fresh local ingest: one agent killed and removed its copy, the
+  other left `local_6644702d51ff` (0 images spent), archived here as
+  `_void_r6_stray_local_6644702d51ff`. No BF ledger was affected (each BF arm ran against its
+  own `<id>_bf` copy). Usability finding for the tool: the skill tells agents to run probe
+  on a URL, and agents given a pre-ingested id reach for probe anyway.
