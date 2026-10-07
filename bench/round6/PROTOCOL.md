@@ -200,4 +200,7 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   abstention sentence (-uJAz0fmPOY B Q4). The blocklist was narrowed before any judge ran
   ("claude" only when followed by a model name or version; "I examined" only with a frame
   count) and the packs rebuilt with zero numbered-line loss. Round 5 had to disclose such
-  damage after judging (REJUDGE.md); here the scrub-loss audit caught it first.
+  damage after judging (REJUDGE.md); here the scrub-loss audit caught it first. A second
+  pass found two more content collisions on qSIX7qvPmlo AM (the word "arm" for a wrist, and
+  "5 stills" in an abstention); the patterns were narrowed again ("arm" only as an arm label
+  such as "arm B"; "stills" only as "uniform stills") and the final build shows zero loss.

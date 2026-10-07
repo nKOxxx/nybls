@@ -17,5 +17,6 @@ txt only (auto-captions, names garbled). "Transcript says" = stated; "Inference"
 
 8. England's three wickets:
    - 1: "Dominant Milan" (almost certainly David Malan; captions garbled) out for 18, caught at backward gully by "Sonny" (a Bangladesh fielder; Sonny/Sunny is my reading of the caption), team score 29-1 ([14:45]-[15:10]). Bowler not identified in the transcript.
+   - 2: Jason Roy bowled for 15, beaten in flight by a left-arm spinner, "right through" him; 70-2 ([17:17]-[17:36]). Bowler's name not given.
    - 3: Samit Patel for 12, caught from a delivery down the leg side, "this time taken" ([19:02]-[19:38]), 96-3. Taker not named; inference is the wicketkeeper (caught behind). Bowler not named.
    Hence the dismissal method for 1 and 3 is partly inferred and the bowler (and catcher for 3) is insufficient evidence.

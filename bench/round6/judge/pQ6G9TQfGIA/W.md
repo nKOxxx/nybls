@@ -1,5 +1,6 @@
 # Answers
 
+Transcript read first: it carries talk-heavy content (Q5, Q7 and most of Q2/Q6 context), but all commands/slides are on screen only, so 8 stills + 1 zoom were spent.
 
 1. `npm install -g @anthropic-ai/claude-code` (requires Node.js, spoken [00:55]). Slide "Follow along:" in frame f_44000_1568.png [00:44]. Speaker only says "type this" [00:39-00:46], so the command is from the frame.
 

@@ -18,5 +18,6 @@
 
 8. England's wickets:
    - 1: Dominic Malan, 18, caught at backward gully, team 29-1 ([14:45]-[15:10]); the catch is credited to "Sonny" (ASR, uncertain name). Bowler: insufficient evidence.
+   - 2: Jason Roy, 15, bowled (beaten in flight, "right through", [17:17]-[17:36]), team 70-2. Bowler: not named (a left-arm spinner per [16:50]); insufficient evidence.
    - 3: Samit Patel, 12, caught (down the leg side, taken, [19:02]-[19:38]), team 96-3. Bowler and catcher: insufficient evidence (presumably keeper, inferred only).
    Frame am05_1280s.png shows 130-3, consistent with exactly three wickets.

@@ -9,8 +9,8 @@ import json, os, random, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARMS = ["T", "B", "AM", "BF"]  # BF only on the Fable subset; packs hold 3 or 4 arms
 BLOCK = re.compile(
-    r"nybls|ledger|oneshot|watch protocol|\barm\b|no-video|transcript-only|"
-    r"uniform grid|uniform stills|\d+ stills|evidence available|"
+    r"nybls|ledger|oneshot|watch protocol|\barm [A-Z]{1,2}\b|\b(this|control|my) arm\b|no-video|transcript-only|"
+    r"uniform grid|uniform stills|evidence available|"
     r"frames? examined|files? (i )?read|i examined \d+ (frames|images|stills)|modif(y|ied) no|did not modify|"
     r"no file was modified|image units|visual tokens|evidence pack|_s55|sonnet|fable|claude (sonnet|fable|opus|haiku|5)",
     re.I,
