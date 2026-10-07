@@ -16,7 +16,7 @@ def parse(gt):
     items = {}
     for i in range(1, len(secs), 2):
         q, body = int(secs[i]), secs[i + 1]
-        m = re.search(r"Label:?\**\s*\**\s*([SVB])\b", body)
+        m = re.search(r"Label:?\**\s*\**\s*([SVB])\b", body) or re.search(r"^[^\n]*[—-]\s*\**([SVB])\**", body)
         kt = re.search(r"(?im)^\**Key terms:?\**(.*)$", body)
         terms = re.findall(r'["“«]([^"”»]+)["”»]', kt.group(1)) if kt else []
         items[q] = {"label": m.group(1) if m else None, "terms": terms}

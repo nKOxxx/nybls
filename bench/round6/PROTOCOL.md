@@ -177,3 +177,14 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   never pooled; the 8-video BF subset is the bridge between them. Authors are mixed (8 Fable,
   23 Sonnet) and the author model is recorded per video in `VIDEOS.json`. Judges on Sonnet
   5.5 is a departure from round 5's Fable judges and is listed in Limitations.
+- **D9 (2026-10-07, authors, disclosure).** Several Sonnet authors reported in their hand-back
+  that the harness's per-request image limit dropped some grid frames ("media removed:
+  request limit") so they did not see every frame, and that they ran one `ls` on the grid
+  directory (read-only) despite the no-shell rule; each stated that its questions rest only on
+  frames it did see. One author (y08TrAsHZzI) reported grid timestamps disagreeing with the
+  transcript by 45 to 70 s; checked by SSIM against frames extracted directly, the grid frame
+  labelled 260 s matches the video at 265 s and the 500 s frame at 500 s, so the grid is
+  correct and the slides simply appear before they are discussed. The 2TvP0aXC4Ss author
+  flagged a typo in its own ground truth (a transcript range written "[18:43]-[18:04]" for
+  [17:43]-[18:04]); ground truth is not edited after writing, so it stands as written and the
+  judge sees it. Authors wrote labels in two header formats; the checker reads both.
