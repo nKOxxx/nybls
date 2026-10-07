@@ -160,12 +160,12 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   real Arabic transcript); kept on the same basis.
 - **D8 (2026-10-07, after 8 authors ran, before any arm or judge ran). Model re-plan under
   budget.** Twenty of the first 28 Fable author agents were killed by the account's Fable
-  session limit; 7 completed (Xxq8hZc6mws, AvCFhznItLU, n0VSqz69k3Q, pQC3JsbgaTw,
-  l_mOoZNuuDg, Ze1s_FB8CeI, fDEFGpMoPkk, all on Fable 5.1), one (OH-5LJFiYHA) wrote
-  questions but no labelled ground truth and is rerun. About 10% of the week's Fable
+  session limit; 8 completed on Fable 5.1 (Xxq8hZc6mws, AvCFhznItLU, n0VSqz69k3Q,
+  pQC3JsbgaTw, l_mOoZNuuDg, Ze1s_FB8CeI, fDEFGpMoPkk, OH-5LJFiYHA; the last puts its labels
+  in the section headers, which the label checker was extended to read). About 10% of the week's Fable
   allowance remains, which cannot carry the registered 155 Fable agents. Change, stated
   before any arm runs: the round's primary model becomes **Claude Sonnet 5.5** for authors
-  (the remaining 24), arms T, B and AM, and judges. Fable 5.1 is reserved for one extra arm,
+  (the remaining 23), arms T, B and AM, and judges. Fable 5.1 is reserved for one extra arm,
   **BF** (nybls + skill on Fable, the round 5 configuration), on a registered subset of 8
   videos chosen by rule before any arm ran: every fourth video in `VIDEOS.json` order
   starting at the first (J7DzL2_Na80, vRaghhAFsFo, Xxq8hZc6mws, y08TrAsHZzI, l_mOoZNuuDg,
@@ -174,6 +174,6 @@ A non-Claude judge (still blocked on credentials, as round 5 P22).
   to "Sonnet B scores at least 85% of Fable BF's points on the 8-video subset, with at most
   2 fabricated items in Sonnet B's 248". The former B2 arm is dropped (it is now the main B).
   Round 5 and round 6 therefore use different agent models and are reported side by side,
-  never pooled; the 8-video BF subset is the bridge between them. Authors are mixed (7 Fable,
-  24 Sonnet) and the author model is recorded per video in `VIDEOS.json`. Judges on Sonnet
+  never pooled; the 8-video BF subset is the bridge between them. Authors are mixed (8 Fable,
+  23 Sonnet) and the author model is recorded per video in `VIDEOS.json`. Judges on Sonnet
   5.5 is a departure from round 5's Fable judges and is listed in Limitations.

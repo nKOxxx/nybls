@@ -18,7 +18,7 @@
   "lang": "ko",
   "transcript_source": "whisper:turbo, UNRELIABLE: one line repeated 28 times consecutively, the model looped.",
   "scene_count": 1,
-  "author_model": "sonnet-5.5",
+  "author_model": "fable-5.1",
   "bf_subset": false
  },
  "5bVQqrzjCI8": {
