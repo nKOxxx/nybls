@@ -45,7 +45,7 @@ def check_public_url(url: str) -> None:
     host that redirects inward; it stops the direct case. NYBLS_ALLOW_PRIVATE=1
     disables it, for a media server on your own network.
     """
-    if os.environ.get("NYBLS_ALLOW_PRIVATE"):
+    if os.environ.get("NYBLS_ALLOW_PRIVATE", "").strip().lower() in ("1", "true", "yes", "on"):
         return
     host = urlparse(url).hostname
     if not host:
@@ -55,8 +55,11 @@ def check_public_url(url: str) -> None:
     except socket.gaierror:
         return  # unresolvable here: yt-dlp will fail with its own clear error
     for info in infos:
-        ip = ipaddress.ip_address(str(info[4][0]).split("%")[0])
-        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast:
+        ip: ipaddress.IPv4Address | ipaddress.IPv6Address = ipaddress.ip_address(
+            str(info[4][0]).split("%")[0])
+        if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped:
+            ip = ip.ipv4_mapped
+        if not ip.is_global or ip.is_multicast:  # also covers CGNAT 100.64.0.0/10
             raise ValueError(
                 f"{host} resolves to a non-public address ({ip}); refusing. "
                 "Set NYBLS_ALLOW_PRIVATE=1 if this is your own media server.")

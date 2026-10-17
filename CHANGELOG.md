@@ -10,6 +10,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Lint (ruff) and type checking (mypy) now run in CI and pass; a real ffmpeg pipeline test and a coverage floor were added. With `NYBLS_NO_DOWNLOAD` set, `probe` on a captionless video degrades to frames only instead of failing.
 
 ### Security
+- SSRF guard now refuses any non-global address (adds CGNAT 100.64.0.0/10, IPv4-mapped IPv6), and `NYBLS_ALLOW_PRIVATE=0` no longer disables it.
 - URLs that resolve to loopback, private or link-local addresses are refused (`NYBLS_ALLOW_PRIVATE=1` opts out); yt-dlp is called with `--` before the source; the receiver rejects malformed or oversized request bodies and now has tests. Added a root `SECURITY.md`.
 - Speech models are verified against a pinned SHA-256 before use and a mismatch is discarded. Downloads ask first on a terminal and are quiet otherwise; `NYBLS_NO_DOWNLOAD=1` refuses them.
 

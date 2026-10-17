@@ -9,3 +9,5 @@ brand/nybls_180.png
 dist/
 build/
 *.egg-info/
+.coverage
+htmlcov/
