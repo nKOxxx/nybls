@@ -10,7 +10,19 @@
 
 <p align="center">
   Summarize lectures, tutorials, webinars, recorded meetings, demos, and screen<br>
-  recordings — YouTube or local files — with timestamped evidence and a spend ledger.
+  recordings, from YouTube or local files, with timestamped evidence and a spend ledger.
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/nybls/"><img alt="PyPI" src="https://img.shields.io/pypi/v/nybls"></a>
+  <a href="https://github.com/nKOxxx/nybls/actions/workflows/test.yml"><img alt="tests" src="https://github.com/nKOxxx/nybls/actions/workflows/test.yml/badge.svg"></a>
+  <img alt="Python 3.12+" src="https://img.shields.io/badge/python-3.12%2B-blue">
+  <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-green"></a>
+</p>
+
+<p align="center">
+  <sub>Early software (alpha). Local-first: no account, no telemetry, no API key. Your agent brings its own model.<br>
+  <a href="#install">Install</a> · <a href="#does-it-actually-work">Evidence and limits</a> · <a href="docs/SECURITY.md">Security</a></sub>
 </p>
 
 ---
