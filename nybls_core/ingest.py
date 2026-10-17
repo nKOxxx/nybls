@@ -3,8 +3,11 @@
 Additional sources (e.g. platforms needing session cookies) live in separate
 adapters that write into the same store and reuse this engine.
 """
+import ipaddress
 import json
+import os
 import shutil
+import socket
 import subprocess
 from pathlib import Path
 from urllib.parse import urlparse
@@ -33,13 +36,40 @@ def is_image(path: Path) -> bool:
     return path.suffix.lower() in IMAGE_SUFFIXES
 
 
+def check_public_url(url: str) -> None:
+    """Refuse URLs whose host is loopback, private or link-local (SSRF guard).
+
+    yt-dlp's generic extractor will fetch any URL, so a link pointing at a router
+    page or a cloud metadata address would be fetched from this machine. This
+    resolves the host once up front. It does not stop DNS rebinding or a public
+    host that redirects inward; it stops the direct case. NYBLS_ALLOW_PRIVATE=1
+    disables it, for a media server on your own network.
+    """
+    if os.environ.get("NYBLS_ALLOW_PRIVATE"):
+        return
+    host = urlparse(url).hostname
+    if not host:
+        raise ValueError("URL has no host")
+    try:
+        infos = socket.getaddrinfo(host, None)
+    except socket.gaierror:
+        return  # unresolvable here: yt-dlp will fail with its own clear error
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0].split("%")[0])
+        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast:
+            raise ValueError(
+                f"{host} resolves to a non-public address ({ip}); refusing. "
+                "Set NYBLS_ALLOW_PRIVATE=1 if this is your own media server.")
+
+
 def ingest(source: str, max_height: int = 720) -> tuple[str, Path]:
     """Return (id, media_path). Downloads URL sources into the store."""
     if source.startswith(("http://", "https://")):
         if urlparse(source).scheme != "https":
             raise ValueError("only https URLs accepted")
+        check_public_url(source)
 
-        probe = _run([ytdlp(), "--no-playlist", "--dump-json", "--no-download", source], 120)
+        probe = _run([ytdlp(), "--no-playlist", "--dump-json", "--no-download", "--", source], 120)
         if probe.returncode != 0:
             raise RuntimeError(f"yt-dlp probe failed: {probe.stderr.strip()[-400:]}")
         meta = json.loads(probe.stdout)
@@ -53,7 +83,7 @@ def ingest(source: str, max_height: int = 720) -> tuple[str, Path]:
                 "-f", f"bv*[height<={max_height}]+ba/b[height<={max_height}]",
                 "--merge-output-format", "mp4",
                 "-o", str(ws / "video.%(ext)s"),
-                "--write-info-json", source,
+                "--write-info-json", "--", source,
             ])
             if dl.returncode != 0 or not video.exists():
                 raise RuntimeError(f"download failed: {dl.stderr.strip()[-400:]}")
@@ -63,7 +93,7 @@ def ingest(source: str, max_height: int = 720) -> tuple[str, Path]:
         if not any(ws.glob("*.vtt")):
             _run([ytdlp(), "--no-playlist", "--skip-download",
                   "--write-auto-subs", "--write-subs", "--sub-langs", SUB_LANGS,
-                  "--sub-format", "vtt", "-o", str(ws / "video.%(ext)s"), source], 300)
+                  "--sub-format", "vtt", "-o", str(ws / "video.%(ext)s"), "--", source], 300)
         return media_id, video
 
     path = Path(source).expanduser().resolve()

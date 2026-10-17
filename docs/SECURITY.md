@@ -11,8 +11,9 @@ small web UI" later would reactivate every one of them.
 | Asset | Threat | Control |
 |---|---|---|
 | Your machine | Malicious filename or video title reaching a shell | Every subprocess call uses an argument array; `shell=True` appears nowhere |
+| Your machine | A link that points the downloader at your own network (SSRF) | URLs must be https and their host must resolve to a public address (`NYBLS_ALLOW_PRIVATE=1` opts out). Not covered: DNS rebinding, and a public host that redirects inward |
 | Your machine | Path traversal via a crafted id | Ids are regex-validated; workspaces resolve under a fixed root |
-| Your agent | **Prompt injection from video content** | See below, the most important item here |
+| Your agent | **Prompt injection from video content** | A rule in the skill and protocol, enforced by the model following it. No code inspects transcripts or OCR output, so this is mitigation, not prevention. See below |
 | Your identity | Home path or username leaking into shared output | All user-facing strings pass through a scrubber |
 | Your credentials | Secrets committed to git | No secrets exist in the repo; optional cookies live in `~/.nybls/secrets`, outside the tree, mode 600 |
 | Your bandwidth/quota | Runaway extraction | Duration-scaled budget, per-call frame cap, refusal past budget |
@@ -40,12 +41,17 @@ The default mode makes outbound requests only: to the video source, via the tool
 you installed. Nothing is sent to any endpoint operated by this project, because
 no such endpoint exists.
 
-The optional phone-share receiver is the single exception, and it is off by
-default. When explicitly started it: binds to a private network interface or
-localhost, never `0.0.0.0`; requires a bearer token; closes itself after a time
-window; accepts `https` URLs only; caps upload size; sanitizes filenames; and
-holds every submission as **pending** until a human approves it, so nothing is
-fetched on a stranger's say-so. It is not installed as a background service.
+The optional phone-share receiver (`nybls serve`) is the single exception, and it is
+off by default. When you start it: it binds to a Tailscale address or localhost,
+never `0.0.0.0`; requires a bearer token (constant-time compared); closes itself
+after a time window (default 30 minutes); accepts `https` URLs only; caps uploads
+at 500 MB and JSON bodies at 64 KB; sanitizes filenames and restricts upload
+types; and holds every submission as **pending** until a human runs
+`nybls approve`, so nothing is fetched on a stranger's say-so. It is not installed
+as a background service. It speaks plain HTTP, so run it only on a network you
+trust, which is what the Tailscale binding is for. It has automated tests
+(`tests/test_receiver.py`) covering auth, the https rule, filename handling, size
+limits and the approval gate.
 
 ## What is not protected
 
@@ -60,5 +66,4 @@ fetched on a stranger's say-so. It is not installed as a background service.
 
 ## Reporting
 
-Security issues: open a GitHub issue for anything non-sensitive, or contact the
-maintainer privately for anything that should not be public first.
+See [SECURITY.md](../SECURITY.md) at the repository root.
