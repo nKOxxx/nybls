@@ -6,6 +6,9 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+- Speech models are verified against a pinned SHA-256 before use and a mismatch is discarded. Downloads ask first on a terminal and are quiet otherwise; `NYBLS_NO_DOWNLOAD=1` refuses them.
+
 ### Changed
 - **digest/tesseract: sparse-text primary pass.** The tesseract path now runs
   psm 11 ("sparse text") on a grayscale copy of the frame (fed over stdin —
