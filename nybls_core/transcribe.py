@@ -5,7 +5,9 @@ fetch, so whisper is a fallback rather than a requirement. Models are downloaded
 on demand, and the default is small on purpose: a 1.5 GB download before a tool
 does anything is an adoption tax most people decline to pay.
 """
+import hashlib
 import html
+import os
 import re
 import shutil
 import subprocess
@@ -22,6 +24,15 @@ MODELS = {
     "small":  ("ggml-small.en.bin", 465, "more accurate, English only"),
     "turbo":  ("ggml-large-v3-turbo.bin", 1549, "most accurate, all languages"),
 }
+# SHA-256 of each file, from Hugging Face's LFS metadata for ggerganov/whisper.cpp
+# (the API's lfs.oid), checked 2026-10-17. base, small and turbo also matched
+# the copies already on the author's disk; tiny is from the API only.
+SHA256 = {
+    "ggml-tiny.en.bin": "921e4cf8686fdd993dcd081a5da5b6c365bfde1162e72b08d75ac75289920b1f",
+    "ggml-base.en.bin": "a03779c86df3323075f5e796cb2ce5029f00ec8869eee3fdfb897afe36c6d002",
+    "ggml-small.en.bin": "c6138d6d58ecc8322097e0f987c32f1be8bb0a18532a3f88f734d1bbf9c41e5d",
+    "ggml-large-v3-turbo.bin": "1fc70f774d38eb169993ac391eea357ef47c88757ef72ee5943879b7e8e2bc69",
+}
 DEFAULT_MODEL = "base"
 MIN_WORDS_PER_MIN = 30.0      # below this the audio is silent or near-silent
 MIN_DISTINCT_PER_MIN = 9.0    # enough words but no vocabulary means the model is inventing
@@ -32,6 +43,14 @@ TS_LINE_RE = re.compile(r"(\d+):(\d+):(\d+)\.\d+\s+-->")
 
 def _fmt(seconds: float) -> str:
     return f"[{int(seconds // 60):02d}:{int(seconds % 60):02d}]"
+
+
+def _sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def have_whisper() -> bool:
@@ -47,14 +66,30 @@ def model_path(name: str = DEFAULT_MODEL, autodownload: bool = True) -> Path:
         return dest
     if not autodownload:
         raise FileNotFoundError(f"model {name} not downloaded")
+    if os.environ.get("NYBLS_NO_DOWNLOAD"):
+        raise FileNotFoundError(
+            f"model {name} ({size_mb} MB) is not downloaded and NYBLS_NO_DOWNLOAD is set; "
+            f"fetch {BASE_URL}/{fname} into {MODEL_DIR} yourself")
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
+    interactive = sys.stdin.isatty() and sys.stderr.isatty()
     print(f"this video has no captions, so it needs local transcription.\n"
-          f"downloading the '{name}' speech model once ({size_mb} MB)...", file=sys.stderr)
+          f"downloading the '{name}' speech model once ({size_mb} MB) from "
+          f"{BASE_URL}/{fname}", file=sys.stderr)
+    if interactive and input("continue? [Y/n] ").strip().lower() in ("n", "no"):
+        raise RuntimeError("model download declined")
     tmp = dest.with_suffix(".part")
-    r = subprocess.run(["curl", "-fL", "--progress-bar", "-o", str(tmp), f"{BASE_URL}/{fname}"])
+    cmd = ["curl", "-fL", "-sS", "-o", str(tmp), f"{BASE_URL}/{fname}"]
+    if interactive:
+        cmd.insert(3, "--progress-bar")
+        cmd.remove("-sS")
+    r = subprocess.run(cmd)
     if r.returncode != 0 or not tmp.exists():
         tmp.unlink(missing_ok=True)
         raise RuntimeError(f"model download failed; retry, or fetch {BASE_URL}/{fname} manually")
+    if _sha256(tmp) != SHA256[fname]:
+        tmp.unlink(missing_ok=True)
+        raise RuntimeError(f"{fname} failed its SHA-256 check and was discarded; "
+                           f"retry, and report it if it keeps happening")
     tmp.rename(dest)
     return dest
 
