@@ -53,7 +53,10 @@ def test_plugin_description_carries_the_package_line_plus_prerequisites():
     desc = re.search(r'^description = "(.+)"$', (root / "pyproject.toml").read_text(), re.M).group(1)
     plugin = json.loads((root / ".claude-plugin/plugin.json").read_text())["description"]
     market = json.loads((root / ".claude-plugin/marketplace.json").read_text())["plugins"]
-    assert plugin.startswith(desc), "plugin description must lead with the package line"
+    # The plugin line is rewritten for Discover-tab retrieval, so it no longer
+    # leads with the package line; the shared claim is the mechanism sentence.
+    shared = desc.split(". ", 1)[1]
+    assert shared in plugin, "plugin description must carry the package line's mechanism claim"
     for text in (plugin, *[m["description"] for m in market]):
         # This assertion used to require "pip install nybls", so it enforced the
         # very command that PEP 668 refuses instead of catching it.
