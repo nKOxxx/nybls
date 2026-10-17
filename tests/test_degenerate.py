@@ -55,6 +55,7 @@ def test_silent_video_guidance_is_inverted():
     a degenerate-transcript report was read as 'low-value video' and four reels
     full of architecture diagrams went unexamined."""
     import inspect
+
     from nybls_core import cli
     src = inspect.getsource(cli.cmd_probe)
     # Pin the property, not the line (TESTING.md rule 3): the unreliable-transcript
@@ -149,9 +150,9 @@ def test_no_audio_track_is_not_a_crash():
     """A video with no audio stream made probe crash, because audio extraction
     ran unconditionally. Screen recordings often have no audio track, which is
     the content this tool is best at. It must report no speech and carry on."""
-    from unittest import mock
-    from pathlib import Path
     import tempfile
+    from pathlib import Path
+    from unittest import mock
     with tempfile.TemporaryDirectory() as d:
         ws = Path(d)
         with mock.patch.object(tr, "has_audio", return_value=False), \
@@ -164,6 +165,7 @@ def test_probe_sends_a_no_audio_video_straight_to_the_frames():
     """The silent-video guidance must fire for a missing audio track, not only
     for an unreliable transcript."""
     import inspect
+
     from nybls_core import cli
     assert '"no audio track" in tsource' in inspect.getsource(cli.cmd_probe)
 

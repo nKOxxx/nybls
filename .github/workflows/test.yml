@@ -1,5 +1,7 @@
-# Pure-Python suite: tests never call ffmpeg/yt-dlp/whisper, so no system deps.
-# Runs on both OSes because path handling and Pillow wheels differ.
+# Most tests are pure Python. tests/test_e2e_pipeline.py runs the real pipeline on a
+# generated video, so ffmpeg is installed first. Runs on both OSes because path
+# handling and Pillow wheels differ. Coverage is measured in-process only (the e2e
+# test drives the CLI as a subprocess), so the floor is deliberately modest.
 name: tests
 on:
   push:
@@ -20,9 +22,23 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[dev]"
-      - run: python -m pytest tests/ -q
+      - name: ffmpeg
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; else brew install ffmpeg; fi
+      - run: python -m pytest tests/ -q --cov=nybls_core --cov-fail-under=40
       # The footprint guard: a clean install must stay far under the 150 MB ceiling.
       - run: |
           python -m venv /tmp/clean && /tmp/clean/bin/pip install -q .
           SIZE=$(du -sm /tmp/clean | cut -f1); echo "clean install: ${SIZE} MB"
           test "$SIZE" -lt 150
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: ruff check .
+      - run: mypy nybls_core

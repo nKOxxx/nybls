@@ -2,6 +2,7 @@
 the tile was rendered at 1452.4. Measured across three videos, 21 of 24
 one-second offsets landed in a visibly different shot."""
 import json
+
 from nybls_core import media
 
 

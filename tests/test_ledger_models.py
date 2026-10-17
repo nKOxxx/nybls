@@ -7,8 +7,10 @@ the code, so a wrong implementation cannot certify itself.
 """
 import json
 import math
-import pytest
 from pathlib import Path
+
+import pytest
+
 from nybls_core import ledger as led
 
 
@@ -118,7 +120,9 @@ def test_agents_md_exists_and_matches_the_skill_on_the_rules_that_matter():
 def test_every_command_agents_md_mentions_exists():
     """The inverse of the documentation test: a doc for agents must not name a
     command or flag the CLI does not have, because an agent will run it."""
-    import re, subprocess, sys
+    import re
+    import subprocess
+    import sys
     root = Path(__file__).parent.parent
     doc = (root / "AGENTS.md").read_text()
     src = (root / "nybls_core/cli.py").read_text()

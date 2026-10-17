@@ -28,7 +28,8 @@ def test_version_is_not_hardcoded():
 def test_plugin_manifests_match_package_version():
     """The Claude Code plugin manifests carried 0.7.1 while PyPI served 0.8.0.
     Nothing exercised them, so nothing noticed. Three files, one version."""
-    import json, re
+    import json
+    import re
     from pathlib import Path
     root = Path(__file__).parent.parent
     ver = re.search(r'^version = "([^"]+)"', (root / "pyproject.toml").read_text(), re.M).group(1)
@@ -47,7 +48,8 @@ def test_plugin_description_carries_the_package_line_plus_prerequisites():
     is no prerequisites field in plugin.json, so the description is the only
     place a prerequisite can be stated before install rather than after.
     """
-    import json, re
+    import json
+    import re
     from pathlib import Path
     root = Path(__file__).parent.parent
     desc = re.search(r'^description = "(.+)"$', (root / "pyproject.toml").read_text(), re.M).group(1)
