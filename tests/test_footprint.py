@@ -145,12 +145,12 @@ def test_tools_are_found_beside_our_interpreter_before_path():
 
     This passed on the author's Mac because Homebrew had put a second yt-dlp on
     PATH. Two clean CI runners found it in one run."""
-    import os
     import stat
     import sys
     import tempfile
     from pathlib import Path
     from unittest import mock
+
     from nybls_core import store
 
     with tempfile.TemporaryDirectory() as d:
@@ -171,6 +171,7 @@ def test_doctor_does_not_tell_linux_users_to_run_brew():
     """doctor hardcoded `brew install` in its missing-dependency hint, which is
     wrong on every Linux machine. Found by a clean Ubuntu runner."""
     import inspect
+
     from nybls_core import cli
     src = inspect.getsource(cli.cmd_doctor)
     assert "platform.system()" in src, "the hint must depend on the platform"

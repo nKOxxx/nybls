@@ -3,14 +3,16 @@ import argparse
 import json
 import math
 import sys
-from importlib.metadata import PackageNotFoundError, version as _pkg_version
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
 from pathlib import Path
 
 from . import ingest as ing
 from . import ledger as led
 from . import media
 from . import transcribe as tr
-from .store import read_manifest, scrub, tool as store_tool, workspace, write_manifest
+from .store import read_manifest, scrub, workspace, write_manifest
+from .store import tool as store_tool
 
 
 def _version() -> str:
@@ -278,12 +280,13 @@ def cmd_study(args) -> int:
     ws, m, video = _ctx(args.id)
     dur = m["duration_s"]
     if args.adaptive:
-        region = None
+        region: tuple[float, float, float, float] | None = None
         if args.region:
-            region = tuple(float(v) for v in args.region.split(","))
-            if len(region) != 4 or not all(0 <= v <= 1 for v in region):
+            vals = [float(v) for v in args.region.split(",")]
+            if len(vals) != 4 or not all(0 <= v <= 1 for v in vals):
                 print("--region needs x,y,w,h as fractions 0..1", file=sys.stderr)
                 return 1
+            region = (vals[0], vals[1], vals[2], vals[3])
         probe = args.every or 5
         print(f"probing every {probe}s at low resolution (no vision cost)...")
         stamps, n_probed, median = media.adaptive_timestamps(
@@ -556,7 +559,6 @@ def _skill_drift() -> str | None:
 
 def cmd_doctor(args) -> int:
     """What works right now, and what any missing piece would unlock."""
-    import shutil
     from . import digest as dg
     from . import transcribe as tr
 

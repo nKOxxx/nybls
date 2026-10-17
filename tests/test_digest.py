@@ -7,7 +7,6 @@ used 20s frames; and a corrupt JPEG killed a whole OCR batch. Each test below
 pins the property that prevents one of those.
 """
 import shutil
-from pathlib import Path
 
 import pytest
 
@@ -55,8 +54,9 @@ def test_gray_png_returns_mode_l_bytes(tmp_path):
     """The sparse pass feeds tesseract grayscale PNG bytes over stdin. Pin the
     conversion itself: output is PNG bytes that decode to an 'L' (grayscale)
     image of unchanged size."""
-    from PIL import Image
     import io
+
+    from PIL import Image
     src = tmp_path / "frame_00001.jpg"
     Image.new("RGB", (64, 32), (200, 30, 30)).save(src, "JPEG")
     raw = dg._gray_png(str(src))
@@ -236,6 +236,7 @@ def test_manifest_update_preserves_created_utc(tmp_path, monkeypatch):
     """write_manifest would stamp a fresh created_utc; the digest is a later pass
     and must not lie about when the video was probed."""
     import json
+
     from nybls_core import store
     ws = tmp_path
     (ws / "frames").mkdir()
@@ -251,6 +252,7 @@ def test_digest_never_spends_ledger():
     """The whole point of the pass is that it is free. Pin the property the way
     TESTING.md rule 3 pins the silent-video guidance: on the source, not lines."""
     import inspect
+
     from nybls_core import cli
     src = inspect.getsource(cli.cmd_digest)
     assert "led.record" not in src, "digest must stay a zero-vision-token pass"

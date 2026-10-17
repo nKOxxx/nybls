@@ -84,6 +84,7 @@ def _gray_png(path: str) -> bytes:
     zero runtime cost. Fed to tesseract over stdin -- no cache files, no
     hidden state next to the user's frames."""
     import io
+
     from PIL import Image, ImageOps
     buf = io.BytesIO()
     with Image.open(path) as img:

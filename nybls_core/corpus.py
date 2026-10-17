@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from .store import read_manifest, utc_now, workspace
 
@@ -49,7 +50,7 @@ def describe(media_id: str) -> dict:
 
 def register(name: str, ids: list[str]) -> dict:
     path = _dir() / f"{name}.json"
-    existing = json.loads(path.read_text()) if path.exists() else {"name": name, "videos": []}
+    existing: dict[str, Any] = json.loads(path.read_text()) if path.exists() else {"name": name, "videos": []}
     known = {v["id"] for v in existing["videos"]}
     added, failed = [], []
     for i in ids:
@@ -135,7 +136,7 @@ def evolution(corpus: dict, items: list[dict], subject_key: str) -> list[dict]:
         })
 
     out = []
-    for subj, entries in groups.items():
+    for entries in groups.values():
         entries.sort(key=lambda e: e["observed"] or "9999-99-99")
         span = {e["observed"] for e in entries if e["observed"]}
         if len(entries) < 2:

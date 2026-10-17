@@ -55,7 +55,7 @@ def check_public_url(url: str) -> None:
     except socket.gaierror:
         return  # unresolvable here: yt-dlp will fail with its own clear error
     for info in infos:
-        ip = ipaddress.ip_address(info[4][0].split("%")[0])
+        ip = ipaddress.ip_address(str(info[4][0]).split("%")[0])
         if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast:
             raise ValueError(
                 f"{host} resolves to a non-public address ({ip}); refusing. "

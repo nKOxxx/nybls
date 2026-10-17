@@ -370,6 +370,7 @@ def shot_strip(clusters: list[dict], out: Path, top: int = 6) -> Path:
     pad, band = 6, 30
     sheet = Image.new("RGB", (w * len(ims) + pad * (len(ims) - 1), h + band), "black")
     d = ImageDraw.Draw(sheet)
+    font: ImageFont.FreeTypeFont | ImageFont.ImageFont
     try:
         font = ImageFont.truetype(FONT_PATH, 16)
     except OSError:

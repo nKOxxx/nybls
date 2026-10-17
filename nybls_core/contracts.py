@@ -145,7 +145,7 @@ def validate(obj: dict, shape: str) -> list[str]:
     if not items:
         errs.append(f"'{root}' is empty")
 
-    checks = {"string": str, "number": (int, float)}
+    checks: dict[str, type | tuple[type, ...]] = {"string": str, "number": (int, float)}
     for i, it in enumerate(items):
         where = f"{root}[{i}]"
         if not isinstance(it, dict):

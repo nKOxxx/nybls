@@ -9,6 +9,7 @@ import json
 import math
 import os
 from pathlib import Path
+from typing import Any
 
 from PIL import Image
 
@@ -62,11 +63,11 @@ def _openai_patch(w: int, h: int, spec: dict) -> int:
 def _openai_tile(w: int, h: int, spec: dict) -> int:
     """OpenAI tile models: fit in 2048 square, shortest side to 768, 512px tiles."""
     scale = min(1.0, 2048 / max(w, h))
-    w, h = w * scale, h * scale
-    short = min(w, h)
+    fw, fh = w * scale, h * scale
+    short = min(fw, fh)
     if short > 768:
-        w, h = w * 768 / short, h * 768 / short
-    tiles = math.ceil(w / 512) * math.ceil(h / 512)
+        fw, fh = fw * 768 / short, fh * 768 / short
+    tiles = math.ceil(fw / 512) * math.ceil(fh / 512)
     return spec["base"] + spec["per_tile"] * tiles
 
 
@@ -131,7 +132,7 @@ def resolve_model(name: str | None) -> str:
 
 def record(ws: Path, cmd: str, images: list[Path]) -> dict:
     p = ws / "ledger.json"
-    led = json.loads(p.read_text()) if p.exists() else {"entries": [], "images": 0, "tokens": 0}
+    led: dict[str, Any] = json.loads(p.read_text()) if p.exists() else {"entries": [], "images": 0, "tokens": 0}
     dims = [image_dims(i) for i in images]
     tokens = sum(tokens_for(w, h) for w, h in dims)
     led["entries"].append({"utc": utc_now(), "cmd": cmd, "images": len(images),

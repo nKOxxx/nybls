@@ -318,7 +318,10 @@ def build_transcript(media_id: str, ws: Path, video: Path,
         return None, ("none, no captions on this video, and whisper-cli is not installed. "
                       "Frames still work; for speech install it with: brew install whisper-cpp")
     else:
-        segs, source = whisper(video, ws, model), f"whisper:{model}"
+        try:
+            segs, source = whisper(video, ws, model), f"whisper:{model}"
+        except FileNotFoundError as e:  # model missing and NYBLS_NO_DOWNLOAD set
+            return None, f"none, no captions, and {e}. Frames still work"
     if not segs:
         return None, "none"
     out = ws / "transcript.txt"

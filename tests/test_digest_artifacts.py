@@ -5,6 +5,7 @@
 
 from nybls_core import digest as dg  # noqa: E402 (convention: tests import core modules)
 
+
 def _fake_frame(tmp_path, name, kb=2):
     p = tmp_path / name
     p.write_bytes(b"x" * (kb * 1024))
@@ -14,8 +15,8 @@ def _fake_frame(tmp_path, name, kb=2):
 def test_write_digest_artifacts_creates_all_three_files(tmp_path, monkeypatch):
     ws = tmp_path / "ws"; ws.mkdir()
     frames_dir = tmp_path / "frames30"; frames_dir.mkdir()
-    f1 = _fake_frame(frames_dir, "frame_00001.jpg")
-    f2 = _fake_frame(frames_dir, "frame_00002.jpg")
+    _fake_frame(frames_dir, "frame_00001.jpg")
+    _fake_frame(frames_dir, "frame_00002.jpg")
     records = [
         {"frame": 1, "text": "hello world", "chars": 11},
         {"frame": 2, "text": "", "chars": 0},
