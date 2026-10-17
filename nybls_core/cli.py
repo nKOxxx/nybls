@@ -248,9 +248,10 @@ def cmd_ledger(args) -> int:
     if not args.id:
         print("need an id, or --models", file=sys.stderr)
         return 1
-    ws, m, _ = _ctx(args.id)
+    ws, m, video = _ctx(args.id)
     try:
-        print(led.summary(ws, m["duration_s"], model=args.model))
+        print(led.summary(ws, m["duration_s"], total_frames_hint=media.frame_count(video, m["duration_s"]),
+                          model=args.model))
     except ValueError as e:
         print(f"error: {e}", file=sys.stderr)
         return 1

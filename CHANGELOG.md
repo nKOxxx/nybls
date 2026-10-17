@@ -7,6 +7,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - Lint (ruff) and type checking (mypy) now run in CI and pass; a real ffmpeg pipeline test and a coverage floor were added. With `NYBLS_NO_DOWNLOAD` set, `probe` on a captionless video degrades to frames only instead of failing.
 
 ### Security
