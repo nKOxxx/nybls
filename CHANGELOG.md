@@ -6,6 +6,19 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Known issues (found by benchmark arms, reported not fixed during the run)
+- Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom
+  box derived from a tile can land on a different shot. `snap_to_tile` (added in 0.7.1)
+  mitigates this for `frames`; `zoom` is still open.
+
+### Planned
+- Independent benchmark of the iterative loop against a one-shot frame dump at
+  equal cost, the open gap named in `docs/RESEARCH.md`
+- Simplified small-size logo variant for favicon rendering
+- Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
+
+## [0.11.0] - 2026-10-17
+
 ### Changed
 - `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - Lint (ruff) and type checking (mypy) now run in CI and pass; a real ffmpeg pipeline test and a coverage floor were added. With `NYBLS_NO_DOWNLOAD` set, `probe` on a captionless video degrades to frames only instead of failing.
@@ -48,17 +61,6 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   transcribe-then-delete policy keeps its frames but not its media, so the
   video is optional when `frames30/` exists and the manifest is created on the
   fly for legacy stores that predate it.
-
-### Known issues (found by benchmark arms, reported not fixed during the run)
-- Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom
-  box derived from a tile can land on a different shot. `snap_to_tile` (added in 0.7.1)
-  mitigates this for `frames`; `zoom` is still open.
-
-### Planned
-- Independent benchmark of the iterative loop against a one-shot frame dump at
-  equal cost, the open gap named in `docs/RESEARCH.md`
-- Simplified small-size logo variant for favicon rendering
-- Optional MCP server wrapper so non-Claude-Code agents can use the same verbs
 
 ## [0.10.0] - 2026-09-15
 
