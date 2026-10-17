@@ -64,3 +64,11 @@ def test_unknown_id_fails_cleanly(env):
     r = nybls(e, "sheet", "doesnotexist")
     assert r.returncode != 0
     assert "Traceback" not in r.stderr
+
+
+def test_ledger_reports_the_real_frame_count_not_a_25fps_guess(env):
+    video, e = env  # generated at 10 fps for 12 s: 120 frames, a 25 fps guess would say 300
+    vid = re.search(r"^id:\s*(\S+)", nybls(e, "probe", str(video)).stdout, re.M).group(1)
+    out = nybls(e, "ledger", vid).stdout
+    n = int(re.search(r"of ~([\d,]+) total frames", out).group(1).replace(",", ""))
+    assert 110 <= n <= 130, out

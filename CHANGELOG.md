@@ -7,6 +7,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - Lint (ruff) and type checking (mypy) now run in CI and pass; a real ffmpeg pipeline test and a coverage floor were added. With `NYBLS_NO_DOWNLOAD` set, `probe` on a captionless video degrades to frames only instead of failing.
 
 ### Security
@@ -14,6 +15,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Speech models are verified against a pinned SHA-256 before use and a mismatch is discarded. Downloads ask first on a terminal and are quiet otherwise; `NYBLS_NO_DOWNLOAD=1` refuses them.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - **digest/tesseract: sparse-text primary pass.** The tesseract path now runs
   psm 11 ("sparse text") on a grayscale copy of the frame (fed over stdin —
   no cache files) with the psm-6 block-mode rescue behind it, replacing the
@@ -78,6 +80,7 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   certain than its source.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - Ledger entries now carry `dims`. Older entries without them are priced at the
   default model's stored count, and the summary says so when another model is
   chosen.
@@ -222,6 +225,7 @@ platforms, and found two real bugs that every previous release shipped.
   local files work without it and the base install is advertised at about 50 MB.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - **The README never said a bare URL is a complete instruction.** A user pasted
   one, got a full digest, and afterwards said he had not known he was supposed to
   ask a question or that he could. Study mode was already the default for a URL
@@ -273,6 +277,7 @@ platforms, and found two real bugs that every previous release shipped.
   long video about one narrow subject, and no threshold survived a gap that thin.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - README rewritten. It now lists what the tool actually does, documents call
   review, and reports the benchmark honestly at four rounds, 12 videos and 112
   audited questions: 83/112 for the uniform control against 101/112, with the
@@ -287,6 +292,7 @@ platforms, and found two real bugs that every previous release shipped.
 ## [0.8.0] - 2026-09-04
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - **Install footprint 293 MB → 63 MB** (clean venv, measured; ~50 MB net of the venv's
   own pip). The agreed ceiling is 150 MB and 0.7.x was nearly double it, not because
   of nybls (the wheel is 36 KB) but because two transitive imports we used one
@@ -325,6 +331,7 @@ platforms, and found two real bugs that every previous release shipped.
 ## [0.7.2] - 2026-09-04
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - **The `/watch` skill now handles silent video.** It told the agent to read the
   transcript first and to spend "almost nothing" on static scenes, and said
   nothing about what to do when there is no usable transcript at all. The budget
@@ -400,6 +407,7 @@ platforms, and found two real bugs that every previous release shipped.
 - **`paper/`**, draft arXiv paper with a fully verified bibliography.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - **The change-detection design rule from 0.3.0 is WITHDRAWN.** "Use the hash to detect
   duplicates, never to detect change" was stated from a single observation on a single
   video. Measured against an independent OCR reference across seven videos, perceptual
@@ -427,6 +435,7 @@ platforms, and found two real bugs that every previous release shipped.
 - `probe --model tiny|base|small|turbo` to choose the speech model up front.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - Benchmark extended to **eight videos, forty questions, sixteen arms**
   (`bench/RESULTS.md`): iterative 80/80, one-shot 65/80, with round 3's iterative
   arms scoring higher on 47% of the images. The gap narrows on short and visually
@@ -446,6 +455,7 @@ platforms, and found two real bugs that every previous release shipped.
   nothing to snap to and behaviour is unchanged.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - Benchmark extended to **four videos across two domains** (`bench/RESULTS.md`):
   iterative 40/40, one-shot 29/40, with the difference concentrated in brief
   on-screen graphics falling between uniform samples, replicated four times.
@@ -537,6 +547,7 @@ platforms, and found two real bugs that every previous release shipped.
   content.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - The protocol now distinguishes **answer mode** (a question exists; stop when
   answered) from **study mode** (comprehension; cover the whole video). The skill
   defaults to study mode for instructional material when intent is ambiguous.
@@ -559,6 +570,7 @@ platforms, and found two real bugs that every previous release shipped.
   both `--looking-for` and `--force`.
 
 ### Changed
+- `ledger` reports the video's real frame count (average frame rate x duration) instead of assuming 25 fps.
 - The named-gap rule now distinguishes coverage from targeting: a whole-video
   `sheet` is the coverage round and never needs a named gap, while a `--range`
   sheet is a targeted request and requires one once spending has begun.

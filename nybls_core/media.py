@@ -33,6 +33,20 @@ def _duration(video: Path) -> float:
     return float(out) if out else 0.0
 
 
+def frame_count(video: Path, duration: float) -> int | None:
+    """Estimated frames: duration x the video's real average rate. None if unreadable."""
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+             "stream=avg_frame_rate", "-of", "csv=p=0", str(video)],
+            capture_output=True, text=True, timeout=30).stdout.strip()
+        num, _, den = out.partition("/")
+        fps = float(num) / float(den or 1)
+    except (OSError, ValueError, ZeroDivisionError, subprocess.SubprocessError):
+        return None
+    return round(duration * fps) if fps > 0 else None
+
+
 def phash_hex(img: Image.Image, hash_size: int = 8, highfreq_factor: int = 4) -> str:
     """64-bit perceptual hash, bit-compatible with imagehash.phash.
 

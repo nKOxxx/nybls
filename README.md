@@ -37,11 +37,11 @@ study pass: 72 tiles every 5s → 12 sheets (12 of 200 budget units)
 
 $ nybls ledger F2FmTdLtb_4
 
-watched 54 min · examined 12 images (~12,480 visual tokens, ≈$0.02)
-of ~80,443 total frames
+watched 54 min · examined 12 images (~12,480 visual tokens, ≈$0.02 at sonnet-5 input rate) of ~77,226 total frames · budget 12/200 units
 ```
 
-**A 54-minute course. 12 images. Two cents.** *Verbatim output, not a mockup.*
+**A 54-minute course. 12 images. Two cents.** *Output from a real run, with the paths
+elided. The cost is an estimate at one model's input price.*
 
 It pulled 644 frames for free to work out which 72 were worth looking at, then
 packed them into 12 sheets. Pulling frames is nearly free, but looking at them is
@@ -59,8 +59,8 @@ You do not have to ask it anything to get that. Pasting a URL on its own means
 ## Why this exists
 
 Almost every tool that claims to watch YouTube is really just reading the
-captions. That is not a cheap shot, it is what the code does: the YouTube loaders
-in the major agent frameworks are caption scrapers, and Google's own
+captions. That is not a cheap shot, it is what the code does: LangChain's
+`YoutubeLoader`, for one, wraps `youtube-transcript-api`, and Google's own
 documentation says a YouTube source in NotebookLM imports "only the text
 transcript."
 
@@ -76,9 +76,9 @@ two samples.
 
 ## Install
 
-**Any agent, one line** — installs the `watch` skill into any of the 79 agents
+**Any agent, one line** — installs the `watch` skill into the agents
 the [skills.sh](https://skills.sh) ecosystem supports (Claude Code, Codex,
-Cursor, Gemini CLI, and more); installs count on the public leaderboard:
+Cursor, Gemini CLI, and dozens more); installs count on the public leaderboard:
 
 ```bash
 npx skills add nKOxxx/nybls
