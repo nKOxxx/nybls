@@ -24,6 +24,7 @@ TOKEN_FILE = Path.home() / ".nybls" / "secrets" / "receiver_token"
 MAX_UPLOAD = 500 * 1024 * 1024  # 500 MB
 SAFE_NAME = re.compile(r"[^A-Za-z0-9._-]")
 MEDIA_SUFFIXES = {".mp4", ".mov", ".m4v", ".webm", ".mkv", ".jpg", ".jpeg", ".png", ".webp"}
+MAX_JSON = 64 * 1024  # a /watch body is one URL
 PORT = 8422
 
 
@@ -171,11 +172,18 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):  # noqa: N802
         if not self._auth_ok():
             return self._reply(401, {"error": "unauthorized"})
-        length = int(self.headers.get("Content-Length") or 0)
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            length = -1
+        if length < 0:
+            return self._reply(400, {"error": "bad Content-Length"})
         if length > MAX_UPLOAD:
             return self._reply(413, {"error": "file too large (max 500 MB)"})
 
         if self.path.startswith("/watch"):
+            if length > MAX_JSON:
+                return self._reply(413, {"error": "request body too large"})
             try:
                 data = json.loads(self.rfile.read(length) or b"{}")
                 url = str(data.get("url", "")).strip()
