@@ -74,3 +74,11 @@ def test_only_approved_items_are_ever_processed(srv, monkeypatch):
     monkeypatch.setattr(r, "_process", lambda item: (seen.append(item["id"]), stop.set()))
     r.worker_loop(stop)
     assert seen == [first]
+
+
+def test_upload_over_the_cap_is_refused_without_writing(srv, monkeypatch, tmp_path):
+    port, tok = srv
+    monkeypatch.setattr(r, "MAX_UPLOAD", 10)
+    code, _ = call(port, "POST", "/upload", tok, b"x" * 11, {"X-Filename": "a.mp4"})
+    assert code == 413
+    assert not (tmp_path / "up").exists() or list((tmp_path / "up").iterdir()) == []
