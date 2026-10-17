@@ -330,10 +330,18 @@ firing, along with a product restructure that no caption mentioned anywhere.
 
 ## Does it actually work
 
-Four rounds, 12 videos, 112 audited questions. A control arm that gets a uniform
-grid of frames scores 83 of 112, or 74 percent, for 645,120 visual tokens. nybls
-scores 101 of 112, or 90 percent, for 189,052. The control spends 3.41 times the
-tokens to get 82 percent of the score.
+Four rounds, 12 videos, 56 audited questions scored two points each (112 points).
+A control arm that gets a uniform grid of frames scores 83 of 112, or 74 percent,
+for 764,400 visual tokens served. nybls scores 101 of 112, or 90 percent, for
+189,052. The control is served 4.0 times the tokens for 82 percent of the score.
+
+**Read this as a pilot, not a verdict.** It is 12 videos, the judges are language
+models, the control is a uniform grid we built ourselves and not another product,
+and there are no confidence intervals. Round 4, the best designed one, is four silent
+screen recordings, which is the case this tool is built for. Two of its registered
+predictions missed their thresholds and are reported as missed in
+[the results](bench/RESULTS_round4.md), which also records the correction that
+raised the control's cost from 645,120 to 764,400 tokens.
 
 Round 4 was run properly, which matters more than the numbers. The questions and
 the ground truth were written by an agent with no access to nybls, working from a
@@ -354,31 +362,13 @@ answer, and that audit is published alongside the results.
 
 ## Testing the premises, not just the claims
 
-For eight releases the first command in this README did not work. `pip install
-nybls` is refused under PEP 668 on Homebrew Python and most current Linux, and
-nobody noticed because the tool only ever ran from the folder it was built in.
-
-The benchmark did not catch it. Neither did 56 tests, a blind-judged
-benchmark round, or an adversarial review pass. All of that was aimed at the
-claims, at whether the tool beats a uniform control. None of it was aimed at the
-premises, at whether the first thing a stranger types actually runs.
-
-Worse: the test written to protect that instruction asserted the broken command
-was present, so a correct README would have failed CI. A test written by whoever
-wrote the bug inherits the bug's assumption, and it reads as perfectly reasonable
-to a reviewer. It is only wrong against a machine.
-
-The rules that came out of this, each naming the incident that produced it
-and the file that enforces it, are in [TESTING.md](TESTING.md).
-
-So the install is no longer described and asserted, it is executed.
-`scripts/check_documented_install.py` reads the platform table out of
-`INSTALL.md`, runs those exact commands on a runner that has never seen this
-project, then makes a video with ffmpeg and watches it. It runs on every push,
-weekly against PyPI to catch drift nobody caused, and as a gate in the release
-workflow: a build that a stranger cannot install does not get published.
-
-If the docs drift, that breaks. That is the point of it.
+For eight releases the first command in this README, `pip install nybls`, did not
+work on Homebrew Python or most current Linux, because PEP 668 refuses it. The
+tests and the benchmark were aimed at the claims, not at whether a stranger's first
+command runs. So the install is now executed rather than described:
+`scripts/check_documented_install.py` runs the exact commands from
+[INSTALL.md](INSTALL.md) on a clean runner on every push, weekly against PyPI, and
+as a gate before release. The rules that came out of it are in [TESTING.md](TESTING.md).
 
 ## Honest limits
 
