@@ -53,6 +53,23 @@ def _sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def _check_existing(dest: Path, fname: str) -> None:
+    """A model already on disk is hashed once; a sidecar remembers the result.
+
+    The sidecar is keyed on size and mtime, so replacing or editing the file
+    forces a re-hash. A file that does not match the pin is refused, not used.
+    """
+    st = dest.stat()
+    stamp = f"{st.st_size}:{st.st_mtime_ns}:{SHA256[fname]}"
+    marker = dest.with_name(dest.name + ".verified")
+    if marker.exists() and marker.read_text() == stamp:
+        return
+    if _sha256(dest) != SHA256[fname]:
+        raise RuntimeError(f"{dest} does not match the pinned SHA-256 for {fname}; "
+                           f"delete it and let nybls fetch a fresh copy")
+    marker.write_text(stamp)
+
+
 def have_whisper() -> bool:
     return shutil.which("whisper-cli") is not None
 
@@ -63,6 +80,7 @@ def model_path(name: str = DEFAULT_MODEL, autodownload: bool = True) -> Path:
     fname, size_mb, _ = MODELS[name]
     dest = MODEL_DIR / fname
     if dest.exists():
+        _check_existing(dest, fname)
         return dest
     if not autodownload:
         raise FileNotFoundError(f"model {name} not downloaded")
@@ -70,8 +88,13 @@ def model_path(name: str = DEFAULT_MODEL, autodownload: bool = True) -> Path:
         raise FileNotFoundError(
             f"model {name} ({size_mb} MB) is not downloaded and NYBLS_NO_DOWNLOAD is set; "
             f"fetch {BASE_URL}/{fname} into {MODEL_DIR} yourself")
-    MODEL_DIR.mkdir(parents=True, exist_ok=True)
     interactive = sys.stdin.isatty() and sys.stderr.isatty()
+    if not interactive and not os.environ.get("NYBLS_ASSUME_YES"):
+        raise FileNotFoundError(
+            f"the '{name}' speech model ({size_mb} MB) is not downloaded and nobody is at a terminal "
+            f"to approve it; run `nybls probe` once in a terminal, or set NYBLS_ASSUME_YES=1 to allow "
+            f"the download from {BASE_URL}/{fname}")
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
     print(f"this video has no captions, so it needs local transcription.\n"
           f"downloading the '{name}' speech model once ({size_mb} MB) from "
           f"{BASE_URL}/{fname}", file=sys.stderr)

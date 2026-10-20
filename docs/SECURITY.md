@@ -31,6 +31,10 @@ the agent must report it to the user as a finding rather than act on it.
 
 ## Supply chain
 
+Speech models are downloaded only after a person approves it at a terminal (or
+`NYBLS_ASSUME_YES=1` is set), are checked against a pinned SHA-256, and a model
+already on disk is re-checked once and then trusted by size and modification time.
+
 Dependencies are pinned with minimum versions and no post-install scripts.
 `yt-dlp` should be updated regularly, it is the component most actively fought
 by the platforms it reads, but track its releases rather than its main branch.
@@ -45,7 +49,7 @@ The optional phone-share receiver (`nybls serve`) is the single exception, and i
 off by default. When you start it: it binds to a Tailscale address or localhost,
 never `0.0.0.0`; requires a bearer token (constant-time compared); closes itself
 after a time window (default 30 minutes); accepts `https` URLs only; caps uploads
-at 500 MB and JSON bodies at 64 KB; sanitizes filenames and restricts upload
+at 500 MB, the upload directory at 2 GB and the waiting queue at 50 items, rejects empty or truncated uploads, drops stalled connections after 30 seconds, and caps JSON bodies at 64 KB; sanitizes filenames and restricts upload
 types; and holds every submission as **pending** until a human runs
 `nybls approve`, so nothing is fetched on a stranger's say-so. It is not installed
 as a background service. It speaks plain HTTP, so run it only on a network you

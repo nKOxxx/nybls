@@ -5,6 +5,7 @@ otherwise localhost only. Never exposed to the public internet.
 """
 import hmac
 import json
+import os
 import re
 import secrets
 import subprocess
@@ -25,15 +26,28 @@ MAX_UPLOAD = 500 * 1024 * 1024  # 500 MB
 SAFE_NAME = re.compile(r"[^A-Za-z0-9._-]")
 MEDIA_SUFFIXES = {".mp4", ".mov", ".m4v", ".webm", ".mkv", ".jpg", ".jpeg", ".png", ".webp"}
 MAX_JSON = 64 * 1024  # a /watch body is one URL
+MAX_PENDING_ITEMS = 50                # submissions waiting for a human
+MAX_UPLOAD_DIR_BYTES = 2 * 1024**3    # total kept in UPLOADS before refusing more
+SOCKET_TIMEOUT_S = 30                 # idle seconds before a stalled client is dropped
 PORT = 8422
 
 
 def token() -> str:
     if not TOKEN_FILE.exists():
-        TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True)
-        TOKEN_FILE.write_text(secrets.token_urlsafe(32))
-        TOKEN_FILE.chmod(0o600)
+        TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        # created 0600 from the first byte, no window where it is world-readable
+        fd = os.open(TOKEN_FILE, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w") as fh:
+            fh.write(secrets.token_urlsafe(32))
     return TOKEN_FILE.read_text().strip()
+
+
+def _pending_count() -> int:
+    return sum(1 for i in items(200) if i["status"] == "pending")
+
+
+def _uploads_bytes() -> int:
+    return sum(p.stat().st_size for p in UPLOADS.glob("*") if p.is_file()) if UPLOADS.exists() else 0
 
 
 def bind_host() -> tuple[str, str]:
@@ -143,6 +157,7 @@ def worker_loop(stop: threading.Event) -> None:
 
 class Handler(BaseHTTPRequestHandler):
     server_version = "nybls"
+    timeout = SOCKET_TIMEOUT_S  # StreamRequestHandler applies this to the socket
 
     def _auth_ok(self) -> bool:
         got = (self.headers.get("Authorization") or "").removeprefix("Bearer ").strip()
@@ -181,6 +196,10 @@ class Handler(BaseHTTPRequestHandler):
         if length > MAX_UPLOAD:
             return self._reply(413, {"error": "file too large (max 500 MB)"})
 
+        if self.path.startswith(("/watch", "/upload")) and _pending_count() >= MAX_PENDING_ITEMS:
+            return self._reply(429, {"error": f"{MAX_PENDING_ITEMS} items are already waiting for approval; "
+                                              "run `nybls inbox`"})
+
         if self.path.startswith("/watch"):
             if length > MAX_JSON:
                 return self._reply(413, {"error": "request body too large"})
@@ -199,6 +218,10 @@ class Handler(BaseHTTPRequestHandler):
             name = SAFE_NAME.sub("_", Path(raw_name).name)[:120]
             if Path(name).suffix.lower() not in MEDIA_SUFFIXES:
                 return self._reply(400, {"error": f"unsupported file type: {Path(name).suffix or 'none'}"})
+            if length == 0:
+                return self._reply(400, {"error": "empty upload"})
+            if _uploads_bytes() + length > MAX_UPLOAD_DIR_BYTES:
+                return self._reply(507, {"error": "upload quota is full; approve or reject pending items"})
             UPLOADS.mkdir(parents=True, exist_ok=True)
             dest = UPLOADS / f"{int(time.time())}_{name}"
             remaining, chunk = length, 1 << 20
@@ -209,6 +232,9 @@ class Handler(BaseHTTPRequestHandler):
                         break
                     fh.write(buf)
                     remaining -= len(buf)
+            if remaining > 0:  # client hung up early: never queue a truncated file
+                dest.unlink(missing_ok=True)
+                return self._reply(400, {"error": "upload was truncated"})
             item = enqueue(str(dest), "file")
             return self._reply(202, {"received": item["id"], "status": "awaiting approval on the Mac"})
 

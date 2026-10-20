@@ -6,6 +6,10 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Security
+- Speech-model download now needs a person at a terminal to confirm, or `NYBLS_ASSUME_YES=1`; without either, `probe` continues frames-only and says how to opt in. A model already on disk is hashed once and must match the pinned SHA-256.
+- Receiver: 30 s socket timeout, 2 GB upload-directory quota, 50-item pending cap, empty and truncated uploads rejected, token file created 0600 in a 0700 directory.
+
 ### Known issues (found by benchmark arms, reported not fixed during the run)
 - Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom
   box derived from a tile can land on a different shot. `snap_to_tile` (added in 0.7.1)
