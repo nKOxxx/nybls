@@ -82,3 +82,47 @@ def test_upload_over_the_cap_is_refused_without_writing(srv, monkeypatch, tmp_pa
     code, _ = call(port, "POST", "/upload", tok, b"x" * 11, {"X-Filename": "a.mp4"})
     assert code == 413
     assert not (tmp_path / "up").exists() or list((tmp_path / "up").iterdir()) == []
+
+
+def test_truncated_upload_is_not_queued(srv, tmp_path):
+    import socket
+    port, tok = srv
+    s = socket.create_connection(("127.0.0.1", port))
+    s.sendall((f"POST /upload HTTP/1.1\r\nHost: x\r\nAuthorization: Bearer {tok}\r\n"
+               "X-Filename: a.mp4\r\nContent-Length: 1000\r\n\r\n").encode() + b"only a little")
+    s.shutdown(socket.SHUT_WR)
+    assert b"400" in s.recv(200).split(b"\r\n")[0]
+    s.close()
+    assert r.items() == []
+    assert not (tmp_path / "up").exists() or list((tmp_path / "up").iterdir()) == []
+
+
+def test_empty_upload_is_refused(srv):
+    port, tok = srv
+    assert call(port, "POST", "/upload", tok, b"", {"X-Filename": "a.mp4"})[0] == 400
+
+
+def test_pending_queue_is_capped(srv, monkeypatch):
+    port, tok = srv
+    monkeypatch.setattr(r, "MAX_PENDING_ITEMS", 2)
+    body = json.dumps({"url": "https://example.com/v"}).encode()
+    assert call(port, "POST", "/watch", tok, body)[0] == 202
+    assert call(port, "POST", "/watch", tok, body)[0] == 202
+    assert call(port, "POST", "/watch", tok, body)[0] == 429
+
+
+def test_upload_dir_quota(srv, monkeypatch, tmp_path):
+    port, tok = srv
+    monkeypatch.setattr(r, "MAX_UPLOAD_DIR_BYTES", 5)
+    assert call(port, "POST", "/upload", tok, b"abcdef", {"X-Filename": "a.mp4"})[0] == 507
+
+
+def test_stalled_client_is_dropped_by_the_socket_timeout():
+    assert r.Handler.timeout == r.SOCKET_TIMEOUT_S
+
+
+def test_token_file_is_private_from_creation(tmp_path, monkeypatch):
+    monkeypatch.setattr(r, "TOKEN_FILE", tmp_path / "secrets" / "tok")
+    r.token()
+    assert oct((tmp_path / "secrets" / "tok").stat().st_mode & 0o777) == "0o600"
+    assert oct((tmp_path / "secrets").stat().st_mode & 0o777) == "0o700"

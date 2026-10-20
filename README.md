@@ -132,8 +132,9 @@ else. It was 293 MB before 0.8.0, and the difference was two libraries we were
 using one function from each.
 
 Videos without captions need speech recognition, which is one more line
-(`brew install whisper-cpp`). The model fetches itself the first time you need
-it, and the default is 141 MB rather than 1.5 GB.
+(`brew install whisper-cpp`). The model is fetched the first time you need it,
+after you confirm at a terminal (agents without one need `NYBLS_ASSUME_YES=1`), and
+the default is 141 MB rather than 1.5 GB.
 
 ```bash
 nybls doctor
