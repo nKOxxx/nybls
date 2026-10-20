@@ -6,6 +6,10 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- `scripts/check_receipt.py` (run in the test suite): recomputes the benchmark headline from the stored per-video results and fails if the README quotes different numbers.
+- `CONTRIBUTING.md`, issue and pull request templates; a README header block with the three headline figures, each linked to its evidence.
+
 ### Known issues (found by benchmark arms, reported not fixed during the run)
 - Contact-sheet tile timestamps resolve differently from `frames`/`zoom` seek, so a zoom
   box derived from a tile can land on a different shot. `snap_to_tile` (added in 0.7.1)
