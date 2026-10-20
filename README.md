@@ -25,6 +25,14 @@
   <a href="#install">Install</a> · <a href="#does-it-actually-work">Evidence and limits</a> · <a href="docs/SECURITY.md">Security</a></sub>
 </p>
 
+<table>
+<tr>
+<td align="center" width="33%"><h3>90% vs 74%</h3>answers correct, nybls vs a uniform-frame control<br><sub><a href="bench/RESULTS_round4.md">pilot: 12 videos, LLM judges, control built by us</a></sub></td>
+<td align="center" width="33%"><h3>4.0x</h3>visual tokens the control was served for 82% of the score<br><sub><a href="bench/RESULTS_round4.md">recomputed after review; the README is checked against it in CI</a></sub></td>
+<td align="center" width="33%"><h3>12 images</h3>to cover a 54-minute course, about $0.02 at one model's input price<br><sub><a href="#does-it-actually-work">estimate, not a bill</a></sub></td>
+</tr>
+</table>
+
 ---
 
 ```console
@@ -88,7 +96,7 @@ two samples.
 
 ## Install
 
-**Any agent, one line** — installs the `watch` skill into the agents
+**Any agent, one line:** installs the `watch` skill into the agents
 the [skills.sh](https://skills.sh) ecosystem supports (Claude Code, Codex,
 Cursor, Gemini CLI, and dozens more); installs count on the public leaderboard:
 
@@ -258,8 +266,8 @@ browse:   ~/.nybls/store/<id>/digest/contact_sheet.html
 ```
 
 One uniform frame pass (ffmpeg, a JPEG every 30 seconds, or whatever `--every`
-you ask for), one OCR pass over all of it — Apple Vision if the `macos` extra is
-installed, tesseract otherwise, never a model — and three artifacts land under
+you ask for), one OCR pass over all of it (Apple Vision if the `macos` extra is
+installed, tesseract otherwise, never a model), and three artifacts land under
 `digest/`. `ocr-index.jsonl` turns "somewhere in nine and a half hours of stream
 there was a pricing table" into a one-line grep. `contact_sheet.html` is for
 human eyes: every frame in order, timestamped, with its OCR text under the tile
@@ -267,7 +275,7 @@ so the page itself is find-in-page searchable. `scenes.txt` flags scene-change
 hints by JPEG-size delta, which is how you find the moment the demo started
 without looking at anything.
 
-The pass costs zero vision tokens — the ledger is never touched — so running it
+The pass costs zero vision tokens (the ledger is never touched), so running it
 is never a budget decision. `nybls corpus <name> --digest` shows which videos in
 a collection are still missing theirs.
 
